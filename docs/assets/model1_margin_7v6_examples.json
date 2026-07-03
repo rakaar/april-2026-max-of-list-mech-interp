@@ -1,0 +1,771 @@
+{
+  "description": "Component decomposition of logit[7] - logit[6] on selected examples.",
+  "components": [
+    "residual",
+    "H0",
+    "H1",
+    "H2",
+    "H3",
+    "final"
+  ],
+  "examples": [
+    {
+      "example_index": 0,
+      "nums": [
+        6,
+        2,
+        3,
+        4,
+        5
+      ],
+      "true_max": 6,
+      "model_pred": 6,
+      "component_logits_6_7": {
+        "residual": {
+          "logit6": 1.3907968997955322,
+          "logit7": 2.3102216720581055,
+          "margin_7_minus_6": 0.9194247722625732
+        },
+        "H0": {
+          "logit6": -15.299884796142578,
+          "logit7": 32.1828727722168,
+          "margin_7_minus_6": 47.482757568359375
+        },
+        "H1": {
+          "logit6": 1.8841228485107422,
+          "logit7": 15.169775009155273,
+          "margin_7_minus_6": 13.285652160644531
+        },
+        "H2": {
+          "logit6": -15.450736999511719,
+          "logit7": -14.810866355895996,
+          "margin_7_minus_6": 0.6398706436157227
+        },
+        "H3": {
+          "logit6": 253.3729705810547,
+          "logit7": 152.39288330078125,
+          "margin_7_minus_6": -100.98008728027344
+        },
+        "final": {
+          "logit6": 225.8972930908203,
+          "logit7": 187.24490356445312,
+          "margin_7_minus_6": -38.65238952636719
+        }
+      },
+      "attention": {
+        "H0": {
+          "top_position": 10,
+          "top_token": 12,
+          "top_is_ans": true,
+          "max_token_attention_mass": 5.065197705711455e-10,
+          "ans_self_attention_mass": 0.9999960660934448
+        },
+        "H1": {
+          "top_position": 10,
+          "top_token": 12,
+          "top_is_ans": true,
+          "max_token_attention_mass": 7.822826989029628e-28,
+          "ans_self_attention_mass": 1.0
+        },
+        "H2": {
+          "top_position": 10,
+          "top_token": 12,
+          "top_is_ans": true,
+          "max_token_attention_mass": 2.1173669665586203e-05,
+          "ans_self_attention_mass": 0.9991300702095032
+        },
+        "H3": {
+          "top_position": 1,
+          "top_token": 6,
+          "top_is_ans": false,
+          "max_token_attention_mass": 0.9815857410430908,
+          "ans_self_attention_mass": 1.290694884303889e-09
+        }
+      }
+    },
+    {
+      "example_index": 1,
+      "nums": [
+        2,
+        6,
+        4,
+        5,
+        3
+      ],
+      "true_max": 6,
+      "model_pred": 6,
+      "component_logits_6_7": {
+        "residual": {
+          "logit6": 1.3907968997955322,
+          "logit7": 2.3102216720581055,
+          "margin_7_minus_6": 0.9194247722625732
+        },
+        "H0": {
+          "logit6": -15.299884796142578,
+          "logit7": 32.1828727722168,
+          "margin_7_minus_6": 47.482757568359375
+        },
+        "H1": {
+          "logit6": 1.8841228485107422,
+          "logit7": 15.169775009155273,
+          "margin_7_minus_6": 13.285652160644531
+        },
+        "H2": {
+          "logit6": -15.450704574584961,
+          "logit7": -14.810832023620605,
+          "margin_7_minus_6": 0.6398725509643555
+        },
+        "H3": {
+          "logit6": 253.34536743164062,
+          "logit7": 152.3778076171875,
+          "margin_7_minus_6": -100.96755981445312
+        },
+        "final": {
+          "logit6": 225.86962890625,
+          "logit7": 187.22982788085938,
+          "margin_7_minus_6": -38.639801025390625
+        }
+      },
+      "attention": {
+        "H0": {
+          "top_position": 10,
+          "top_token": 12,
+          "top_is_ans": true,
+          "max_token_attention_mass": 4.959361254996963e-10,
+          "ans_self_attention_mass": 0.9999960660934448
+        },
+        "H1": {
+          "top_position": 10,
+          "top_token": 12,
+          "top_is_ans": true,
+          "max_token_attention_mass": 8.32348114475784e-28,
+          "ans_self_attention_mass": 1.0
+        },
+        "H2": {
+          "top_position": 10,
+          "top_token": 12,
+          "top_is_ans": true,
+          "max_token_attention_mass": 2.1067349734948948e-05,
+          "ans_self_attention_mass": 0.9991267323493958
+        },
+        "H3": {
+          "top_position": 3,
+          "top_token": 6,
+          "top_is_ans": false,
+          "max_token_attention_mass": 0.9816396832466125,
+          "ans_self_attention_mass": 1.3020090561255415e-09
+        }
+      }
+    },
+    {
+      "example_index": 2,
+      "nums": [
+        2,
+        3,
+        6,
+        4,
+        5
+      ],
+      "true_max": 6,
+      "model_pred": 6,
+      "component_logits_6_7": {
+        "residual": {
+          "logit6": 1.3907968997955322,
+          "logit7": 2.3102216720581055,
+          "margin_7_minus_6": 0.9194247722625732
+        },
+        "H0": {
+          "logit6": -15.299884796142578,
+          "logit7": 32.1828727722168,
+          "margin_7_minus_6": 47.482757568359375
+        },
+        "H1": {
+          "logit6": 1.8841228485107422,
+          "logit7": 15.169775009155273,
+          "margin_7_minus_6": 13.285652160644531
+        },
+        "H2": {
+          "logit6": -15.450730323791504,
+          "logit7": -14.810858726501465,
+          "margin_7_minus_6": 0.6398715972900391
+        },
+        "H3": {
+          "logit6": 253.39633178710938,
+          "logit7": 152.40289306640625,
+          "margin_7_minus_6": -100.99343872070312
+        },
+        "final": {
+          "logit6": 225.92063903808594,
+          "logit7": 187.2549285888672,
+          "margin_7_minus_6": -38.66571044921875
+        }
+      },
+      "attention": {
+        "H0": {
+          "top_position": 10,
+          "top_token": 12,
+          "top_is_ans": true,
+          "max_token_attention_mass": 5.074181075315209e-10,
+          "ans_self_attention_mass": 0.9999960660934448
+        },
+        "H1": {
+          "top_position": 10,
+          "top_token": 12,
+          "top_is_ans": true,
+          "max_token_attention_mass": 7.065178667452328e-28,
+          "ans_self_attention_mass": 1.0
+        },
+        "H2": {
+          "top_position": 10,
+          "top_token": 12,
+          "top_is_ans": true,
+          "max_token_attention_mass": 2.1116979041835293e-05,
+          "ans_self_attention_mass": 0.9991298317909241
+        },
+        "H3": {
+          "top_position": 5,
+          "top_token": 6,
+          "top_is_ans": false,
+          "max_token_attention_mass": 0.9813963770866394,
+          "ans_self_attention_mass": 1.3039650470503261e-09
+        }
+      }
+    },
+    {
+      "example_index": 3,
+      "nums": [
+        5,
+        4,
+        3,
+        2,
+        6
+      ],
+      "true_max": 6,
+      "model_pred": 6,
+      "component_logits_6_7": {
+        "residual": {
+          "logit6": 1.3907968997955322,
+          "logit7": 2.3102216720581055,
+          "margin_7_minus_6": 0.9194247722625732
+        },
+        "H0": {
+          "logit6": -15.299884796142578,
+          "logit7": 32.18288040161133,
+          "margin_7_minus_6": 47.482765197753906
+        },
+        "H1": {
+          "logit6": 1.8841228485107422,
+          "logit7": 15.169775009155273,
+          "margin_7_minus_6": 13.285652160644531
+        },
+        "H2": {
+          "logit6": -15.450794219970703,
+          "logit7": -14.810916900634766,
+          "margin_7_minus_6": 0.6398773193359375
+        },
+        "H3": {
+          "logit6": 253.27993774414062,
+          "logit7": 152.33607482910156,
+          "margin_7_minus_6": -100.94386291503906
+        },
+        "final": {
+          "logit6": 225.80416870117188,
+          "logit7": 187.18801879882812,
+          "margin_7_minus_6": -38.61614990234375
+        }
+      },
+      "attention": {
+        "H0": {
+          "top_position": 10,
+          "top_token": 12,
+          "top_is_ans": true,
+          "max_token_attention_mass": 4.965362565556575e-10,
+          "ans_self_attention_mass": 0.9999961853027344
+        },
+        "H1": {
+          "top_position": 10,
+          "top_token": 12,
+          "top_is_ans": true,
+          "max_token_attention_mass": 6.791613800361731e-28,
+          "ans_self_attention_mass": 1.0
+        },
+        "H2": {
+          "top_position": 10,
+          "top_token": 12,
+          "top_is_ans": true,
+          "max_token_attention_mass": 2.1487498088390566e-05,
+          "ans_self_attention_mass": 0.9991315007209778
+        },
+        "H3": {
+          "top_position": 9,
+          "top_token": 6,
+          "top_is_ans": false,
+          "max_token_attention_mass": 0.9814261794090271,
+          "ans_self_attention_mass": 1.2961365314367868e-09
+        }
+      }
+    },
+    {
+      "example_index": 4,
+      "nums": [
+        6,
+        6,
+        5,
+        4,
+        3
+      ],
+      "true_max": 6,
+      "model_pred": 6,
+      "component_logits_6_7": {
+        "residual": {
+          "logit6": 1.3907968997955322,
+          "logit7": 2.3102216720581055,
+          "margin_7_minus_6": 0.9194247722625732
+        },
+        "H0": {
+          "logit6": -15.299927711486816,
+          "logit7": 32.18296813964844,
+          "margin_7_minus_6": 47.48289489746094
+        },
+        "H1": {
+          "logit6": 1.8841228485107422,
+          "logit7": 15.169775009155273,
+          "margin_7_minus_6": 13.285652160644531
+        },
+        "H2": {
+          "logit6": -15.45314884185791,
+          "logit7": -14.813175201416016,
+          "margin_7_minus_6": 0.6399736404418945
+        },
+        "H3": {
+          "logit6": 254.18170166015625,
+          "logit7": 152.880126953125,
+          "margin_7_minus_6": -101.30157470703125
+        },
+        "final": {
+          "logit6": 226.7035369873047,
+          "logit7": 187.72996520996094,
+          "margin_7_minus_6": -38.97357177734375
+        }
+      },
+      "attention": {
+        "H0": {
+          "top_position": 10,
+          "top_token": 12,
+          "top_is_ans": true,
+          "max_token_attention_mass": 1.0024587826507059e-09,
+          "ans_self_attention_mass": 0.999998927116394
+        },
+        "H1": {
+          "top_position": 10,
+          "top_token": 12,
+          "top_is_ans": true,
+          "max_token_attention_mass": 1.6146308133787467e-27,
+          "ans_self_attention_mass": 1.0
+        },
+        "H2": {
+          "top_position": 10,
+          "top_token": 12,
+          "top_is_ans": true,
+          "max_token_attention_mass": 4.2249059333698824e-05,
+          "ans_self_attention_mass": 0.9993185997009277
+        },
+        "H3": {
+          "top_position": 1,
+          "top_token": 6,
+          "top_is_ans": false,
+          "max_token_attention_mass": 0.9907222986221313,
+          "ans_self_attention_mass": 6.541787667124765e-10
+        }
+      }
+    },
+    {
+      "example_index": 5,
+      "nums": [
+        7,
+        2,
+        3,
+        4,
+        5
+      ],
+      "true_max": 7,
+      "model_pred": 7,
+      "component_logits_6_7": {
+        "residual": {
+          "logit6": 1.3907968997955322,
+          "logit7": 2.3102216720581055,
+          "margin_7_minus_6": 0.9194247722625732
+        },
+        "H0": {
+          "logit6": -14.903412818908691,
+          "logit7": 31.354354858398438,
+          "margin_7_minus_6": 46.25776672363281
+        },
+        "H1": {
+          "logit6": 1.8841228485107422,
+          "logit7": 15.169775009155273,
+          "margin_7_minus_6": 13.285652160644531
+        },
+        "H2": {
+          "logit6": 3.9360432624816895,
+          "logit7": 3.7613325119018555,
+          "margin_7_minus_6": -0.17471075057983398
+        },
+        "H3": {
+          "logit6": 58.72172164916992,
+          "logit7": 35.33138656616211,
+          "margin_7_minus_6": -23.390335083007812
+        },
+        "final": {
+          "logit6": 51.02926254272461,
+          "logit7": 87.92707061767578,
+          "margin_7_minus_6": 36.89780807495117
+        }
+      },
+      "attention": {
+        "H0": {
+          "top_position": 10,
+          "top_token": 12,
+          "top_is_ans": true,
+          "max_token_attention_mass": 0.019807634875178337,
+          "ans_self_attention_mass": 0.9801884889602661
+        },
+        "H1": {
+          "top_position": 10,
+          "top_token": 12,
+          "top_is_ans": true,
+          "max_token_attention_mass": 6.3413985569799394e-15,
+          "ans_self_attention_mass": 1.0
+        },
+        "H2": {
+          "top_position": 1,
+          "top_token": 7,
+          "top_is_ans": false,
+          "max_token_attention_mass": 0.9540954828262329,
+          "ans_self_attention_mass": 0.045865561813116074
+        },
+        "H3": {
+          "top_position": 1,
+          "top_token": 7,
+          "top_is_ans": false,
+          "max_token_attention_mass": 0.9995484948158264,
+          "ans_self_attention_mass": 3.164687956136447e-11
+        }
+      }
+    },
+    {
+      "example_index": 6,
+      "nums": [
+        2,
+        7,
+        4,
+        6,
+        3
+      ],
+      "true_max": 7,
+      "model_pred": 7,
+      "component_logits_6_7": {
+        "residual": {
+          "logit6": 1.3907968997955322,
+          "logit7": 2.3102216720581055,
+          "margin_7_minus_6": 0.9194247722625732
+        },
+        "H0": {
+          "logit6": -14.90992259979248,
+          "logit7": 31.368375778198242,
+          "margin_7_minus_6": 46.278297424316406
+        },
+        "H1": {
+          "logit6": 1.8841228485107422,
+          "logit7": 15.169775009155273,
+          "margin_7_minus_6": 13.285652160644531
+        },
+        "H2": {
+          "logit6": 3.96063494682312,
+          "logit7": 3.779270648956299,
+          "margin_7_minus_6": -0.1813642978668213
+        },
+        "H3": {
+          "logit6": 63.222652435302734,
+          "logit7": 38.03971481323242,
+          "margin_7_minus_6": -25.182937622070312
+        },
+        "final": {
+          "logit6": 55.54828643798828,
+          "logit7": 90.66734313964844,
+          "margin_7_minus_6": 35.119056701660156
+        }
+      },
+      "attention": {
+        "H0": {
+          "top_position": 10,
+          "top_token": 12,
+          "top_is_ans": true,
+          "max_token_attention_mass": 0.019401805475354195,
+          "ans_self_attention_mass": 0.9805943369865417
+        },
+        "H1": {
+          "top_position": 10,
+          "top_token": 12,
+          "top_is_ans": true,
+          "max_token_attention_mass": 6.747190866185793e-15,
+          "ans_self_attention_mass": 1.0
+        },
+        "H2": {
+          "top_position": 3,
+          "top_token": 7,
+          "top_is_ans": false,
+          "max_token_attention_mass": 0.95387864112854,
+          "ans_self_attention_mass": 0.046086378395557404
+        },
+        "H3": {
+          "top_position": 3,
+          "top_token": 7,
+          "top_is_ans": false,
+          "max_token_attention_mass": 0.9766554832458496,
+          "ans_self_attention_mass": 3.119134117657296e-11
+        }
+      }
+    },
+    {
+      "example_index": 7,
+      "nums": [
+        2,
+        3,
+        7,
+        4,
+        6
+      ],
+      "true_max": 7,
+      "model_pred": 7,
+      "component_logits_6_7": {
+        "residual": {
+          "logit6": 1.3907968997955322,
+          "logit7": 2.3102216720581055,
+          "margin_7_minus_6": 0.9194247722625732
+        },
+        "H0": {
+          "logit6": -14.902010917663574,
+          "logit7": 31.351478576660156,
+          "margin_7_minus_6": 46.25349044799805
+        },
+        "H1": {
+          "logit6": 1.8841228485107422,
+          "logit7": 15.169775009155273,
+          "margin_7_minus_6": 13.285652160644531
+        },
+        "H2": {
+          "logit6": 3.924255847930908,
+          "logit7": 3.75062894821167,
+          "margin_7_minus_6": -0.17362689971923828
+        },
+        "H3": {
+          "logit6": 63.35657501220703,
+          "logit7": 38.11472702026367,
+          "margin_7_minus_6": -25.24184799194336
+        },
+        "final": {
+          "logit6": 55.653743743896484,
+          "logit7": 90.69683074951172,
+          "margin_7_minus_6": 35.043087005615234
+        }
+      },
+      "attention": {
+        "H0": {
+          "top_position": 10,
+          "top_token": 12,
+          "top_is_ans": true,
+          "max_token_attention_mass": 0.019842036068439484,
+          "ans_self_attention_mass": 0.9801541566848755
+        },
+        "H1": {
+          "top_position": 10,
+          "top_token": 12,
+          "top_is_ans": true,
+          "max_token_attention_mass": 5.7272060730799e-15,
+          "ans_self_attention_mass": 1.0
+        },
+        "H2": {
+          "top_position": 5,
+          "top_token": 7,
+          "top_is_ans": false,
+          "max_token_attention_mass": 0.9539821147918701,
+          "ans_self_attention_mass": 0.045983195304870605
+        },
+        "H3": {
+          "top_position": 5,
+          "top_token": 7,
+          "top_is_ans": false,
+          "max_token_attention_mass": 0.9763409495353699,
+          "ans_self_attention_mass": 3.1235940917140326e-11
+        }
+      }
+    },
+    {
+      "example_index": 8,
+      "nums": [
+        6,
+        5,
+        4,
+        3,
+        7
+      ],
+      "true_max": 7,
+      "model_pred": 7,
+      "component_logits_6_7": {
+        "residual": {
+          "logit6": 1.3907968997955322,
+          "logit7": 2.3102216720581055,
+          "margin_7_minus_6": 0.9194247722625732
+        },
+        "H0": {
+          "logit6": -14.909931182861328,
+          "logit7": 31.367773056030273,
+          "margin_7_minus_6": 46.27770233154297
+        },
+        "H1": {
+          "logit6": 1.8841228485107422,
+          "logit7": 15.169775009155273,
+          "margin_7_minus_6": 13.285652160644531
+        },
+        "H2": {
+          "logit6": 3.968596935272217,
+          "logit7": 3.78415584564209,
+          "margin_7_minus_6": -0.18444108963012695
+        },
+        "H3": {
+          "logit6": 63.27558898925781,
+          "logit7": 38.06911087036133,
+          "margin_7_minus_6": -25.206478118896484
+        },
+        "final": {
+          "logit6": 55.60917663574219,
+          "logit7": 90.7010498046875,
+          "margin_7_minus_6": 35.09187316894531
+        }
+      },
+      "attention": {
+        "H0": {
+          "top_position": 10,
+          "top_token": 12,
+          "top_is_ans": true,
+          "max_token_attention_mass": 0.01942485012114048,
+          "ans_self_attention_mass": 0.9805740714073181
+        },
+        "H1": {
+          "top_position": 10,
+          "top_token": 12,
+          "top_is_ans": true,
+          "max_token_attention_mass": 5.505426589467359e-15,
+          "ans_self_attention_mass": 1.0
+        },
+        "H2": {
+          "top_position": 9,
+          "top_token": 7,
+          "top_is_ans": false,
+          "max_token_attention_mass": 0.9547438621520996,
+          "ans_self_attention_mass": 0.04522651433944702
+        },
+        "H3": {
+          "top_position": 9,
+          "top_token": 7,
+          "top_is_ans": false,
+          "max_token_attention_mass": 0.9759564399719238,
+          "ans_self_attention_mass": 3.103524728875762e-11
+        }
+      }
+    },
+    {
+      "example_index": 9,
+      "nums": [
+        7,
+        7,
+        6,
+        5,
+        4
+      ],
+      "true_max": 7,
+      "model_pred": 7,
+      "component_logits_6_7": {
+        "residual": {
+          "logit6": 1.3907968997955322,
+          "logit7": 2.3102216720581055,
+          "margin_7_minus_6": 0.9194247722625732
+        },
+        "H0": {
+          "logit6": -14.528623580932617,
+          "logit7": 30.571548461914062,
+          "margin_7_minus_6": 45.10017395019531
+        },
+        "H1": {
+          "logit6": 1.8841224908828735,
+          "logit7": 15.169775009155273,
+          "margin_7_minus_6": 13.285652160644531
+        },
+        "H2": {
+          "logit6": 4.405213832855225,
+          "logit7": 4.207920551300049,
+          "margin_7_minus_6": -0.19729328155517578
+        },
+        "H3": {
+          "logit6": 61.00297927856445,
+          "logit7": 36.704105377197266,
+          "margin_7_minus_6": -24.298873901367188
+        },
+        "final": {
+          "logit6": 54.15448760986328,
+          "logit7": 88.96356201171875,
+          "margin_7_minus_6": 34.80907440185547
+        }
+      },
+      "attention": {
+        "H0": {
+          "top_position": 10,
+          "top_token": 12,
+          "top_is_ans": true,
+          "max_token_attention_mass": 0.038455769419670105,
+          "ans_self_attention_mass": 0.9615440368652344
+        },
+        "H1": {
+          "top_position": 10,
+          "top_token": 12,
+          "top_is_ans": true,
+          "max_token_attention_mass": 1.3088539448221845e-14,
+          "ans_self_attention_mass": 1.0
+        },
+        "H2": {
+          "top_position": 1,
+          "top_token": 7,
+          "top_is_ans": false,
+          "max_token_attention_mass": 0.9764621257781982,
+          "ans_self_attention_mass": 0.0235294122248888
+        },
+        "H3": {
+          "top_position": 1,
+          "top_token": 7,
+          "top_is_ans": false,
+          "max_token_attention_mass": 0.9879564046859741,
+          "ans_self_attention_mass": 1.5707742398451963e-11
+        }
+      }
+    }
+  ],
+  "avg_margin_7_minus_6_by_true_max": {
+    "6": {
+      "residual": 0.919424831867218,
+      "H0": 47.4827880859375,
+      "H1": 13.285652160644531,
+      "H2": 0.6398931741714478,
+      "H3": -101.03730773925781,
+      "final": -38.70952606201172
+    },
+    "7": {
+      "residual": 0.919424831867218,
+      "H0": 46.033485412597656,
+      "H1": 13.285652160644531,
+      "H2": -0.18228726089000702,
+      "H3": -24.66409683227539,
+      "final": 35.39217758178711
+    }
+  }
+}

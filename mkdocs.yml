@@ -1,0 +1,40 @@
+site_name: April 2026 Max of List Result Book
+site_description: Working notes and results for the April 2026 Mech Interp Puzzle.
+site_url: ""
+docs_dir: docs
+site_dir: site
+
+theme:
+  name: material
+  palette:
+    - scheme: default
+      primary: indigo
+      accent: teal
+  features:
+    - navigation.sections
+    - navigation.indexes
+    - content.code.copy
+    - content.tabs.link
+
+nav:
+  - Home: index.md
+  - Setup: setup.md
+  - First Part: first-part.md
+  - Experiments: experiments.md
+  - Daily Notes:
+      - 2026-06-29: 2026-06-29.md
+      - 2026-06-30: 2026-06-30.md
+      - 2026-07-02: 2026-07-02.md
+
+markdown_extensions:
+  - admonition
+  - attr_list
+  - md_in_html
+  - tables
+  - toc:
+      permalink: true
+  - pymdownx.details
+  - pymdownx.highlight
+  - pymdownx.superfences
+  - pymdownx.tasklist:
+      custom_checkbox: true

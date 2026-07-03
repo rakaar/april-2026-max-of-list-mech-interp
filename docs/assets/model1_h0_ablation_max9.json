@@ -1,0 +1,174 @@
+{
+  "description": "Full-space H0 ablation test. zero_H0_vector removes the H0 output vector from the final ANS residual before unembedding. zero_H0_logit9_only removes only H0's direct contribution to output digit 9.",
+  "groups": {
+    "all": {
+      "count": 100000,
+      "accuracy": {
+        "baseline": 1.0,
+        "zero_H0_vector": 0.36311,
+        "zero_H0_logit9_only": 0.32768
+      },
+      "correct": {
+        "baseline": 100000,
+        "zero_H0_vector": 36311,
+        "zero_H0_logit9_only": 32768
+      },
+      "prediction_distribution": {
+        "baseline": {
+          "0": 1,
+          "1": 31,
+          "2": 211,
+          "3": 781,
+          "4": 2101,
+          "5": 4651,
+          "6": 9031,
+          "7": 15961,
+          "8": 26281,
+          "9": 40951
+        },
+        "zero_H0_vector": {
+          "0": 26,
+          "1": 6,
+          "2": 211,
+          "3": 781,
+          "5": 2101,
+          "6": 13682,
+          "8": 83193
+        },
+        "zero_H0_logit9_only": {
+          "0": 1,
+          "1": 31,
+          "2": 211,
+          "3": 781,
+          "4": 2101,
+          "5": 4651,
+          "6": 9031,
+          "7": 15961,
+          "8": 40951,
+          "9": 26281
+        }
+      },
+      "avg_logit9_minus_logit8_margin": {
+        "baseline": -19.1608984375,
+        "H0_component": -10.9030351171875,
+        "zero_H0_vector": -8.25786044189453
+      }
+    },
+    "max8": {
+      "count": 26281,
+      "accuracy": {
+        "baseline": 1.0,
+        "zero_H0_vector": 1.0,
+        "zero_H0_logit9_only": 0.0
+      },
+      "correct": {
+        "baseline": 26281,
+        "zero_H0_vector": 26281,
+        "zero_H0_logit9_only": 0
+      },
+      "prediction_distribution": {
+        "baseline": {
+          "8": 26281
+        },
+        "zero_H0_vector": {
+          "8": 26281
+        },
+        "zero_H0_logit9_only": {
+          "9": 26281
+        }
+      },
+      "avg_logit9_minus_logit8_margin": {
+        "baseline": -27.085940918581866,
+        "H0_component": -26.41614352455196,
+        "zero_H0_vector": -0.6697957973756736
+      }
+    },
+    "max9": {
+      "count": 40951,
+      "accuracy": {
+        "baseline": 1.0,
+        "zero_H0_vector": 0.0,
+        "zero_H0_logit9_only": 0.0
+      },
+      "correct": {
+        "baseline": 40951,
+        "zero_H0_vector": 0,
+        "zero_H0_logit9_only": 0
+      },
+      "prediction_distribution": {
+        "baseline": {
+          "9": 40951
+        },
+        "zero_H0_vector": {
+          "8": 40951
+        },
+        "zero_H0_logit9_only": {
+          "8": 40951
+        }
+      },
+      "avg_logit9_minus_logit8_margin": {
+        "baseline": 18.133751026379088,
+        "H0_component": 19.285501555975433,
+        "zero_H0_vector": -1.151744117707939
+      }
+    },
+    "max9_contains8": {
+      "count": 14670,
+      "accuracy": {
+        "baseline": 1.0,
+        "zero_H0_vector": 0.0,
+        "zero_H0_logit9_only": 0.0
+      },
+      "correct": {
+        "baseline": 14670,
+        "zero_H0_vector": 0,
+        "zero_H0_logit9_only": 0
+      },
+      "prediction_distribution": {
+        "baseline": {
+          "9": 14670
+        },
+        "zero_H0_vector": {
+          "8": 14670
+        },
+        "zero_H0_logit9_only": {
+          "8": 14670
+        }
+      },
+      "avg_logit9_minus_logit8_margin": {
+        "baseline": 18.116568660931108,
+        "H0_component": 19.263502424431238,
+        "zero_H0_vector": -1.146926425343561
+      }
+    },
+    "max9_no8": {
+      "count": 26281,
+      "accuracy": {
+        "baseline": 1.0,
+        "zero_H0_vector": 0.0,
+        "zero_H0_logit9_only": 0.0
+      },
+      "correct": {
+        "baseline": 26281,
+        "zero_H0_vector": 0,
+        "zero_H0_logit9_only": 0
+      },
+      "prediction_distribution": {
+        "baseline": {
+          "9": 26281
+        },
+        "zero_H0_vector": {
+          "8": 26281
+        },
+        "zero_H0_logit9_only": {
+          "8": 26281
+        }
+      },
+      "avg_logit9_minus_logit8_margin": {
+        "baseline": 18.143342577500736,
+        "H0_component": 19.29778188102562,
+        "zero_H0_vector": -1.1544333465530885
+      }
+    }
+  }
+}

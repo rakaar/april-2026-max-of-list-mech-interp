@@ -1,0 +1,26 @@
+# Python / notebooks
+.venv/
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# MkDocs build and local server state
+site/
+.mkdocs*.log
+.mkdocs*.pid
+.mkdocs.port
+
+# Local tunnel/runtime files. Do not publish tunnel state or secrets.
+.ngrok*
+
+# Local Codex/session metadata
+.codex/
+codex_continue.md
+README_LOCAL.md
+
+# Environment files
+.env
+.env.*
