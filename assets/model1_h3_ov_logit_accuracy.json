@@ -1,0 +1,336 @@
+{
+  "n_inputs_all_numbers_ge_2": 32768,
+  "digit_argmax_accuracy": {
+    "H3 actual OV only": {
+      "accuracy": 0.064117431640625,
+      "correct": 2101,
+      "total": 32768
+    },
+    "H3 one-hot max OV only": {
+      "accuracy": 0.064117431640625,
+      "correct": 2101,
+      "total": 32768
+    },
+    "resid + H3 actual": {
+      "accuracy": 0.064117431640625,
+      "correct": 2101,
+      "total": 32768
+    },
+    "resid + H3 one-hot max": {
+      "accuracy": 0.064117431640625,
+      "correct": 2101,
+      "total": 32768
+    },
+    "full model actual": {
+      "accuracy": 1.0,
+      "correct": 32768,
+      "total": 32768
+    },
+    "full model with H3 one-hot max": {
+      "accuracy": 1.0,
+      "correct": 32768,
+      "total": 32768
+    }
+  },
+  "vocab_argmax_accuracy": {
+    "H3 actual OV only": {
+      "accuracy": 0.064117431640625,
+      "correct": 2101,
+      "total": 32768
+    },
+    "H3 one-hot max OV only": {
+      "accuracy": 0.064117431640625,
+      "correct": 2101,
+      "total": 32768
+    }
+  },
+  "h3_attention": {
+    "top_key_is_a_max_token_count": 32768,
+    "top_key_is_a_max_token_fraction": 1.0,
+    "max_token_attention_mass_mean": 0.9951678514480591,
+    "max_token_attention_mass_min": 0.9113041758537292,
+    "max_token_attention_mass_max": 1.0
+  },
+  "per_true_max_digit_accuracy": {
+    "H3 actual OV only": {
+      "2": 0.0,
+      "3": 0.0,
+      "4": 0.0,
+      "5": 0.0,
+      "6": 1.0,
+      "7": 0.0,
+      "8": 0.0,
+      "9": 0.0
+    },
+    "H3 one-hot max OV only": {
+      "2": 0.0,
+      "3": 0.0,
+      "4": 0.0,
+      "5": 0.0,
+      "6": 1.0,
+      "7": 0.0,
+      "8": 0.0,
+      "9": 0.0
+    },
+    "resid + H3 actual": {
+      "2": 0.0,
+      "3": 0.0,
+      "4": 0.0,
+      "5": 0.0,
+      "6": 1.0,
+      "7": 0.0,
+      "8": 0.0,
+      "9": 0.0
+    },
+    "resid + H3 one-hot max": {
+      "2": 0.0,
+      "3": 0.0,
+      "4": 0.0,
+      "5": 0.0,
+      "6": 1.0,
+      "7": 0.0,
+      "8": 0.0,
+      "9": 0.0
+    },
+    "full model actual": {
+      "2": 1.0,
+      "3": 1.0,
+      "4": 1.0,
+      "5": 1.0,
+      "6": 1.0,
+      "7": 1.0,
+      "8": 1.0,
+      "9": 1.0
+    },
+    "full model with H3 one-hot max": {
+      "2": 1.0,
+      "3": 1.0,
+      "4": 1.0,
+      "5": 1.0,
+      "6": 1.0,
+      "7": 1.0,
+      "8": 1.0,
+      "9": 1.0
+    }
+  },
+  "h3_onehot_digit_confusion_rows_true_cols_pred": [
+    [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      1,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      31,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      211,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      781,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      2101,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      4651,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      9031,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      15961,
+      0,
+      0,
+      0
+    ]
+  ],
+  "sample_examples": [
+    {
+      "nums": [
+        6,
+        8,
+        4,
+        7,
+        5
+      ],
+      "max": 8,
+      "max_token_position_used": 3,
+      "h3_max_attention_mass": 0.9988590478897095,
+      "h3_actual_pred": 6,
+      "h3_onehot_pred": 6,
+      "resid_h3_onehot_pred": 6,
+      "final_pred": 8
+    },
+    {
+      "nums": [
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "max": 6,
+      "max_token_position_used": 9,
+      "h3_max_attention_mass": 0.981717050075531,
+      "h3_actual_pred": 6,
+      "h3_onehot_pred": 6,
+      "resid_h3_onehot_pred": 6,
+      "final_pred": 6
+    },
+    {
+      "nums": [
+        9,
+        2,
+        3,
+        4,
+        5
+      ],
+      "max": 9,
+      "max_token_position_used": 1,
+      "h3_max_attention_mass": 1.0,
+      "h3_actual_pred": 6,
+      "h3_onehot_pred": 6,
+      "resid_h3_onehot_pred": 6,
+      "final_pred": 9
+    },
+    {
+      "nums": [
+        7,
+        7,
+        2,
+        3,
+        4
+      ],
+      "max": 7,
+      "max_token_position_used": 1,
+      "h3_max_attention_mass": 0.9999961853027344,
+      "h3_actual_pred": 6,
+      "h3_onehot_pred": 6,
+      "resid_h3_onehot_pred": 6,
+      "final_pred": 7
+    },
+    {
+      "nums": [
+        2,
+        2,
+        2,
+        2,
+        2
+      ],
+      "max": 2,
+      "max_token_position_used": 1,
+      "h3_max_attention_mass": 0.9972696304321289,
+      "h3_actual_pred": 0,
+      "h3_onehot_pred": 0,
+      "resid_h3_onehot_pred": 0,
+      "final_pred": 2
+    },
+    {
+      "nums": [
+        8,
+        9,
+        7,
+        6,
+        5
+      ],
+      "max": 9,
+      "max_token_position_used": 3,
+      "h3_max_attention_mass": 0.9948636889457703,
+      "h3_actual_pred": 6,
+      "h3_onehot_pred": 6,
+      "resid_h3_onehot_pred": 6,
+      "final_pred": 9
+    }
+  ]
+}

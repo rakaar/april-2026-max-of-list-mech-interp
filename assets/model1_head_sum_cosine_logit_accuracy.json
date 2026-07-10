@@ -1,0 +1,272 @@
+{
+  "description": "All 10^5 Model 1 inputs. raw_head_sum logits are head_sum @ W_U_numbers.T. norm_weighted_cosine predicts with ||W_U[d]|| * cosine(head_sum, W_U[d]), which removes only the common per-input ||head_sum|| factor. cosine_logits predicts with cosine(head_sum, W_U[d]), removing both the common head_sum norm and each digit unembedding row norm from the prediction score.",
+  "n_inputs_total": 100000,
+  "sequence_format": "[BOS] n0 [SEP] n1 [SEP] n2 [SEP] n3 [SEP] n4 [ANS]",
+  "counts_by_true_max": {
+    "0": 1,
+    "1": 31,
+    "2": 211,
+    "3": 781,
+    "4": 2101,
+    "5": 4651,
+    "6": 9031,
+    "7": 15961,
+    "8": 26281,
+    "9": 40951
+  },
+  "raw_norm_weighted_prediction_mismatches": 0,
+  "rows": [
+    {
+      "true_max": 0,
+      "count": 1,
+      "raw_head_sum": {
+        "correct": 1,
+        "accuracy": 1.0,
+        "prediction_distribution": {
+          "0": 1
+        }
+      },
+      "norm_weighted_cosine": {
+        "correct": 1,
+        "accuracy": 1.0,
+        "prediction_distribution": {
+          "0": 1
+        }
+      },
+      "cosine_logits": {
+        "correct": 0,
+        "accuracy": 0.0,
+        "prediction_distribution": {
+          "1": 1
+        }
+      }
+    },
+    {
+      "true_max": 1,
+      "count": 31,
+      "raw_head_sum": {
+        "correct": 31,
+        "accuracy": 1.0,
+        "prediction_distribution": {
+          "1": 31
+        }
+      },
+      "norm_weighted_cosine": {
+        "correct": 31,
+        "accuracy": 1.0,
+        "prediction_distribution": {
+          "1": 31
+        }
+      },
+      "cosine_logits": {
+        "correct": 0,
+        "accuracy": 0.0,
+        "prediction_distribution": {
+          "2": 31
+        }
+      }
+    },
+    {
+      "true_max": 2,
+      "count": 211,
+      "raw_head_sum": {
+        "correct": 211,
+        "accuracy": 1.0,
+        "prediction_distribution": {
+          "2": 211
+        }
+      },
+      "norm_weighted_cosine": {
+        "correct": 211,
+        "accuracy": 1.0,
+        "prediction_distribution": {
+          "2": 211
+        }
+      },
+      "cosine_logits": {
+        "correct": 80,
+        "accuracy": 0.379146933555603,
+        "prediction_distribution": {
+          "2": 80,
+          "3": 131
+        }
+      }
+    },
+    {
+      "true_max": 3,
+      "count": 781,
+      "raw_head_sum": {
+        "correct": 781,
+        "accuracy": 1.0,
+        "prediction_distribution": {
+          "3": 781
+        }
+      },
+      "norm_weighted_cosine": {
+        "correct": 781,
+        "accuracy": 1.0,
+        "prediction_distribution": {
+          "3": 781
+        }
+      },
+      "cosine_logits": {
+        "correct": 781,
+        "accuracy": 1.0,
+        "prediction_distribution": {
+          "3": 781
+        }
+      }
+    },
+    {
+      "true_max": 4,
+      "count": 2101,
+      "raw_head_sum": {
+        "correct": 2101,
+        "accuracy": 1.0,
+        "prediction_distribution": {
+          "4": 2101
+        }
+      },
+      "norm_weighted_cosine": {
+        "correct": 2101,
+        "accuracy": 1.0,
+        "prediction_distribution": {
+          "4": 2101
+        }
+      },
+      "cosine_logits": {
+        "correct": 2101,
+        "accuracy": 1.0,
+        "prediction_distribution": {
+          "4": 2101
+        }
+      }
+    },
+    {
+      "true_max": 5,
+      "count": 4651,
+      "raw_head_sum": {
+        "correct": 4651,
+        "accuracy": 1.0,
+        "prediction_distribution": {
+          "5": 4651
+        }
+      },
+      "norm_weighted_cosine": {
+        "correct": 4651,
+        "accuracy": 1.0,
+        "prediction_distribution": {
+          "5": 4651
+        }
+      },
+      "cosine_logits": {
+        "correct": 4651,
+        "accuracy": 1.0,
+        "prediction_distribution": {
+          "5": 4651
+        }
+      }
+    },
+    {
+      "true_max": 6,
+      "count": 9031,
+      "raw_head_sum": {
+        "correct": 9031,
+        "accuracy": 1.0,
+        "prediction_distribution": {
+          "6": 9031
+        }
+      },
+      "norm_weighted_cosine": {
+        "correct": 9031,
+        "accuracy": 1.0,
+        "prediction_distribution": {
+          "6": 9031
+        }
+      },
+      "cosine_logits": {
+        "correct": 0,
+        "accuracy": 0.0,
+        "prediction_distribution": {
+          "5": 9031
+        }
+      }
+    },
+    {
+      "true_max": 7,
+      "count": 15961,
+      "raw_head_sum": {
+        "correct": 15961,
+        "accuracy": 1.0,
+        "prediction_distribution": {
+          "7": 15961
+        }
+      },
+      "norm_weighted_cosine": {
+        "correct": 15961,
+        "accuracy": 1.0,
+        "prediction_distribution": {
+          "7": 15961
+        }
+      },
+      "cosine_logits": {
+        "correct": 10426,
+        "accuracy": 0.6532171964645386,
+        "prediction_distribution": {
+          "5": 5535,
+          "7": 10426
+        }
+      }
+    },
+    {
+      "true_max": 8,
+      "count": 26281,
+      "raw_head_sum": {
+        "correct": 26281,
+        "accuracy": 1.0,
+        "prediction_distribution": {
+          "8": 26281
+        }
+      },
+      "norm_weighted_cosine": {
+        "correct": 26281,
+        "accuracy": 1.0,
+        "prediction_distribution": {
+          "8": 26281
+        }
+      },
+      "cosine_logits": {
+        "correct": 26281,
+        "accuracy": 1.0,
+        "prediction_distribution": {
+          "8": 26281
+        }
+      }
+    },
+    {
+      "true_max": 9,
+      "count": 40951,
+      "raw_head_sum": {
+        "correct": 40951,
+        "accuracy": 1.0,
+        "prediction_distribution": {
+          "9": 40951
+        }
+      },
+      "norm_weighted_cosine": {
+        "correct": 40951,
+        "accuracy": 1.0,
+        "prediction_distribution": {
+          "9": 40951
+        }
+      },
+      "cosine_logits": {
+        "correct": 40951,
+        "accuracy": 1.0,
+        "prediction_distribution": {
+          "9": 40951
+        }
+      }
+    }
+  ]
+}

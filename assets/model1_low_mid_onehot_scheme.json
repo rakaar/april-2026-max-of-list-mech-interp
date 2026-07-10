@@ -1,0 +1,55 @@
+{
+  "scope": "all 5-number inputs with every number in 2..6, equivalently true max in 2..6",
+  "n_inputs": 3125,
+  "actual_accuracy": {
+    "accuracy": 1.0,
+    "correct": 3125,
+    "total": 3125
+  },
+  "onehot_scheme": "H0/H1/H2 one-hot to ANS self; H3 one-hot to a max-valued number position",
+  "onehot_accuracy": {
+    "accuracy": 1.0,
+    "correct": 3125,
+    "total": 3125
+  },
+  "max_abs_digit_logit_diff_actual_vs_onehot": 9.156005859375,
+  "top_key_rates": {
+    "H0_top_is_ANS": 1.0,
+    "H1_top_is_ANS": 1.0,
+    "H2_top_is_ANS": 1.0,
+    "H3_top_is_max": 1.0
+  },
+  "avg_attention_mass": {
+    "H0_ANS": 0.9999961083984376,
+    "H1_ANS": 1.0,
+    "H2_ANS": 0.9991289892578125,
+    "H3_max": 0.9856374963378907
+  },
+  "accuracy_by_true_max": {
+    "2": {
+      "count": 1,
+      "actual_accuracy": 1.0,
+      "onehot_accuracy": 1.0
+    },
+    "3": {
+      "count": 31,
+      "actual_accuracy": 1.0,
+      "onehot_accuracy": 1.0
+    },
+    "4": {
+      "count": 211,
+      "actual_accuracy": 1.0,
+      "onehot_accuracy": 1.0
+    },
+    "5": {
+      "count": 781,
+      "actual_accuracy": 1.0,
+      "onehot_accuracy": 1.0
+    },
+    "6": {
+      "count": 2101,
+      "actual_accuracy": 1.0,
+      "onehot_accuracy": 1.0
+    }
+  }
+}

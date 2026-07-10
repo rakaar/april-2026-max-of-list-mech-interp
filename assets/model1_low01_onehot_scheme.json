@@ -1,0 +1,211 @@
+{
+  "scope": "all inputs whose numbers are only 0 or 1",
+  "n_inputs": 32,
+  "scheme": {
+    "true_max_0": "H0 -> ANS, H1 -> ANS, H2 -> ANS, H3 -> ANS",
+    "true_max_1": "H0 -> ANS, H1 -> ANS, H2 -> ANS, H3 -> ANS"
+  },
+  "condition_accuracy": {
+    "actual": {
+      "accuracy": 1.0,
+      "correct": 32,
+      "total": 32
+    },
+    "H0_H1_H2_ANS_onehot_H3_actual": {
+      "accuracy": 1.0,
+      "correct": 32,
+      "total": 32
+    },
+    "H3_top_onehot_others_actual": {
+      "accuracy": 0.03125,
+      "correct": 1,
+      "total": 32
+    },
+    "all_heads_ans_onehot": {
+      "accuracy": 0.03125,
+      "correct": 1,
+      "total": 32
+    },
+    "all_heads_top_onehot": {
+      "accuracy": 0.03125,
+      "correct": 1,
+      "total": 32
+    },
+    "h3_max_others_ans_onehot": {
+      "accuracy": 0.0,
+      "correct": 0,
+      "total": 32
+    },
+    "all_heads_max_onehot": {
+      "accuracy": 0.03125,
+      "correct": 1,
+      "total": 32
+    }
+  },
+  "condition_accuracy_by_true_max": {
+    "actual": {
+      "0": {
+        "accuracy": 1.0,
+        "correct": 1,
+        "total": 1
+      },
+      "1": {
+        "accuracy": 1.0,
+        "correct": 31,
+        "total": 31
+      }
+    },
+    "H0_H1_H2_ANS_onehot_H3_actual": {
+      "0": {
+        "accuracy": 1.0,
+        "correct": 1,
+        "total": 1
+      },
+      "1": {
+        "accuracy": 1.0,
+        "correct": 31,
+        "total": 31
+      }
+    },
+    "H3_top_onehot_others_actual": {
+      "0": {
+        "accuracy": 1.0,
+        "correct": 1,
+        "total": 1
+      },
+      "1": {
+        "accuracy": 0.0,
+        "correct": 0,
+        "total": 31
+      }
+    },
+    "all_heads_ans_onehot": {
+      "0": {
+        "accuracy": 1.0,
+        "correct": 1,
+        "total": 1
+      },
+      "1": {
+        "accuracy": 0.0,
+        "correct": 0,
+        "total": 31
+      }
+    },
+    "all_heads_top_onehot": {
+      "0": {
+        "accuracy": 1.0,
+        "correct": 1,
+        "total": 1
+      },
+      "1": {
+        "accuracy": 0.0,
+        "correct": 0,
+        "total": 31
+      }
+    },
+    "h3_max_others_ans_onehot": {
+      "0": {
+        "accuracy": 0.0,
+        "correct": 0,
+        "total": 1
+      },
+      "1": {
+        "accuracy": 0.0,
+        "correct": 0,
+        "total": 31
+      }
+    },
+    "all_heads_max_onehot": {
+      "0": {
+        "accuracy": 1.0,
+        "correct": 1,
+        "total": 1
+      },
+      "1": {
+        "accuracy": 0.0,
+        "correct": 0,
+        "total": 31
+      }
+    }
+  },
+  "top_key_rates": {
+    "H0_top_is_ANS": {
+      "0": 1.0,
+      "1": 1.0
+    },
+    "H1_top_is_ANS": {
+      "0": 1.0,
+      "1": 1.0
+    },
+    "H2_top_is_ANS": {
+      "0": 1.0,
+      "1": 1.0
+    },
+    "H3_top_is_ANS": {
+      "0": 1.0,
+      "1": 1.0
+    },
+    "H0_top_is_max": {
+      "0": 0.0,
+      "1": 0.0
+    },
+    "H1_top_is_max": {
+      "0": 0.0,
+      "1": 0.0
+    },
+    "H2_top_is_max": {
+      "0": 0.0,
+      "1": 0.0
+    },
+    "H3_top_is_max": {
+      "0": 0.0,
+      "1": 0.0
+    }
+  },
+  "avg_attention_mass": {
+    "H0_ANS": {
+      "0": 1.0,
+      "1": 0.9999997019767761
+    },
+    "H0_max": {
+      "0": 2.501501783491733e-10,
+      "1": 2.824236844389816e-07
+    },
+    "H1_ANS": {
+      "0": 1.0,
+      "1": 1.0
+    },
+    "H1_max": {
+      "0": 5.046530684657546e-13,
+      "1": 1.0361402708047862e-11
+    },
+    "H2_ANS": {
+      "0": 1.0,
+      "1": 0.9999821782112122
+    },
+    "H2_max": {
+      "0": 2.1471507238857157e-08,
+      "1": 1.784772211976815e-05
+    },
+    "H3_ANS": {
+      "0": 0.9983012080192566,
+      "1": 0.4153755009174347
+    },
+    "H3_max": {
+      "0": 0.0003635014872997999,
+      "1": 0.5839877724647522
+    }
+  },
+  "max_abs_digit_logit_diff_vs_actual": {
+    "H0_H1_H2_ANS_onehot_H3_actual": 0.002227783203125,
+    "H3_top_onehot_others_actual": 200.61094665527344,
+    "all_heads_ans_onehot": 200.61256408691406,
+    "all_heads_top_onehot": 200.61256408691406,
+    "h3_max_others_ans_onehot": 281.10040283203125,
+    "all_heads_max_onehot": 344.7628479003906
+  },
+  "counts_by_true_max": {
+    "0": 1,
+    "1": 31
+  }
+}

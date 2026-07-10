@@ -1,0 +1,315 @@
+{
+  "scope": "all 10^5 possible inputs",
+  "n_inputs": 100000,
+  "condition_accuracy": {
+    "actual": {
+      "accuracy": 1.0,
+      "correct": 100000,
+      "total": 100000
+    },
+    "complete_piecewise_with_H3_soft_for_max1": {
+      "accuracy": 1.0,
+      "correct": 100000,
+      "total": 100000
+    },
+    "pure_onehot_piecewise_H3_to_ANS_for_max1": {
+      "accuracy": 0.99969,
+      "correct": 99969,
+      "total": 100000
+    },
+    "pure_onehot_piecewise_H3_to_max_for_max1": {
+      "accuracy": 0.99969,
+      "correct": 99969,
+      "total": 100000
+    }
+  },
+  "condition_accuracy_by_true_max": {
+    "actual": {
+      "0": {
+        "accuracy": 1.0,
+        "correct": 1,
+        "total": 1
+      },
+      "1": {
+        "accuracy": 1.0,
+        "correct": 31,
+        "total": 31
+      },
+      "2": {
+        "accuracy": 1.0,
+        "correct": 211,
+        "total": 211
+      },
+      "3": {
+        "accuracy": 1.0,
+        "correct": 781,
+        "total": 781
+      },
+      "4": {
+        "accuracy": 1.0,
+        "correct": 2101,
+        "total": 2101
+      },
+      "5": {
+        "accuracy": 1.0,
+        "correct": 4651,
+        "total": 4651
+      },
+      "6": {
+        "accuracy": 1.0,
+        "correct": 9031,
+        "total": 9031
+      },
+      "7": {
+        "accuracy": 1.0,
+        "correct": 15961,
+        "total": 15961
+      },
+      "8": {
+        "accuracy": 1.0,
+        "correct": 26281,
+        "total": 26281
+      },
+      "9": {
+        "accuracy": 1.0,
+        "correct": 40951,
+        "total": 40951
+      }
+    },
+    "complete_piecewise_with_H3_soft_for_max1": {
+      "0": {
+        "accuracy": 1.0,
+        "correct": 1,
+        "total": 1
+      },
+      "1": {
+        "accuracy": 1.0,
+        "correct": 31,
+        "total": 31
+      },
+      "2": {
+        "accuracy": 1.0,
+        "correct": 211,
+        "total": 211
+      },
+      "3": {
+        "accuracy": 1.0,
+        "correct": 781,
+        "total": 781
+      },
+      "4": {
+        "accuracy": 1.0,
+        "correct": 2101,
+        "total": 2101
+      },
+      "5": {
+        "accuracy": 1.0,
+        "correct": 4651,
+        "total": 4651
+      },
+      "6": {
+        "accuracy": 1.0,
+        "correct": 9031,
+        "total": 9031
+      },
+      "7": {
+        "accuracy": 1.0,
+        "correct": 15961,
+        "total": 15961
+      },
+      "8": {
+        "accuracy": 1.0,
+        "correct": 26281,
+        "total": 26281
+      },
+      "9": {
+        "accuracy": 1.0,
+        "correct": 40951,
+        "total": 40951
+      }
+    },
+    "pure_onehot_piecewise_H3_to_ANS_for_max1": {
+      "0": {
+        "accuracy": 1.0,
+        "correct": 1,
+        "total": 1
+      },
+      "1": {
+        "accuracy": 0.0,
+        "correct": 0,
+        "total": 31
+      },
+      "2": {
+        "accuracy": 1.0,
+        "correct": 211,
+        "total": 211
+      },
+      "3": {
+        "accuracy": 1.0,
+        "correct": 781,
+        "total": 781
+      },
+      "4": {
+        "accuracy": 1.0,
+        "correct": 2101,
+        "total": 2101
+      },
+      "5": {
+        "accuracy": 1.0,
+        "correct": 4651,
+        "total": 4651
+      },
+      "6": {
+        "accuracy": 1.0,
+        "correct": 9031,
+        "total": 9031
+      },
+      "7": {
+        "accuracy": 1.0,
+        "correct": 15961,
+        "total": 15961
+      },
+      "8": {
+        "accuracy": 1.0,
+        "correct": 26281,
+        "total": 26281
+      },
+      "9": {
+        "accuracy": 1.0,
+        "correct": 40951,
+        "total": 40951
+      }
+    },
+    "pure_onehot_piecewise_H3_to_max_for_max1": {
+      "0": {
+        "accuracy": 1.0,
+        "correct": 1,
+        "total": 1
+      },
+      "1": {
+        "accuracy": 0.0,
+        "correct": 0,
+        "total": 31
+      },
+      "2": {
+        "accuracy": 1.0,
+        "correct": 211,
+        "total": 211
+      },
+      "3": {
+        "accuracy": 1.0,
+        "correct": 781,
+        "total": 781
+      },
+      "4": {
+        "accuracy": 1.0,
+        "correct": 2101,
+        "total": 2101
+      },
+      "5": {
+        "accuracy": 1.0,
+        "correct": 4651,
+        "total": 4651
+      },
+      "6": {
+        "accuracy": 1.0,
+        "correct": 9031,
+        "total": 9031
+      },
+      "7": {
+        "accuracy": 1.0,
+        "correct": 15961,
+        "total": 15961
+      },
+      "8": {
+        "accuracy": 1.0,
+        "correct": 26281,
+        "total": 26281
+      },
+      "9": {
+        "accuracy": 1.0,
+        "correct": 40951,
+        "total": 40951
+      }
+    }
+  },
+  "max_abs_digit_logit_diff_vs_actual": {
+    "complete_piecewise_with_H3_soft_for_max1": 41.35242462158203,
+    "pure_onehot_piecewise_H3_to_ANS_for_max1": 200.61253356933594,
+    "pure_onehot_piecewise_H3_to_max_for_max1": 166.22637939453125
+  },
+  "counts_by_true_max": {
+    "0": 1,
+    "1": 31,
+    "2": 211,
+    "3": 781,
+    "4": 2101,
+    "5": 4651,
+    "6": 9031,
+    "7": 15961,
+    "8": 26281,
+    "9": 40951
+  },
+  "attention_abstraction_table": {
+    "0": {
+      "H0": "ANS",
+      "H1": "ANS",
+      "H2": "ANS",
+      "H3": "ANS"
+    },
+    "1": {
+      "H0": "ANS",
+      "H1": "ANS",
+      "H2": "ANS",
+      "H3": "actual soft: ANS + max-1 positions"
+    },
+    "2": {
+      "H0": "ANS",
+      "H1": "ANS",
+      "H2": "ANS",
+      "H3": "max token"
+    },
+    "3": {
+      "H0": "ANS",
+      "H1": "ANS",
+      "H2": "ANS",
+      "H3": "max token"
+    },
+    "4": {
+      "H0": "ANS",
+      "H1": "ANS",
+      "H2": "ANS",
+      "H3": "max token"
+    },
+    "5": {
+      "H0": "ANS",
+      "H1": "ANS",
+      "H2": "ANS",
+      "H3": "max token"
+    },
+    "6": {
+      "H0": "ANS",
+      "H1": "ANS",
+      "H2": "ANS",
+      "H3": "max token"
+    },
+    "7": {
+      "H0": "ANS",
+      "H1": "ANS",
+      "H2": "max token",
+      "H3": "max token"
+    },
+    "8": {
+      "H0": "ANS",
+      "H1": "ANS",
+      "H2": "max token",
+      "H3": "max token"
+    },
+    "9": {
+      "H0": "max token",
+      "H1": "ANS",
+      "H2": "max token",
+      "H3": "max token"
+    }
+  }
+}
