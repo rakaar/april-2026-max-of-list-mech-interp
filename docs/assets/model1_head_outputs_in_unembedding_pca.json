@@ -1,0 +1,3495 @@
+{
+  "description": "Actual layer-0 ANS-position outputs H0..H3 after each head's W_O slice, plus their sum, projected without mean subtraction into the top three principal directions of either the centered 14-token unembedding or the centered digit-only unembedding.",
+  "hf_repo": "andyrdt/04_2026_puzzle_1a",
+  "model_config": {
+    "vocab_size": 14,
+    "d_model": 64,
+    "n_heads": 4,
+    "n_layers": 1,
+    "max_seq_len": 12
+  },
+  "seed": 0,
+  "selected_maxima": [
+    1,
+    3,
+    5,
+    7,
+    9
+  ],
+  "component_shape": [
+    5,
+    5,
+    64
+  ],
+  "projection_note": "Head writes are vectors from the residual-stream origin, so coordinates are h @ PC.T; the unembedding PCA mean is not subtracted from h.",
+  "basis_metadata": {
+    "full_vocabulary": {
+      "token_vector_shape": [
+        14,
+        64
+      ],
+      "centered_rank": 13,
+      "top3_explained_variance": [
+        0.6201301217079163,
+        0.2535959482192993,
+        0.06662551313638687
+      ],
+      "top3_cumulative_explained_variance": 0.9403516054153442
+    },
+    "digits_only": {
+      "token_vector_shape": [
+        10,
+        64
+      ],
+      "centered_rank": 9,
+      "top3_explained_variance": [
+        0.6946895122528076,
+        0.17044708132743835,
+        0.08746802061796188
+      ],
+      "top3_cumulative_explained_variance": 0.9526046514511108
+    }
+  },
+  "metric_definitions": {
+    "top3_total_vector_energy_fraction": "||h P3^T||^2 / ||h||^2",
+    "top3_centered_unembedding_span_energy_fraction": "||h P3^T||^2 / ||h Prank^T||^2",
+    "top3_centered_logit_effect_energy_fraction": "||top3 reconstruction of h @ centered_W_U^T||^2 / ||h @ centered_W_U^T||^2"
+  },
+  "samples": [
+    {
+      "numbers": [
+        1,
+        0,
+        0,
+        1,
+        1
+      ],
+      "true_max": 1,
+      "tokens": [
+        10,
+        1,
+        11,
+        0,
+        11,
+        0,
+        11,
+        1,
+        11,
+        1,
+        12
+      ],
+      "baseline_head_sum_prediction": 1,
+      "bases": {
+        "full_vocabulary": {
+          "top3_direct_low_dim_prediction": 1,
+          "top3_direct_low_dim_logits": [
+            150.36338806152344,
+            171.66163635253906,
+            152.66647338867188,
+            105.18624114990234,
+            32.944644927978516,
+            -56.859031677246094,
+            -160.65728759765625,
+            -64.26437377929688,
+            -160.64471435546875,
+            -229.33267211914062,
+            84.14997100830078,
+            82.01923370361328,
+            86.4503402709961,
+            -193.68385314941406
+          ],
+          "components": {
+            "H0": {
+              "pc_coordinates": [
+                28.328224182128906,
+                -71.15835571289062,
+                -16.210988998413086
+              ],
+              "vector_norm": 79.30077362060547,
+              "top3_total_vector_energy_fraction": 0.9745864868164062,
+              "top3_centered_unembedding_span_energy_fraction": 0.9846797585487366,
+              "top3_centered_logit_effect_energy_fraction": 0.999558687210083
+            },
+            "H1": {
+              "pc_coordinates": [
+                -0.119713693857193,
+                -23.11475372314453,
+                -6.037517547607422
+              ],
+              "vector_norm": 24.62839126586914,
+              "top3_total_vector_energy_fraction": 0.9409786462783813,
+              "top3_centered_unembedding_span_energy_fraction": 0.9764999151229858,
+              "top3_centered_logit_effect_energy_fraction": 0.9987481236457825
+            },
+            "H2": {
+              "pc_coordinates": [
+                58.20130920410156,
+                -57.35062789916992,
+                32.90113830566406
+              ],
+              "vector_norm": 89.18354797363281,
+              "top3_total_vector_energy_fraction": 0.9755165576934814,
+              "top3_centered_unembedding_span_energy_fraction": 0.9822962284088135,
+              "top3_centered_logit_effect_energy_fraction": 0.9994053244590759
+            },
+            "H3": {
+              "pc_coordinates": [
+                109.95362854003906,
+                13.907169342041016,
+                -12.162557601928711
+              ],
+              "vector_norm": 113.21007537841797,
+              "top3_total_vector_energy_fraction": 0.9699307084083557,
+              "top3_centered_unembedding_span_energy_fraction": 0.9895763993263245,
+              "top3_centered_logit_effect_energy_fraction": 0.999754786491394
+            },
+            "sum": {
+              "pc_coordinates": [
+                196.36343383789062,
+                -137.716552734375,
+                -1.5099334716796875
+              ],
+              "vector_norm": 241.28546142578125,
+              "top3_total_vector_energy_fraction": 0.9881146550178528,
+              "top3_centered_unembedding_span_energy_fraction": 0.9948838353157043,
+              "top3_centered_logit_effect_energy_fraction": 0.999872624874115
+            }
+          }
+        },
+        "digits_only": {
+          "top3_direct_low_dim_prediction": 1,
+          "top3_direct_low_dim_logits": [
+            155.96273803710938,
+            175.66812133789062,
+            160.5738983154297,
+            111.94535827636719,
+            40.33940124511719,
+            -50.99196243286133,
+            -156.63433837890625,
+            -58.887298583984375,
+            -155.55262756347656,
+            -222.42324829101562
+          ],
+          "components": {
+            "H0": {
+              "pc_coordinates": [
+                28.292369842529297,
+                -67.72354888916016,
+                23.732032775878906
+              ],
+              "vector_norm": 79.30077362060547,
+              "top3_total_vector_energy_fraction": 0.9461779594421387,
+              "top3_centered_unembedding_span_energy_fraction": 0.9739009141921997,
+              "top3_centered_logit_effect_energy_fraction": 0.9989996552467346
+            },
+            "H1": {
+              "pc_coordinates": [
+                -0.16831976175308228,
+                -20.647682189941406,
+                8.117725372314453
+              ],
+              "vector_norm": 24.62839126586914,
+              "top3_total_vector_energy_fraction": 0.8115510940551758,
+              "top3_centered_unembedding_span_energy_fraction": 0.9687484502792358,
+              "top3_centered_logit_effect_energy_fraction": 0.9989020824432373
+            },
+            "H2": {
+              "pc_coordinates": [
+                57.80217742919922,
+                -58.233951568603516,
+                -27.441701889038086
+              ],
+              "vector_norm": 89.18354797363281,
+              "top3_total_vector_energy_fraction": 0.9411125183105469,
+              "top3_centered_unembedding_span_energy_fraction": 0.9743942022323608,
+              "top3_centered_logit_effect_energy_fraction": 0.9992627501487732
+            },
+            "H3": {
+              "pc_coordinates": [
+                110.22041320800781,
+                13.319005966186523,
+                10.150495529174805
+              ],
+              "vector_norm": 113.21007537841797,
+              "top3_total_vector_energy_fraction": 0.969761312007904,
+              "top3_centered_unembedding_span_energy_fraction": 0.991470217704773,
+              "top3_centered_logit_effect_energy_fraction": 0.9998091459274292
+            },
+            "sum": {
+              "pc_coordinates": [
+                196.1466522216797,
+                -133.2861785888672,
+                14.558557510375977
+              ],
+              "vector_norm": 241.28546142578125,
+              "top3_total_vector_energy_fraction": 0.969631552696228,
+              "top3_centered_unembedding_span_energy_fraction": 0.9907441139221191,
+              "top3_centered_logit_effect_energy_fraction": 0.9998506903648376
+            }
+          }
+        }
+      }
+    },
+    {
+      "numbers": [
+        3,
+        0,
+        1,
+        2,
+        1
+      ],
+      "true_max": 3,
+      "tokens": [
+        10,
+        3,
+        11,
+        0,
+        11,
+        1,
+        11,
+        2,
+        11,
+        1,
+        12
+      ],
+      "baseline_head_sum_prediction": 3,
+      "bases": {
+        "full_vocabulary": {
+          "top3_direct_low_dim_prediction": 3,
+          "top3_direct_low_dim_logits": [
+            -24.908489227294922,
+            40.643985748291016,
+            75.3441162109375,
+            88.65333557128906,
+            75.15251159667969,
+            36.37736511230469,
+            -24.937620162963867,
+            22.470821380615234,
+            -33.083492279052734,
+            -102.75926971435547,
+            5.4572367668151855,
+            4.925786972045898,
+            7.059485912322998,
+            -170.395751953125
+          ],
+          "components": {
+            "H0": {
+              "pc_coordinates": [
+                28.32811737060547,
+                -71.1580810546875,
+                -16.210926055908203
+              ],
+              "vector_norm": 79.30046844482422,
+              "top3_total_vector_energy_fraction": 0.9745863676071167,
+              "top3_centered_unembedding_span_energy_fraction": 0.9846796989440918,
+              "top3_centered_logit_effect_energy_fraction": 0.999558687210083
+            },
+            "H1": {
+              "pc_coordinates": [
+                -0.119713693857193,
+                -23.11475372314453,
+                -6.037517547607422
+              ],
+              "vector_norm": 24.62839126586914,
+              "top3_total_vector_energy_fraction": 0.9409786462783813,
+              "top3_centered_unembedding_span_energy_fraction": 0.9764999151229858,
+              "top3_centered_logit_effect_energy_fraction": 0.9987481236457825
+            },
+            "H2": {
+              "pc_coordinates": [
+                58.16795349121094,
+                -57.31779098510742,
+                32.88230895996094
+              ],
+              "vector_norm": 89.1324691772461,
+              "top3_total_vector_energy_fraction": 0.9755166172981262,
+              "top3_centered_unembedding_span_energy_fraction": 0.9822966456413269,
+              "top3_centered_logit_effect_energy_fraction": 0.9994053244590759
+            },
+            "H3": {
+              "pc_coordinates": [
+                -48.97886276245117,
+                -6.279705047607422,
+                5.572627544403076
+              ],
+              "vector_norm": 50.43022537231445,
+              "top3_total_vector_energy_fraction": 0.9709856510162354,
+              "top3_centered_unembedding_span_energy_fraction": 0.9901395440101624,
+              "top3_centered_logit_effect_energy_fraction": 0.9997754096984863
+            },
+            "sum": {
+              "pc_coordinates": [
+                37.397483825683594,
+                -157.87033081054688,
+                16.206493377685547
+              ],
+              "vector_norm": 164.48609924316406,
+              "top3_total_vector_energy_fraction": 0.982576310634613,
+              "top3_centered_unembedding_span_energy_fraction": 0.9942583441734314,
+              "top3_centered_logit_effect_energy_fraction": 0.9998589754104614
+            }
+          }
+        },
+        "digits_only": {
+          "top3_direct_low_dim_prediction": 3,
+          "top3_direct_low_dim_logits": [
+            -39.66393280029297,
+            23.17762565612793,
+            61.44770050048828,
+            73.33012390136719,
+            60.66800308227539,
+            20.8198299407959,
+            -41.37895965576172,
+            6.243246555328369,
+            -48.88738250732422,
+            -115.75621795654297
+          ],
+          "components": {
+            "H0": {
+              "pc_coordinates": [
+                28.29226303100586,
+                -67.72329711914062,
+                23.731943130493164
+              ],
+              "vector_norm": 79.30046844482422,
+              "top3_total_vector_energy_fraction": 0.946178138256073,
+              "top3_centered_unembedding_span_energy_fraction": 0.9739007949829102,
+              "top3_centered_logit_effect_energy_fraction": 0.9989996552467346
+            },
+            "H1": {
+              "pc_coordinates": [
+                -0.16831976175308228,
+                -20.647682189941406,
+                8.117725372314453
+              ],
+              "vector_norm": 24.62839126586914,
+              "top3_total_vector_energy_fraction": 0.8115510940551758,
+              "top3_centered_unembedding_span_energy_fraction": 0.9687484502792358,
+              "top3_centered_logit_effect_energy_fraction": 0.9989020824432373
+            },
+            "H2": {
+              "pc_coordinates": [
+                57.76905059814453,
+                -58.20061492919922,
+                -27.425994873046875
+              ],
+              "vector_norm": 89.1324691772461,
+              "top3_total_vector_energy_fraction": 0.9411125779151917,
+              "top3_centered_unembedding_span_energy_fraction": 0.9743945002555847,
+              "top3_centered_logit_effect_energy_fraction": 0.9992631673812866
+            },
+            "H3": {
+              "pc_coordinates": [
+                -49.094703674316406,
+                -6.133098125457764,
+                -4.631369590759277
+              ],
+              "vector_norm": 50.43022537231445,
+              "top3_total_vector_energy_fraction": 0.9709606766700745,
+              "top3_centered_unembedding_span_energy_fraction": 0.9916952252388,
+              "top3_centered_logit_effect_energy_fraction": 0.9998089671134949
+            },
+            "sum": {
+              "pc_coordinates": [
+                36.79827880859375,
+                -152.70468139648438,
+                -0.20769500732421875
+              ],
+              "vector_norm": 164.48609924316406,
+              "top3_total_vector_energy_fraction": 0.9119297862052917,
+              "top3_centered_unembedding_span_energy_fraction": 0.9697458744049072,
+              "top3_centered_logit_effect_energy_fraction": 0.9989604949951172
+            }
+          }
+        }
+      }
+    },
+    {
+      "numbers": [
+        2,
+        5,
+        1,
+        3,
+        4
+      ],
+      "true_max": 5,
+      "tokens": [
+        10,
+        2,
+        11,
+        5,
+        11,
+        1,
+        11,
+        3,
+        11,
+        4,
+        12
+      ],
+      "baseline_head_sum_prediction": 5,
+      "bases": {
+        "full_vocabulary": {
+          "top3_direct_low_dim_prediction": 5,
+          "top3_direct_low_dim_logits": [
+            -202.03575134277344,
+            -91.7636947631836,
+            -2.801522731781006,
+            71.9402084350586,
+            117.80242919921875,
+            130.59873962402344,
+            112.21883392333984,
+            110.126708984375,
+            95.83238983154297,
+            25.16131591796875,
+            -74.0697021484375,
+            -72.98489379882812,
+            -73.17304229736328,
+            -146.85198974609375
+          ],
+          "components": {
+            "H0": {
+              "pc_coordinates": [
+                28.32811164855957,
+                -71.15806579589844,
+                -16.210922241210938
+              ],
+              "vector_norm": 79.30045318603516,
+              "top3_total_vector_energy_fraction": 0.9745862483978271,
+              "top3_centered_unembedding_span_energy_fraction": 0.984679639339447,
+              "top3_centered_logit_effect_energy_fraction": 0.999558687210083
+            },
+            "H1": {
+              "pc_coordinates": [
+                -0.119713693857193,
+                -23.11475372314453,
+                -6.037517547607422
+              ],
+              "vector_norm": 24.62839126586914,
+              "top3_total_vector_energy_fraction": 0.9409786462783813,
+              "top3_centered_unembedding_span_energy_fraction": 0.9764999151229858,
+              "top3_centered_logit_effect_energy_fraction": 0.9987481236457825
+            },
+            "H2": {
+              "pc_coordinates": [
+                58.13661575317383,
+                -57.2869873046875,
+                32.86463165283203
+              ],
+              "vector_norm": 89.08451843261719,
+              "top3_total_vector_energy_fraction": 0.9755163788795471,
+              "top3_centered_unembedding_span_energy_fraction": 0.9822964072227478,
+              "top3_centered_logit_effect_energy_fraction": 0.9994053840637207
+            },
+            "H3": {
+              "pc_coordinates": [
+                -209.5998077392578,
+                -26.669261932373047,
+                23.48783302307129
+              ],
+              "vector_norm": 215.80226135253906,
+              "top3_total_vector_energy_fraction": 0.9704617261886597,
+              "top3_centered_unembedding_span_energy_fraction": 0.9898605942726135,
+              "top3_centered_logit_effect_energy_fraction": 0.9997652769088745
+            },
+            "sum": {
+              "pc_coordinates": [
+                -123.25479888916016,
+                -178.22906494140625,
+                34.104034423828125
+              ],
+              "vector_norm": 223.57550048828125,
+              "top3_total_vector_energy_fraction": 0.9626778364181519,
+              "top3_centered_unembedding_span_energy_fraction": 0.9885801672935486,
+              "top3_centered_logit_effect_energy_fraction": 0.9996582269668579
+            }
+          }
+        },
+        "digits_only": {
+          "top3_direct_low_dim_prediction": 5,
+          "top3_direct_low_dim_logits": [
+            -237.3591766357422,
+            -130.9295196533203,
+            -38.733177185058594,
+            34.2999267578125,
+            81.20625305175781,
+            93.3897705078125,
+            75.09829711914062,
+            72.06529235839844,
+            58.91233444213867,
+            -7.949997901916504
+          ],
+          "components": {
+            "H0": {
+              "pc_coordinates": [
+                28.292255401611328,
+                -67.72328186035156,
+                23.7319393157959
+              ],
+              "vector_norm": 79.30045318603516,
+              "top3_total_vector_energy_fraction": 0.9461780786514282,
+              "top3_centered_unembedding_span_energy_fraction": 0.9739003777503967,
+              "top3_centered_logit_effect_energy_fraction": 0.9989994764328003
+            },
+            "H1": {
+              "pc_coordinates": [
+                -0.16831976175308228,
+                -20.647682189941406,
+                8.117725372314453
+              ],
+              "vector_norm": 24.62839126586914,
+              "top3_total_vector_energy_fraction": 0.8115510940551758,
+              "top3_centered_unembedding_span_energy_fraction": 0.9687484502792358,
+              "top3_centered_logit_effect_energy_fraction": 0.9989020824432373
+            },
+            "H2": {
+              "pc_coordinates": [
+                57.73793029785156,
+                -58.16933822631836,
+                -27.4112548828125
+              ],
+              "vector_norm": 89.08451843261719,
+              "top3_total_vector_energy_fraction": 0.9411124587059021,
+              "top3_centered_unembedding_span_energy_fraction": 0.9743943810462952,
+              "top3_centered_logit_effect_energy_fraction": 0.9992628693580627
+            },
+            "H3": {
+              "pc_coordinates": [
+                -210.10244750976562,
+                -25.77609634399414,
+                -19.564342498779297
+              ],
+              "vector_norm": 215.80226135253906,
+              "top3_total_vector_energy_fraction": 0.9703586101531982,
+              "top3_centered_unembedding_span_energy_fraction": 0.9915898442268372,
+              "top3_centered_logit_effect_energy_fraction": 0.999809205532074
+            },
+            "sum": {
+              "pc_coordinates": [
+                -124.24057006835938,
+                -172.31640625,
+                -15.125931739807129
+              ],
+              "vector_norm": 223.57550048828125,
+              "top3_total_vector_energy_fraction": 0.9074029326438904,
+              "top3_centered_unembedding_span_energy_fraction": 0.9687234163284302,
+              "top3_centered_logit_effect_energy_fraction": 0.9992003440856934
+            }
+          }
+        }
+      }
+    },
+    {
+      "numbers": [
+        7,
+        7,
+        4,
+        0,
+        1
+      ],
+      "true_max": 7,
+      "tokens": [
+        10,
+        7,
+        11,
+        7,
+        11,
+        4,
+        11,
+        0,
+        11,
+        1,
+        12
+      ],
+      "baseline_head_sum_prediction": 7,
+      "bases": {
+        "full_vocabulary": {
+          "top3_direct_low_dim_prediction": 7,
+          "top3_direct_low_dim_logits": [
+            -99.42993927001953,
+            -46.00525665283203,
+            -4.292423248291016,
+            31.29844093322754,
+            49.40751266479492,
+            58.60662078857422,
+            40.72522735595703,
+            74.93278503417969,
+            59.095008850097656,
+            20.854318618774414,
+            -38.73591995239258,
+            -38.2531852722168,
+            -38.33557891845703,
+            -69.86760711669922
+          ],
+          "components": {
+            "H0": {
+              "pc_coordinates": [
+                26.90164566040039,
+                -67.58885955810547,
+                -15.39826774597168
+              ],
+              "vector_norm": 75.32088470458984,
+              "top3_total_vector_energy_fraction": 0.9745866060256958,
+              "top3_centered_unembedding_span_energy_fraction": 0.9846791625022888,
+              "top3_centered_logit_effect_energy_fraction": 0.999558687210083
+            },
+            "H1": {
+              "pc_coordinates": [
+                -0.119713693857193,
+                -23.11475372314453,
+                -6.037517547607422
+              ],
+              "vector_norm": 24.62839126586914,
+              "top3_total_vector_energy_fraction": 0.9409786462783813,
+              "top3_centered_unembedding_span_energy_fraction": 0.9764999151229858,
+              "top3_centered_logit_effect_energy_fraction": 0.9987481236457825
+            },
+            "H2": {
+              "pc_coordinates": [
+                -16.347423553466797,
+                15.922037124633789,
+                -9.153120994567871
+              ],
+              "vector_norm": 24.88819694519043,
+              "top3_total_vector_energy_fraction": 0.9759562015533447,
+              "top3_centered_unembedding_span_energy_fraction": 0.9822753071784973,
+              "top3_centered_logit_effect_energy_fraction": 0.9994060397148132
+            },
+            "H3": {
+              "pc_coordinates": [
+                -74.60798645019531,
+                -9.468482971191406,
+                8.335606575012207
+              ],
+              "vector_norm": 76.8049545288086,
+              "top3_total_vector_energy_fraction": 0.9705857634544373,
+              "top3_centered_unembedding_span_energy_fraction": 0.9899982213973999,
+              "top3_centered_logit_effect_energy_fraction": 0.9997689127922058
+            },
+            "sum": {
+              "pc_coordinates": [
+                -64.17346954345703,
+                -84.25005340576172,
+                -22.253299713134766
+              ],
+              "vector_norm": 110.67113494873047,
+              "top3_total_vector_energy_fraction": 0.956190288066864,
+              "top3_centered_unembedding_span_energy_fraction": 0.9814413189888,
+              "top3_centered_logit_effect_energy_fraction": 0.9994552731513977
+            }
+          }
+        },
+        "digits_only": {
+          "top3_direct_low_dim_prediction": 7,
+          "top3_direct_low_dim_logits": [
+            -117.97006225585938,
+            -65.8901596069336,
+            -22.036161422729492,
+            12.87445068359375,
+            31.448406219482422,
+            40.075870513916016,
+            21.591880798339844,
+            56.16972351074219,
+            40.34068298339844,
+            3.395382881164551
+          ],
+          "components": {
+            "H0": {
+              "pc_coordinates": [
+                26.867599487304688,
+                -64.32608032226562,
+                22.542001724243164
+              ],
+              "vector_norm": 75.32088470458984,
+              "top3_total_vector_energy_fraction": 0.9461716413497925,
+              "top3_centered_unembedding_span_energy_fraction": 0.9738959074020386,
+              "top3_centered_logit_effect_energy_fraction": 0.9989991784095764
+            },
+            "H1": {
+              "pc_coordinates": [
+                -0.16831976175308228,
+                -20.647682189941406,
+                8.117725372314453
+              ],
+              "vector_norm": 24.62839126586914,
+              "top3_total_vector_energy_fraction": 0.8115510940551758,
+              "top3_centered_unembedding_span_energy_fraction": 0.9687484502792358,
+              "top3_centered_logit_effect_energy_fraction": 0.9989020824432373
+            },
+            "H2": {
+              "pc_coordinates": [
+                -16.235063552856445,
+                16.16254425048828,
+                7.6410112380981445
+              ],
+              "vector_norm": 24.88819694519043,
+              "top3_total_vector_energy_fraction": 0.9415066242218018,
+              "top3_centered_unembedding_span_energy_fraction": 0.9742859601974487,
+              "top3_centered_logit_effect_energy_fraction": 0.999267578125
+            },
+            "H3": {
+              "pc_coordinates": [
+                -74.78591918945312,
+                -9.163891792297363,
+                -6.9363813400268555
+              ],
+              "vector_norm": 76.8049545288086,
+              "top3_total_vector_energy_fraction": 0.9705073833465576,
+              "top3_centered_unembedding_span_energy_fraction": 0.9917148947715759,
+              "top3_centered_logit_effect_energy_fraction": 0.9998116493225098
+            },
+            "sum": {
+              "pc_coordinates": [
+                -64.32170104980469,
+                -77.97511291503906,
+                31.364356994628906
+              ],
+              "vector_norm": 110.67113494873047,
+              "top3_total_vector_energy_fraction": 0.9145191311836243,
+              "top3_centered_unembedding_span_energy_fraction": 0.9646744132041931,
+              "top3_centered_logit_effect_energy_fraction": 0.9987139701843262
+            }
+          }
+        }
+      }
+    },
+    {
+      "numbers": [
+        9,
+        2,
+        1,
+        4,
+        2
+      ],
+      "true_max": 9,
+      "tokens": [
+        10,
+        9,
+        11,
+        2,
+        11,
+        1,
+        11,
+        4,
+        11,
+        2,
+        12
+      ],
+      "baseline_head_sum_prediction": 9,
+      "bases": {
+        "full_vocabulary": {
+          "top3_direct_low_dim_prediction": 9,
+          "top3_direct_low_dim_logits": [
+            -188.71775817871094,
+            -160.3456573486328,
+            -112.01953887939453,
+            -48.54290771484375,
+            19.873371124267578,
+            90.69969940185547,
+            154.37353515625,
+            98.56558990478516,
+            158.55267333984375,
+            178.30020141601562,
+            -90.9730453491211,
+            -89.0293960571289,
+            -92.28491973876953,
+            81.5481185913086
+          ],
+          "components": {
+            "H0": {
+              "pc_coordinates": [
+                -14.865945816040039,
+                36.78228759765625,
+                8.366802215576172
+              ],
+              "vector_norm": 41.07392501831055,
+              "top3_total_vector_energy_fraction": 0.9744344353675842,
+              "top3_centered_unembedding_span_energy_fraction": 0.9846405982971191,
+              "top3_centered_logit_effect_energy_fraction": 0.9995582699775696
+            },
+            "H1": {
+              "pc_coordinates": [
+                -0.119713693857193,
+                -23.11475372314453,
+                -6.037517547607422
+              ],
+              "vector_norm": 24.62839126586914,
+              "top3_total_vector_energy_fraction": 0.9409786462783813,
+              "top3_centered_unembedding_span_energy_fraction": 0.9764999151229858,
+              "top3_centered_logit_effect_energy_fraction": 0.9987481236457825
+            },
+            "H2": {
+              "pc_coordinates": [
+                -34.39604187011719,
+                33.59275436401367,
+                -19.294509887695312
+              ],
+              "vector_norm": 52.44289016723633,
+              "top3_total_vector_energy_fraction": 0.9758503437042236,
+              "top3_centered_unembedding_span_energy_fraction": 0.9823221564292908,
+              "top3_centered_logit_effect_energy_fraction": 0.9994089007377625
+            },
+            "H3": {
+              "pc_coordinates": [
+                -142.3720703125,
+                -18.03072738647461,
+                15.819568634033203
+              ],
+              "vector_norm": 146.56590270996094,
+              "top3_total_vector_energy_fraction": 0.9703749418258667,
+              "top3_centered_unembedding_span_energy_fraction": 0.9899096488952637,
+              "top3_centered_logit_effect_energy_fraction": 0.9997655153274536
+            },
+            "sum": {
+              "pc_coordinates": [
+                -191.75375366210938,
+                29.22955894470215,
+                -1.1456565856933594
+              ],
+              "vector_norm": 196.2783660888672,
+              "top3_total_vector_energy_fraction": 0.9766382575035095,
+              "top3_centered_unembedding_span_energy_fraction": 0.9896547198295593,
+              "top3_centered_logit_effect_energy_fraction": 0.9997472763061523
+            }
+          }
+        },
+        "digits_only": {
+          "top3_direct_low_dim_prediction": 9,
+          "top3_direct_low_dim_logits": [
+            -206.62240600585938,
+            -179.0518341064453,
+            -132.4282684326172,
+            -68.93570709228516,
+            -0.5034608840942383,
+            71.30996704101562,
+            136.69363403320312,
+            79.07050323486328,
+            140.04266357421875,
+            160.4248809814453
+          ],
+          "components": {
+            "H0": {
+              "pc_coordinates": [
+                -14.847049713134766,
+                35.02085876464844,
+                -12.257326126098633
+              ],
+              "vector_norm": 41.07392501831055,
+              "top3_total_vector_energy_fraction": 0.9466946721076965,
+              "top3_centered_unembedding_span_energy_fraction": 0.9742185473442078,
+              "top3_centered_logit_effect_energy_fraction": 0.9990293383598328
+            },
+            "H1": {
+              "pc_coordinates": [
+                -0.16831976175308228,
+                -20.647682189941406,
+                8.117725372314453
+              ],
+              "vector_norm": 24.62839126586914,
+              "top3_total_vector_energy_fraction": 0.8115510940551758,
+              "top3_centered_unembedding_span_energy_fraction": 0.9687484502792358,
+              "top3_centered_logit_effect_energy_fraction": 0.9989020824432373
+            },
+            "H2": {
+              "pc_coordinates": [
+                -34.16044998168945,
+                34.108001708984375,
+                16.100418090820312
+              ],
+              "vector_norm": 52.44289016723633,
+              "top3_total_vector_energy_fraction": 0.9415541887283325,
+              "top3_centered_unembedding_span_energy_fraction": 0.9743204712867737,
+              "top3_centered_logit_effect_energy_fraction": 0.9992682933807373
+            },
+            "H3": {
+              "pc_coordinates": [
+                -142.71295166015625,
+                -17.38408851623535,
+                -13.173857688903809
+              ],
+              "vector_norm": 146.56590270996094,
+              "top3_total_vector_energy_fraction": 0.9702619314193726,
+              "top3_centered_unembedding_span_energy_fraction": 0.9916884303092957,
+              "top3_centered_logit_effect_energy_fraction": 0.9998120069503784
+            },
+            "sum": {
+              "pc_coordinates": [
+                -191.8887939453125,
+                31.097087860107422,
+                -1.2130355834960938
+              ],
+              "vector_norm": 196.2783660888672,
+              "top3_total_vector_energy_fraction": 0.9809114336967468,
+              "top3_centered_unembedding_span_energy_fraction": 0.9940212965011597,
+              "top3_centered_logit_effect_energy_fraction": 0.9998437762260437
+            }
+          }
+        }
+      }
+    }
+  ],
+  "overlay_display": {
+    "full_vocabulary": {
+      "head_display_scale": 0.004205050931830395,
+      "max_digit_top3_radius": 1.1206334829330444,
+      "max_raw_head_top3_radius": 239.84730529785156,
+      "digit_pc_coordinates": [
+        [
+          1.0453988313674927,
+          0.3993951678276062,
+          -0.0586882010102272
+        ],
+        [
+          0.826228141784668,
+          -0.06776156276464462,
+          -0.05876713991165161
+        ],
+        [
+          0.5305509567260742,
+          -0.3520204424858093,
+          -0.004364833235740662
+        ],
+        [
+          0.17426827549934387,
+          -0.5157864689826965,
+          0.04373271390795708
+        ],
+        [
+          -0.1808834820985794,
+          -0.4992328882217407,
+          0.19146870076656342
+        ],
+        [
+          -0.5255303978919983,
+          -0.33823972940444946,
+          0.16245728731155396
+        ],
+        [
+          -0.8057721853256226,
+          0.012786302715539932,
+          0.4451802670955658
+        ],
+        [
+          -0.5609033107757568,
+          -0.32753416895866394,
+          -0.5097175240516663
+        ],
+        [
+          -0.8270202279090881,
+          -0.010175855830311775,
+          -0.23209726810455322
+        ],
+        [
+          -0.8627462387084961,
+          0.43620574474334717,
+          -0.10062582790851593
+        ]
+      ],
+      "sample_alignment": [
+        {
+          "true_max": 1,
+          "top3_dot_product_prediction": 1,
+          "true_max_cosine": 0.8611805438995361,
+          "nearest_digit_by_cosine": 2,
+          "nearest_digit_cosine": 0.9996668100357056,
+          "cosine_by_digit": [
+            0.5594273209571838,
+            0.8611805438995361,
+            0.9996668100357056,
+            0.8029426336288452,
+            0.24334266781806946,
+            -0.3671189248561859,
+            -0.7275545001029968,
+            -0.32451730966567993,
+            -0.7796909213066101,
+            -0.983731746673584
+          ],
+          "centered_dot_product_by_digit": [
+            150.36338806152344,
+            171.66162109375,
+            152.66644287109375,
+            105.18621826171875,
+            32.94462585449219,
+            -56.85904312133789,
+            -160.6572723388672,
+            -64.26438903808594,
+            -160.6446990966797,
+            -229.3326416015625
+          ]
+        },
+        {
+          "true_max": 3,
+          "top3_dot_product_prediction": 3,
+          "true_max_cosine": 0.99550461769104,
+          "nearest_digit_by_cosine": 3,
+          "nearest_digit_cosine": 0.99550461769104,
+          "cosine_by_digit": [
+            -0.1363237351179123,
+            0.299943745136261,
+            0.7257441282272339,
+            0.99550461769104,
+            0.8165818452835083,
+            0.3455102741718292,
+            -0.16612793505191803,
+            0.1669202297925949,
+            -0.23620547354221344,
+            -0.6484169960021973
+          ],
+          "centered_dot_product_by_digit": [
+            -24.908489227294922,
+            40.643985748291016,
+            75.3441162109375,
+            88.65333557128906,
+            75.15251159667969,
+            36.37736511230469,
+            -24.937620162963867,
+            22.470821380615234,
+            -33.083492279052734,
+            -102.75926971435547
+          ]
+        },
+        {
+          "true_max": 5,
+          "top3_dot_product_prediction": 5,
+          "true_max_cosine": 0.921968936920166,
+          "nearest_digit_by_cosine": 4,
+          "nearest_digit_cosine": 0.9513887763023376,
+          "cosine_by_digit": [
+            -0.8218638896942139,
+            -0.5033407211303711,
+            -0.020057566463947296,
+            0.6004369258880615,
+            0.9513887763023376,
+            0.921968936920166,
+            0.5556496381759644,
+            0.6080373525619507,
+            0.5085557103157043,
+            0.1180087998509407
+          ],
+          "centered_dot_product_by_digit": [
+            -202.03575134277344,
+            -91.76370239257812,
+            -2.8015379905700684,
+            71.94020080566406,
+            117.80242156982422,
+            130.59873962402344,
+            112.21884155273438,
+            110.126708984375,
+            95.8323974609375,
+            25.16132354736328
+          ]
+        },
+        {
+          "true_max": 7,
+          "top3_dot_product_prediction": 7,
+          "true_max_cosine": 0.8386246562004089,
+          "nearest_digit_by_cosine": 5,
+          "nearest_digit_cosine": 0.8386526703834534,
+          "cosine_by_digit": [
+            -0.8198737502098083,
+            -0.5115130543708801,
+            -0.06229344382882118,
+            0.5295130610466003,
+            0.8088257312774658,
+            0.8386526703834534,
+            0.40874916315078735,
+            0.8386246562004089,
+            0.6356750130653381,
+            0.19826002418994904
+          ],
+          "centered_dot_product_by_digit": [
+            -99.42992401123047,
+            -46.0052490234375,
+            -4.292421340942383,
+            31.298439025878906,
+            49.407508850097656,
+            58.60661315917969,
+            40.7252197265625,
+            74.93277740478516,
+            59.095001220703125,
+            20.854318618774414
+          ]
+        },
+        {
+          "true_max": 9,
+          "top3_dot_product_prediction": 9,
+          "true_max_cosine": 0.9457105398178101,
+          "nearest_digit_by_cosine": 8,
+          "nearest_digit_cosine": 0.9515359997749329,
+          "cosine_by_digit": [
+            -0.8681802153587341,
+            -0.9946578741073608,
+            -0.9069867730140686,
+            -0.458191454410553,
+            0.1815100908279419,
+            0.7241168022155762,
+            0.864437460899353,
+            0.615443766117096,
+            0.9515359997749329,
+            0.9457105398178101
+          ],
+          "centered_dot_product_by_digit": [
+            -188.7177734375,
+            -160.3456573486328,
+            -112.01953887939453,
+            -48.54290771484375,
+            19.873371124267578,
+            90.69970703125,
+            154.37355041503906,
+            98.56559753417969,
+            158.5526885986328,
+            178.3002166748047
+          ]
+        }
+      ]
+    },
+    "digits_only": {
+      "head_display_scale": 0.004864401498061098,
+      "max_digit_top3_radius": 1.2841668128967285,
+      "max_raw_head_top3_radius": 237.59349060058594,
+      "digit_pc_coordinates": [
+        [
+          1.1645464897155762,
+          0.5404114723205566,
+          -0.02951839566230774
+        ],
+        [
+          0.9452448487281799,
+          0.07596518844366074,
+          0.026558011770248413
+        ],
+        [
+          0.650179922580719,
+          -0.24574437737464905,
+          0.019849635660648346
+        ],
+        [
+          0.2929123044013977,
+          -0.4096139073371887,
+          -0.007161546498537064
+        ],
+        [
+          -0.06323479115962982,
+          -0.41232097148895264,
+          -0.1520748734474182
+        ],
+        [
+          -0.40873751044273376,
+          -0.23464109003543854,
+          -0.14382512867450714
+        ],
+        [
+          -0.6924029588699341,
+          0.10476147383451462,
+          -0.47110363841056824
+        ],
+        [
+          -0.43926864862442017,
+          -0.14744991064071655,
+          0.5234541296958923
+        ],
+        [
+          -0.7068977355957031,
+          0.14951419830322266,
+          0.20820468664169312
+        ],
+        [
+          -0.7423417568206787,
+          0.5791177153587341,
+          0.025617100298404694
+        ]
+      ],
+      "sample_alignment": [
+        {
+          "true_max": 1,
+          "top3_dot_product_prediction": 1,
+          "true_max_cosine": 0.7793741226196289,
+          "nearest_digit_by_cosine": 2,
+          "nearest_digit_cosine": 0.9719279408454895,
+          "cosine_by_digit": [
+            0.5111694931983948,
+            0.7793741226196289,
+            0.9719279408454895,
+            0.9355546832084656,
+            0.38239675760269165,
+            -0.4355472922325134,
+            -0.7811065316200256,
+            -0.3545396327972412,
+            -0.8706865310668945,
+            -0.9939355254173279
+          ],
+          "centered_dot_product_by_digit": [
+            155.9627685546875,
+            175.66815185546875,
+            160.5739288330078,
+            111.94537353515625,
+            40.33940505981445,
+            -50.991966247558594,
+            -156.63436889648438,
+            -58.887306213378906,
+            -155.55264282226562,
+            -222.42327880859375
+          ]
+        },
+        {
+          "true_max": 3,
+          "top3_dot_product_prediction": 3,
+          "true_max_cosine": 0.9269793033599854,
+          "nearest_digit_by_cosine": 3,
+          "nearest_digit_cosine": 0.9269793033599854,
+          "cosine_by_digit": [
+            -0.1966366022825241,
+            0.15554161369800568,
+            0.5625864863395691,
+            0.9269793033599854,
+            0.8698993921279907,
+            0.2689895033836365,
+            -0.3121241331100464,
+            0.05685623362660408,
+            -0.4139099717140198,
+            -0.7824325561523438
+          ],
+          "centered_dot_product_by_digit": [
+            -39.66392517089844,
+            23.177627563476562,
+            61.447696685791016,
+            73.33011627197266,
+            60.66799545288086,
+            20.819826126098633,
+            -41.37895584106445,
+            6.243244171142578,
+            -48.88738250732422,
+            -115.7562026977539
+          ]
+        },
+        {
+          "true_max": 5,
+          "top3_dot_product_prediction": 5,
+          "true_max_cosine": 0.8899039030075073,
+          "nearest_digit_by_cosine": 5,
+          "nearest_digit_cosine": 0.8899039030075073,
+          "cosine_by_digit": [
+            -0.867881178855896,
+            -0.648038387298584,
+            -0.26154857873916626,
+            0.31979119777679443,
+            0.8587849736213684,
+            0.8899039030075073,
+            0.41779524087905884,
+            0.48403799533843994,
+            0.3678755462169647,
+            -0.03963283821940422
+          ],
+          "centered_dot_product_by_digit": [
+            -237.35919189453125,
+            -130.9295196533203,
+            -38.73318099975586,
+            34.29993438720703,
+            81.20626831054688,
+            93.38978576660156,
+            75.09829711914062,
+            72.06529235839844,
+            58.9123420715332,
+            -7.949997901916504
+          ]
+        },
+        {
+          "true_max": 7,
+          "top3_dot_product_prediction": 7,
+          "true_max_cosine": 0.7591878771781921,
+          "nearest_digit_by_cosine": 5,
+          "nearest_digit_cosine": 0.768458366394043,
+          "cosine_by_digit": [
+            -0.8679998517036438,
+            -0.656262218952179,
+            -0.2994323670864105,
+            0.241543710231781,
+            0.6692482829093933,
+            0.768458366394043,
+            0.2417227327823639,
+            0.7591878771781921,
+            0.5069107413291931,
+            0.034061990678310394
+          ],
+          "centered_dot_product_by_digit": [
+            -117.97007751464844,
+            -65.89017486572266,
+            -22.036161422729492,
+            12.874456405639648,
+            31.44841766357422,
+            40.07587432861328,
+            21.59188461303711,
+            56.16973114013672,
+            40.34068298339844,
+            3.395379066467285
+          ]
+        },
+        {
+          "true_max": 9,
+          "top3_dot_product_prediction": 9,
+          "true_max_cosine": 0.8761872053146362,
+          "nearest_digit_by_cosine": 8,
+          "nearest_digit_cosine": 0.95805823802948,
+          "cosine_by_digit": [
+            -0.8276916742324829,
+            -0.9709097743034363,
+            -0.97968590259552,
+            -0.7041325569152832,
+            -0.005833085626363754,
+            0.7444420456886292,
+            0.8331411480903625,
+            0.5818415880203247,
+            0.95805823802948,
+            0.8761872053146362
+          ],
+          "centered_dot_product_by_digit": [
+            -206.6223907470703,
+            -179.05181884765625,
+            -132.42825317382812,
+            -68.93569946289062,
+            -0.5034617185592651,
+            71.30995178222656,
+            136.69361877441406,
+            79.07049560546875,
+            140.0426483154297,
+            160.4248809814453
+          ]
+        }
+      ]
+    }
+  },
+  "global_head_sum_projection_accuracy": {
+    "description": "The summed post-W_O head output is projected to k unembedding PCs, then logits are computed directly as (batch x k) @ (k x vocab). No 64d vector is reconstructed for the evaluated logits.",
+    "formula": {
+      "head_coordinates": "z = head_sum @ P_k.T",
+      "low_dim_unembedding": "U_low = (W_U - mean(W_U)) @ P_k.T",
+      "relative_logits": "z @ U_low.T"
+    },
+    "n_inputs": 100000,
+    "baseline_head_sum_only": {
+      "full_vocabulary": {
+        "accuracy": 1.0,
+        "correct": 100000,
+        "total": 100000,
+        "argmax_size": 14
+      },
+      "digits_only": {
+        "accuracy": 1.0,
+        "correct": 100000,
+        "total": 100000,
+        "argmax_size": 10
+      }
+    },
+    "by_unembedding_basis": {
+      "full_vocabulary": {
+        "1": {
+          "accuracy": 0.40952,
+          "correct": 40952,
+          "total": 100000,
+          "argmax_size": 14,
+          "head_coordinate_shape_per_input": [
+            1
+          ],
+          "low_dim_unembedding_transposed_shape": [
+            1,
+            14
+          ],
+          "low_dim_unembedding_transposed": [
+            [
+              1.0453988313674927,
+              0.826228141784668,
+              0.5305509567260742,
+              0.17426827549934387,
+              -0.1808834820985794,
+              -0.5255304574966431,
+              -0.8057721853256226,
+              -0.5609032511711121,
+              -0.8270203471183777,
+              -0.8627461194992065,
+              0.4869536757469177,
+              0.47699353098869324,
+              0.49244415760040283,
+              -0.2699817419052124
+            ]
+          ],
+          "max_abs_error_vs_centered_projected_64d_logits": 4.57763671875e-05,
+          "special_token_prediction_count": 0,
+          "prediction_distribution": {
+            "0": 1024,
+            "9": 98976
+          }
+        },
+        "2": {
+          "accuracy": 0.86318,
+          "correct": 86318,
+          "total": 100000,
+          "argmax_size": 14,
+          "head_coordinate_shape_per_input": [
+            2
+          ],
+          "low_dim_unembedding_transposed_shape": [
+            2,
+            14
+          ],
+          "low_dim_unembedding_transposed": [
+            [
+              1.0453988313674927,
+              0.826228141784668,
+              0.5305508971214294,
+              0.17426827549934387,
+              -0.1808834820985794,
+              -0.5255304574966431,
+              -0.8057722449302673,
+              -0.5609032511711121,
+              -0.8270204067230225,
+              -0.8627462387084961,
+              0.4869536757469177,
+              0.47699353098869324,
+              0.49244415760040283,
+              -0.26998171210289
+            ],
+            [
+              0.3993951380252838,
+              -0.06776155531406403,
+              -0.3520205020904541,
+              -0.5157864093780518,
+              -0.4992328882217407,
+              -0.33823972940444946,
+              0.01278630830347538,
+              -0.32753416895866394,
+              -0.010175839066505432,
+              0.4362057149410248,
+              0.083045095205307,
+              0.08428988605737686,
+              0.07417264580726624,
+              1.0208563804626465
+            ]
+          ],
+          "max_abs_error_vs_centered_projected_64d_logits": 6.103515625e-05,
+          "special_token_prediction_count": 0,
+          "prediction_distribution": {
+            "0": 1,
+            "1": 31,
+            "2": 211,
+            "3": 781,
+            "4": 2101,
+            "7": 20612,
+            "8": 35312,
+            "9": 40951
+          }
+        },
+        "3": {
+          "accuracy": 1.0,
+          "correct": 100000,
+          "total": 100000,
+          "argmax_size": 14,
+          "head_coordinate_shape_per_input": [
+            3
+          ],
+          "low_dim_unembedding_transposed_shape": [
+            3,
+            14
+          ],
+          "low_dim_unembedding_transposed": [
+            [
+              1.0453988313674927,
+              0.826228141784668,
+              0.5305508971214294,
+              0.17426827549934387,
+              -0.1808834820985794,
+              -0.5255304574966431,
+              -0.8057722449302673,
+              -0.5609032511711121,
+              -0.8270204067230225,
+              -0.8627462387084961,
+              0.4869536757469177,
+              0.47699353098869324,
+              0.49244415760040283,
+              -0.26998171210289
+            ],
+            [
+              0.3993951380252838,
+              -0.06776155531406403,
+              -0.3520205020904541,
+              -0.5157864093780518,
+              -0.4992328882217407,
+              -0.33823972940444946,
+              0.01278630830347538,
+              -0.32753416895866394,
+              -0.010175839066505432,
+              0.4362057149410248,
+              0.083045095205307,
+              0.08428988605737686,
+              0.07417264580726624,
+              1.0208563804626465
+            ],
+            [
+              -0.058688171207904816,
+              -0.0587671659886837,
+              -0.004364822059869766,
+              0.04373271018266678,
+              0.19146870076656342,
+              0.16245727241039276,
+              0.44518032670021057,
+              -0.509717583656311,
+              -0.2320972979068756,
+              -0.10062584280967712,
+              0.022012831643223763,
+              0.024330023676156998,
+              0.021779952570796013,
+              0.05329902470111847
+            ]
+          ],
+          "max_abs_error_vs_centered_projected_64d_logits": 9.1552734375e-05,
+          "special_token_prediction_count": 0,
+          "prediction_distribution": {
+            "0": 1,
+            "1": 31,
+            "2": 211,
+            "3": 781,
+            "4": 2101,
+            "5": 4651,
+            "6": 9031,
+            "7": 15961,
+            "8": 26281,
+            "9": 40951
+          }
+        }
+      },
+      "digits_only": {
+        "1": {
+          "accuracy": 0.40952,
+          "correct": 40952,
+          "total": 100000,
+          "argmax_size": 10,
+          "head_coordinate_shape_per_input": [
+            1
+          ],
+          "low_dim_unembedding_transposed_shape": [
+            1,
+            10
+          ],
+          "low_dim_unembedding_transposed": [
+            [
+              1.1645463705062866,
+              0.9452449679374695,
+              0.650179922580719,
+              0.2929122745990753,
+              -0.06323477625846863,
+              -0.40873754024505615,
+              -0.6924029588699341,
+              -0.43926870822906494,
+              -0.7068977355957031,
+              -0.7423417568206787
+            ]
+          ],
+          "max_abs_error_vs_centered_projected_64d_logits": 6.103515625e-05,
+          "special_token_prediction_count": null,
+          "prediction_distribution": {
+            "0": 1024,
+            "9": 98976
+          }
+        },
+        "2": {
+          "accuracy": 0.84039,
+          "correct": 84039,
+          "total": 100000,
+          "argmax_size": 10,
+          "head_coordinate_shape_per_input": [
+            2
+          ],
+          "low_dim_unembedding_transposed_shape": [
+            2,
+            10
+          ],
+          "low_dim_unembedding_transposed": [
+            [
+              1.1645464897155762,
+              0.9452449679374695,
+              0.650179922580719,
+              0.2929123044013977,
+              -0.06323479115962982,
+              -0.40873754024505615,
+              -0.6924030184745789,
+              -0.43926870822906494,
+              -0.7068976759910583,
+              -0.7423418164253235
+            ],
+            [
+              0.5404114723205566,
+              0.07596518099308014,
+              -0.24574437737464905,
+              -0.40961387753486633,
+              -0.41232097148895264,
+              -0.23464111983776093,
+              0.10476147383451462,
+              -0.14744989573955536,
+              0.14951422810554504,
+              0.5791177153587341
+            ]
+          ],
+          "max_abs_error_vs_centered_projected_64d_logits": 0.0001220703125,
+          "special_token_prediction_count": null,
+          "prediction_distribution": {
+            "0": 1,
+            "1": 31,
+            "2": 211,
+            "3": 781,
+            "4": 2101,
+            "5": 20612,
+            "6": 9031,
+            "8": 26281,
+            "9": 40951
+          }
+        },
+        "3": {
+          "accuracy": 1.0,
+          "correct": 100000,
+          "total": 100000,
+          "argmax_size": 10,
+          "head_coordinate_shape_per_input": [
+            3
+          ],
+          "low_dim_unembedding_transposed_shape": [
+            3,
+            10
+          ],
+          "low_dim_unembedding_transposed": [
+            [
+              1.1645464897155762,
+              0.9452449679374695,
+              0.650179922580719,
+              0.2929123044013977,
+              -0.06323479115962982,
+              -0.40873754024505615,
+              -0.6924030184745789,
+              -0.43926870822906494,
+              -0.7068976759910583,
+              -0.7423418164253235
+            ],
+            [
+              0.5404114723205566,
+              0.07596518099308014,
+              -0.24574437737464905,
+              -0.40961387753486633,
+              -0.41232097148895264,
+              -0.23464111983776093,
+              0.10476147383451462,
+              -0.14744989573955536,
+              0.14951422810554504,
+              0.5791177153587341
+            ],
+            [
+              -0.029518403112888336,
+              0.026558034121990204,
+              0.019849661737680435,
+              -0.007161535322666168,
+              -0.1520748883485794,
+              -0.14382511377334595,
+              -0.47110360860824585,
+              0.5234541893005371,
+              0.20820465683937073,
+              0.025617152452468872
+            ]
+          ],
+          "max_abs_error_vs_centered_projected_64d_logits": 0.0001220703125,
+          "special_token_prediction_count": null,
+          "prediction_distribution": {
+            "0": 1,
+            "1": 31,
+            "2": 211,
+            "3": 781,
+            "4": 2101,
+            "5": 4651,
+            "6": 9031,
+            "7": 15961,
+            "8": 26281,
+            "9": 40951
+          }
+        }
+      }
+    }
+  },
+  "per_head_low_dimensional_output_accuracy": {
+    "description": "Each post-attention pre-W_O head value is mapped directly from 16d to k unembedding-PC coordinates with O_h_low = O_h @ P_k, then the four low-dimensional head writes are summed and unembedded in k dimensions.",
+    "formula": {
+      "reduced_output_matrix": "O_h_low = O_h @ P_k",
+      "head_write": "z_h = value_h @ O_h_low",
+      "summed_write": "z = sum_h z_h",
+      "relative_logits": "z @ U_low.T"
+    },
+    "n_inputs": 100000,
+    "original_per_head_output_matrix_shape": [
+      16,
+      64
+    ],
+    "by_unembedding_basis": {
+      "full_vocabulary": {
+        "1": {
+          "accuracy": 0.40952,
+          "correct": 40952,
+          "total": 100000,
+          "argmax_size": 14,
+          "pre_W_O_head_value_shape_per_input": [
+            4,
+            16
+          ],
+          "reduced_output_matrix_shape_per_head": [
+            16,
+            1
+          ],
+          "summed_head_coordinate_shape_per_input": [
+            1
+          ],
+          "reduced_output_matrices": {
+            "H0": [
+              [
+                -0.4475402235984802
+              ],
+              [
+                0.3929814100265503
+              ],
+              [
+                0.5321527719497681
+              ],
+              [
+                -0.3932693600654602
+              ],
+              [
+                0.31126537919044495
+              ],
+              [
+                -0.449849009513855
+              ],
+              [
+                -0.4093915820121765
+              ],
+              [
+                0.5121670365333557
+              ],
+              [
+                0.47562167048454285
+              ],
+              [
+                0.5027664303779602
+              ],
+              [
+                0.4932467043399811
+              ],
+              [
+                0.3297567665576935
+              ],
+              [
+                -0.38000139594078064
+              ],
+              [
+                0.5238840579986572
+              ],
+              [
+                -0.3825690746307373
+              ],
+              [
+                0.44660741090774536
+              ]
+            ],
+            "H1": [
+              [
+                -0.31424814462661743
+              ],
+              [
+                0.0743270069360733
+              ],
+              [
+                -0.06455788761377335
+              ],
+              [
+                0.13235807418823242
+              ],
+              [
+                0.0091486731544137
+              ],
+              [
+                -0.08594073355197906
+              ],
+              [
+                -0.0634084939956665
+              ],
+              [
+                0.1085675060749054
+              ],
+              [
+                -0.3028557300567627
+              ],
+              [
+                0.07566945999860764
+              ],
+              [
+                0.017523542046546936
+              ],
+              [
+                0.06946146488189697
+              ],
+              [
+                0.03170132637023926
+              ],
+              [
+                -0.3071042597293854
+              ],
+              [
+                -0.09077773243188858
+              ],
+              [
+                -0.019836213439702988
+              ]
+            ],
+            "H2": [
+              [
+                -0.951426088809967
+              ],
+              [
+                0.8396779894828796
+              ],
+              [
+                0.7669423222541809
+              ],
+              [
+                -0.9322807788848877
+              ],
+              [
+                -0.8412918448448181
+              ],
+              [
+                0.9703547954559326
+              ],
+              [
+                -1.0469025373458862
+              ],
+              [
+                -0.878523051738739
+              ],
+              [
+                -0.9146380424499512
+              ],
+              [
+                -0.7738629579544067
+              ],
+              [
+                0.7328394651412964
+              ],
+              [
+                0.7758427262306213
+              ],
+              [
+                -0.7659298181533813
+              ],
+              [
+                1.0847831964492798
+              ],
+              [
+                0.81435227394104
+              ],
+              [
+                -0.840049684047699
+              ]
+            ],
+            "H3": [
+              [
+                -3.0924651622772217
+              ],
+              [
+                -1.704451084136963
+              ],
+              [
+                -1.850494623184204
+              ],
+              [
+                1.5658284425735474
+              ],
+              [
+                -2.269165277481079
+              ],
+              [
+                1.5983397960662842
+              ],
+              [
+                -1.8793638944625854
+              ],
+              [
+                2.0562424659729004
+              ],
+              [
+                2.528728485107422
+              ],
+              [
+                2.061244010925293
+              ],
+              [
+                1.6834118366241455
+              ],
+              [
+                2.1950063705444336
+              ],
+              [
+                -2.0444793701171875
+              ],
+              [
+                2.300243377685547
+              ],
+              [
+                -1.9903452396392822
+              ],
+              [
+                -1.8129551410675049
+              ]
+            ]
+          },
+          "max_abs_coordinate_error_vs_64d_route": 7.62939453125e-05,
+          "special_token_prediction_count": 0,
+          "prediction_distribution": {
+            "0": 1024,
+            "9": 98976
+          }
+        },
+        "2": {
+          "accuracy": 0.86318,
+          "correct": 86318,
+          "total": 100000,
+          "argmax_size": 14,
+          "pre_W_O_head_value_shape_per_input": [
+            4,
+            16
+          ],
+          "reduced_output_matrix_shape_per_head": [
+            16,
+            2
+          ],
+          "summed_head_coordinate_shape_per_input": [
+            2
+          ],
+          "reduced_output_matrices": {
+            "H0": [
+              [
+                -0.44754016399383545,
+                0.7300533056259155
+              ],
+              [
+                0.3929814100265503,
+                -0.9702469110488892
+              ],
+              [
+                0.5321527719497681,
+                -1.0939611196517944
+              ],
+              [
+                -0.3932693898677826,
+                1.0076237916946411
+              ],
+              [
+                0.31126540899276733,
+                -1.3897888660430908
+              ],
+              [
+                -0.44984903931617737,
+                0.8351266980171204
+              ],
+              [
+                -0.4093916416168213,
+                1.3447275161743164
+              ],
+              [
+                0.5121671557426453,
+                -1.0104540586471558
+              ],
+              [
+                0.47562167048454285,
+                -1.239601731300354
+              ],
+              [
+                0.5027664303779602,
+                -1.0491282939910889
+              ],
+              [
+                0.4932466745376587,
+                -0.7945014834403992
+              ],
+              [
+                0.32975679636001587,
+                -1.2442110776901245
+              ],
+              [
+                -0.3800013065338135,
+                0.9382631182670593
+              ],
+              [
+                0.5238839983940125,
+                -0.9256389141082764
+              ],
+              [
+                -0.3825690746307373,
+                1.1437101364135742
+              ],
+              [
+                0.446607381105423,
+                -1.2303872108459473
+              ]
+            ],
+            "H1": [
+              [
+                -0.3142481744289398,
+                0.07590080797672272
+              ],
+              [
+                0.0743270069360733,
+                0.8072918057441711
+              ],
+              [
+                -0.06455788016319275,
+                -0.8431587219238281
+              ],
+              [
+                0.13235804438591003,
+                -0.6301880478858948
+              ],
+              [
+                0.009148660115897655,
+                -0.6713926196098328
+              ],
+              [
+                -0.08594077825546265,
+                0.802190899848938
+              ],
+              [
+                -0.06340845674276352,
+                0.712745189666748
+              ],
+              [
+                0.10856751352548599,
+                -0.5993422865867615
+              ],
+              [
+                -0.3028557002544403,
+                -0.18211042881011963
+              ],
+              [
+                0.07566945254802704,
+                0.8099532723426819
+              ],
+              [
+                0.017523543909192085,
+                -0.8203458786010742
+              ],
+              [
+                0.06946145743131638,
+                -0.6349615454673767
+              ],
+              [
+                0.03170131891965866,
+                0.8270251154899597
+              ],
+              [
+                -0.307104229927063,
+                0.08305414766073227
+              ],
+              [
+                -0.09077772498130798,
+                0.6508206725120544
+              ],
+              [
+                -0.019836213439702988,
+                -0.7762064337730408
+              ]
+            ],
+            "H2": [
+              [
+                -0.9514260292053223,
+                0.7752249836921692
+              ],
+              [
+                0.8396779894828796,
+                -0.9411522150039673
+              ],
+              [
+                0.7669426202774048,
+                -0.9549432992935181
+              ],
+              [
+                -0.9322808980941772,
+                0.8200780749320984
+              ],
+              [
+                -0.8412920236587524,
+                1.0323225259780884
+              ],
+              [
+                0.9703547358512878,
+                -1.0346431732177734
+              ],
+              [
+                -1.0469026565551758,
+                0.7678186297416687
+              ],
+              [
+                -0.878523051738739,
+                0.6915310025215149
+              ],
+              [
+                -0.9146381616592407,
+                0.6193001866340637
+              ],
+              [
+                -0.7738628387451172,
+                0.6963562965393066
+              ],
+              [
+                0.7328395247459412,
+                -0.8244304656982422
+              ],
+              [
+                0.7758429050445557,
+                -0.8660255074501038
+              ],
+              [
+                -0.7659297585487366,
+                0.9071400761604309
+              ],
+              [
+                1.0847831964492798,
+                -0.8676369786262512
+              ],
+              [
+                0.81435227394104,
+                -0.7275435924530029
+              ],
+              [
+                -0.840049684047699,
+                0.9648875594139099
+              ]
+            ],
+            "H3": [
+              [
+                -3.092465400695801,
+                -0.2729251980781555
+              ],
+              [
+                -1.7044509649276733,
+                -0.09611557424068451
+              ],
+              [
+                -1.8504942655563354,
+                -0.1370849907398224
+              ],
+              [
+                1.5658282041549683,
+                0.13204310834407806
+              ],
+              [
+                -2.2691650390625,
+                -0.3650408983230591
+              ],
+              [
+                1.5983400344848633,
+                0.18489176034927368
+              ],
+              [
+                -1.879363775253296,
+                -0.2617945075035095
+              ],
+              [
+                2.0562422275543213,
+                0.366289347410202
+              ],
+              [
+                2.5287282466888428,
+                0.2884483337402344
+              ],
+              [
+                2.061244249343872,
+                0.24145349860191345
+              ],
+              [
+                1.6834115982055664,
+                0.10042080283164978
+              ],
+              [
+                2.1950058937072754,
+                0.4347381591796875
+              ],
+              [
+                -2.0444788932800293,
+                -0.30468660593032837
+              ],
+              [
+                2.3002429008483887,
+                0.4391546845436096
+              ],
+              [
+                -1.9903451204299927,
+                -0.17973269522190094
+              ],
+              [
+                -1.8129549026489258,
+                -0.24678513407707214
+              ]
+            ]
+          },
+          "max_abs_coordinate_error_vs_64d_route": 0.0001220703125,
+          "special_token_prediction_count": 0,
+          "prediction_distribution": {
+            "0": 1,
+            "1": 31,
+            "2": 211,
+            "3": 781,
+            "4": 2101,
+            "7": 20612,
+            "8": 35312,
+            "9": 40951
+          }
+        },
+        "3": {
+          "accuracy": 1.0,
+          "correct": 100000,
+          "total": 100000,
+          "argmax_size": 14,
+          "pre_W_O_head_value_shape_per_input": [
+            4,
+            16
+          ],
+          "reduced_output_matrix_shape_per_head": [
+            16,
+            3
+          ],
+          "summed_head_coordinate_shape_per_input": [
+            3
+          ],
+          "reduced_output_matrices": {
+            "H0": [
+              [
+                -0.44754016399383545,
+                0.7300533056259155,
+                0.16020330786705017
+              ],
+              [
+                0.3929814100265503,
+                -0.9702469110488892,
+                -0.19497105479240417
+              ],
+              [
+                0.5321527719497681,
+                -1.0939611196517944,
+                -0.40990668535232544
+              ],
+              [
+                -0.3932693898677826,
+                1.0076237916946411,
+                0.20056889951229095
+              ],
+              [
+                0.31126540899276733,
+                -1.3897888660430908,
+                -0.30705252289772034
+              ],
+              [
+                -0.44984903931617737,
+                0.8351266980171204,
+                0.09816298633813858
+              ],
+              [
+                -0.4093916416168213,
+                1.3447275161743164,
+                0.3012385964393616
+              ],
+              [
+                0.5121671557426453,
+                -1.0104540586471558,
+                -0.18099679052829742
+              ],
+              [
+                0.47562167048454285,
+                -1.239601731300354,
+                -0.3620385229587555
+              ],
+              [
+                0.5027664303779602,
+                -1.0491282939910889,
+                -0.37357696890830994
+              ],
+              [
+                0.4932466745376587,
+                -0.7945014834403992,
+                -0.14804059267044067
+              ],
+              [
+                0.32975679636001587,
+                -1.2442110776901245,
+                -0.22709345817565918
+              ],
+              [
+                -0.3800013065338135,
+                0.9382631182670593,
+                0.16913482546806335
+              ],
+              [
+                0.5238839983940125,
+                -0.9256389141082764,
+                -0.22215233743190765
+              ],
+              [
+                -0.3825690746307373,
+                1.1437101364135742,
+                0.2873804271221161
+              ],
+              [
+                0.446607381105423,
+                -1.2303872108459473,
+                -0.12724362313747406
+              ]
+            ],
+            "H1": [
+              [
+                -0.3142481744289398,
+                0.07590080797672272,
+                -0.13045744597911835
+              ],
+              [
+                0.0743270069360733,
+                0.8072918057441711,
+                0.19253478944301605
+              ],
+              [
+                -0.06455788016319275,
+                -0.8431587219238281,
+                -0.1936490833759308
+              ],
+              [
+                0.13235804438591003,
+                -0.6301880478858948,
+                -0.2576024532318115
+              ],
+              [
+                0.009148660115897655,
+                -0.6713926196098328,
+                -0.1708332896232605
+              ],
+              [
+                -0.08594077825546265,
+                0.802190899848938,
+                0.24955019354820251
+              ],
+              [
+                -0.06340845674276352,
+                0.712745189666748,
+                0.07707038521766663
+              ],
+              [
+                0.10856751352548599,
+                -0.5993422865867615,
+                -0.08831724524497986
+              ],
+              [
+                -0.3028557002544403,
+                -0.18211042881011963,
+                -0.1678394079208374
+              ],
+              [
+                0.07566945254802704,
+                0.8099532723426819,
+                0.22049851715564728
+              ],
+              [
+                0.017523543909192085,
+                -0.8203458786010742,
+                -0.2603430151939392
+              ],
+              [
+                0.06946145743131638,
+                -0.6349615454673767,
+                -0.23230302333831787
+              ],
+              [
+                0.03170131891965866,
+                0.8270251154899597,
+                0.1096600666642189
+              ],
+              [
+                -0.307104229927063,
+                0.08305414766073227,
+                0.010819269344210625
+              ],
+              [
+                -0.09077772498130798,
+                0.6508206725120544,
+                0.19664961099624634
+              ],
+              [
+                -0.019836213439702988,
+                -0.7762064337730408,
+                -0.17721688747406006
+              ]
+            ],
+            "H2": [
+              [
+                -0.9514260292053223,
+                0.7752249836921692,
+                -0.41293609142303467
+              ],
+              [
+                0.8396779894828796,
+                -0.9411522150039673,
+                0.6111319065093994
+              ],
+              [
+                0.7669426202774048,
+                -0.9549432992935181,
+                0.4386608898639679
+              ],
+              [
+                -0.9322808980941772,
+                0.8200780749320984,
+                -0.5669952034950256
+              ],
+              [
+                -0.8412920236587524,
+                1.0323225259780884,
+                -0.5696277618408203
+              ],
+              [
+                0.9703547358512878,
+                -1.0346431732177734,
+                0.6809039115905762
+              ],
+              [
+                -1.0469026565551758,
+                0.7678186297416687,
+                -0.3101597726345062
+              ],
+              [
+                -0.878523051738739,
+                0.6915310025215149,
+                -0.4043039381504059
+              ],
+              [
+                -0.9146381616592407,
+                0.6193001866340637,
+                -0.4903298020362854
+              ],
+              [
+                -0.7738628387451172,
+                0.6963562965393066,
+                -0.3445948362350464
+              ],
+              [
+                0.7328395247459412,
+                -0.8244304656982422,
+                0.310878187417984
+              ],
+              [
+                0.7758429050445557,
+                -0.8660255074501038,
+                0.42554017901420593
+              ],
+              [
+                -0.7659297585487366,
+                0.9071400761604309,
+                -0.39149561524391174
+              ],
+              [
+                1.0847831964492798,
+                -0.8676369786262512,
+                0.5510011911392212
+              ],
+              [
+                0.81435227394104,
+                -0.7275435924530029,
+                0.5563168525695801
+              ],
+              [
+                -0.840049684047699,
+                0.9648875594139099,
+                -0.5726413726806641
+              ]
+            ],
+            "H3": [
+              [
+                -3.092465400695801,
+                -0.2729251980781555,
+                0.05638866126537323
+              ],
+              [
+                -1.7044509649276733,
+                -0.09611557424068451,
+                -0.02055315114557743
+              ],
+              [
+                -1.8504942655563354,
+                -0.1370849907398224,
+                0.18146005272865295
+              ],
+              [
+                1.5658282041549683,
+                0.13204310834407806,
+                -0.23939630389213562
+              ],
+              [
+                -2.2691650390625,
+                -0.3650408983230591,
+                0.34348514676094055
+              ],
+              [
+                1.5983400344848633,
+                0.18489176034927368,
+                -0.26562243700027466
+              ],
+              [
+                -1.879363775253296,
+                -0.2617945075035095,
+                0.296196311712265
+              ],
+              [
+                2.0562422275543213,
+                0.366289347410202,
+                -0.3246506154537201
+              ],
+              [
+                2.5287282466888428,
+                0.2884483337402344,
+                -0.3248363435268402
+              ],
+              [
+                2.061244249343872,
+                0.24145349860191345,
+                -0.2593211829662323
+              ],
+              [
+                1.6834115982055664,
+                0.10042080283164978,
+                -0.113246388733387
+              ],
+              [
+                2.1950058937072754,
+                0.4347381591796875,
+                -0.2162359356880188
+              ],
+              [
+                -2.0444788932800293,
+                -0.30468660593032837,
+                0.2859368920326233
+              ],
+              [
+                2.3002429008483887,
+                0.4391546845436096,
+                -0.4185241460800171
+              ],
+              [
+                -1.9903451204299927,
+                -0.17973269522190094,
+                0.2589537799358368
+              ],
+              [
+                -1.8129549026489258,
+                -0.24678513407707214,
+                0.15295788645744324
+              ]
+            ]
+          },
+          "max_abs_coordinate_error_vs_64d_route": 0.0001220703125,
+          "special_token_prediction_count": 0,
+          "prediction_distribution": {
+            "0": 1,
+            "1": 31,
+            "2": 211,
+            "3": 781,
+            "4": 2101,
+            "5": 4651,
+            "6": 9031,
+            "7": 15961,
+            "8": 26281,
+            "9": 40951
+          }
+        }
+      },
+      "digits_only": {
+        "1": {
+          "accuracy": 0.40952,
+          "correct": 40952,
+          "total": 100000,
+          "argmax_size": 10,
+          "pre_W_O_head_value_shape_per_input": [
+            4,
+            16
+          ],
+          "reduced_output_matrix_shape_per_head": [
+            16,
+            1
+          ],
+          "summed_head_coordinate_shape_per_input": [
+            1
+          ],
+          "reduced_output_matrices": {
+            "H0": [
+              [
+                -0.44830191135406494
+              ],
+              [
+                0.3887336254119873
+              ],
+              [
+                0.5315338373184204
+              ],
+              [
+                -0.39347749948501587
+              ],
+              [
+                0.30949628353118896
+              ],
+              [
+                -0.4457511305809021
+              ],
+              [
+                -0.4084141254425049
+              ],
+              [
+                0.5110276341438293
+              ],
+              [
+                0.4785800278186798
+              ],
+              [
+                0.5045799016952515
+              ],
+              [
+                0.49321895837783813
+              ],
+              [
+                0.33029770851135254
+              ],
+              [
+                -0.37924158573150635
+              ],
+              [
+                0.5240915417671204
+              ],
+              [
+                -0.3814200162887573
+              ],
+              [
+                0.44407546520233154
+              ]
+            ],
+            "H1": [
+              [
+                -0.31495219469070435
+              ],
+              [
+                0.0776306763291359
+              ],
+              [
+                -0.0626097321510315
+              ],
+              [
+                0.12795113027095795
+              ],
+              [
+                0.006352568976581097
+              ],
+              [
+                -0.08343195915222168
+              ],
+              [
+                -0.060234732925891876
+              ],
+              [
+                0.10861197113990784
+              ],
+              [
+                -0.29916146397590637
+              ],
+              [
+                0.07840369641780853
+              ],
+              [
+                0.01518004760146141
+              ],
+              [
+                0.0679900199174881
+              ],
+              [
+                0.031418658792972565
+              ],
+              [
+                -0.30563318729400635
+              ],
+              [
+                -0.09107878804206848
+              ],
+              [
+                -0.021528463810682297
+              ]
+            ],
+            "H2": [
+              [
+                -0.9432263970375061
+              ],
+              [
+                0.8333624005317688
+              ],
+              [
+                0.760648250579834
+              ],
+              [
+                -0.9249892830848694
+              ],
+              [
+                -0.839295506477356
+              ],
+              [
+                0.9687922596931458
+              ],
+              [
+                -1.0449317693710327
+              ],
+              [
+                -0.8718627095222473
+              ],
+              [
+                -0.9067550301551819
+              ],
+              [
+                -0.7675455808639526
+              ],
+              [
+                0.727568507194519
+              ],
+              [
+                0.7707672715187073
+              ],
+              [
+                -0.7609845399856567
+              ],
+              [
+                1.0767408609390259
+              ],
+              [
+                0.8031694889068604
+              ],
+              [
+                -0.8318964242935181
+              ]
+            ],
+            "H3": [
+              [
+                -3.1012110710144043
+              ],
+              [
+                -1.706078290939331
+              ],
+              [
+                -1.8514825105667114
+              ],
+              [
+                1.5663881301879883
+              ],
+              [
+                -2.276977062225342
+              ],
+              [
+                1.5980565547943115
+              ],
+              [
+                -1.8823045492172241
+              ],
+              [
+                2.0618090629577637
+              ],
+              [
+                2.5396761894226074
+              ],
+              [
+                2.064934015274048
+              ],
+              [
+                1.6853899955749512
+              ],
+              [
+                2.201785087585449
+              ],
+              [
+                -2.0498342514038086
+              ],
+              [
+                2.307023525238037
+              ],
+              [
+                -1.9981403350830078
+              ],
+              [
+                -1.8138394355773926
+              ]
+            ]
+          },
+          "max_abs_coordinate_error_vs_64d_route": 7.62939453125e-05,
+          "special_token_prediction_count": null,
+          "prediction_distribution": {
+            "0": 1024,
+            "9": 98976
+          }
+        },
+        "2": {
+          "accuracy": 0.84039,
+          "correct": 84039,
+          "total": 100000,
+          "argmax_size": 10,
+          "pre_W_O_head_value_shape_per_input": [
+            4,
+            16
+          ],
+          "reduced_output_matrix_shape_per_head": [
+            16,
+            2
+          ],
+          "summed_head_coordinate_shape_per_input": [
+            2
+          ],
+          "reduced_output_matrices": {
+            "H0": [
+              [
+                -0.44830185174942017,
+                0.6955057978630066
+              ],
+              [
+                0.38873356580734253,
+                -0.9399077892303467
+              ],
+              [
+                0.5315337181091309,
+                -1.031943678855896
+              ],
+              [
+                -0.3934774100780487,
+                0.9302195310592651
+              ],
+              [
+                0.30949631333351135,
+                -1.316977858543396
+              ],
+              [
+                -0.44575104117393494,
+                0.7786113023757935
+              ],
+              [
+                -0.4084140956401825,
+                1.305594563484192
+              ],
+              [
+                0.5110276937484741,
+                -0.9823494553565979
+              ],
+              [
+                0.4785799980163574,
+                -1.1796587705612183
+              ],
+              [
+                0.5045797824859619,
+                -0.9813170433044434
+              ],
+              [
+                0.4932190477848053,
+                -0.7951306700706482
+              ],
+              [
+                0.33029770851135254,
+                -1.1843689680099487
+              ],
+              [
+                -0.37924155592918396,
+                0.877124547958374
+              ],
+              [
+                0.5240915417671204,
+                -0.8976070880889893
+              ],
+              [
+                -0.3814200460910797,
+                1.0550869703292847
+              ],
+              [
+                0.44407549500465393,
+                -1.1969993114471436
+              ]
+            ],
+            "H1": [
+              [
+                -0.31495219469070435,
+                0.060596272349357605
+              ],
+              [
+                0.07763068377971649,
+                0.737213134765625
+              ],
+              [
+                -0.0626097321510315,
+                -0.749991774559021
+              ],
+              [
+                0.12795118987560272,
+                -0.536230206489563
+              ],
+              [
+                0.006352560594677925,
+                -0.585564911365509
+              ],
+              [
+                -0.08343194425106049,
+                0.6980863213539124
+              ],
+              [
+                -0.06023471802473068,
+                0.6644653081893921
+              ],
+              [
+                0.10861200094223022,
+                -0.5295295119285583
+              ],
+              [
+                -0.29916146397590637,
+                -0.20629480481147766
+              ],
+              [
+                0.07840369641780853,
+                0.7189716696739197
+              ],
+              [
+                0.015180051326751709,
+                -0.7379575967788696
+              ],
+              [
+                0.0679900124669075,
+                -0.5359085202217102
+              ],
+              [
+                0.03141864761710167,
+                0.7593674063682556
+              ],
+              [
+                -0.30563318729400635,
+                0.030209479853510857
+              ],
+              [
+                -0.09107878804206848,
+                0.5881305932998657
+              ],
+              [
+                -0.021528460085392,
+                -0.6827529668807983
+              ]
+            ],
+            "H2": [
+              [
+                -0.9432262778282166,
+                0.756864070892334
+              ],
+              [
+                0.8333621025085449,
+                -0.9587698578834534
+              ],
+              [
+                0.760648250579834,
+                -0.9415083527565002
+              ],
+              [
+                -0.9249894022941589,
+                0.8857964277267456
+              ],
+              [
+                -0.8392953276634216,
+                1.0736202001571655
+              ],
+              [
+                0.9687922596931458,
+                -1.094268560409546
+              ],
+              [
+                -1.0449317693710327,
+                0.7573097944259644
+              ],
+              [
+                -0.8718628883361816,
+                0.6689274907112122
+              ],
+              [
+                -0.9067549705505371,
+                0.6190628409385681
+              ],
+              [
+                -0.7675455212593079,
+                0.7001571655273438
+              ],
+              [
+                0.7275686860084534,
+                -0.82703697681427
+              ],
+              [
+                0.7707672119140625,
+                -0.8641656041145325
+              ],
+              [
+                -0.7609845399856567,
+                0.8832479119300842
+              ],
+              [
+                1.0767407417297363,
+                -0.898963451385498
+              ],
+              [
+                0.803169310092926,
+                -0.7386375665664673
+              ],
+              [
+                -0.8318964838981628,
+                0.9797654747962952
+              ]
+            ],
+            "H3": [
+              [
+                -3.101210594177246,
+                -0.05860992893576622
+              ],
+              [
+                -1.7060784101486206,
+                -0.10907751321792603
+              ],
+              [
+                -1.8514821529388428,
+                -0.178762286901474
+              ],
+              [
+                1.5663880109786987,
+                0.18148905038833618
+              ],
+              [
+                -2.276977062225342,
+                -0.34968090057373047
+              ],
+              [
+                1.598056435585022,
+                0.2304883897304535
+              ],
+              [
+                -1.882304310798645,
+                -0.294716477394104
+              ],
+              [
+                2.0618088245391846,
+                0.3945070207118988
+              ],
+              [
+                2.539675712585449,
+                0.2598574459552765
+              ],
+              [
+                2.064934015274048,
+                0.22498732805252075
+              ],
+              [
+                1.6853898763656616,
+                0.12053924798965454
+              ],
+              [
+                2.201785087585449,
+                0.3953283131122589
+              ],
+              [
+                -2.0498337745666504,
+                -0.3388806879520416
+              ],
+              [
+                2.307023048400879,
+                0.46200668811798096
+              ],
+              [
+                -1.9981403350830078,
+                -0.2152530401945114
+              ],
+              [
+                -1.8138395547866821,
+                -0.2749914526939392
+              ]
+            ]
+          },
+          "max_abs_coordinate_error_vs_64d_route": 0.0001373291015625,
+          "special_token_prediction_count": null,
+          "prediction_distribution": {
+            "0": 1,
+            "1": 31,
+            "2": 211,
+            "3": 781,
+            "4": 2101,
+            "5": 20612,
+            "6": 9031,
+            "8": 26281,
+            "9": 40951
+          }
+        },
+        "3": {
+          "accuracy": 1.0,
+          "correct": 100000,
+          "total": 100000,
+          "argmax_size": 10,
+          "pre_W_O_head_value_shape_per_input": [
+            4,
+            16
+          ],
+          "reduced_output_matrix_shape_per_head": [
+            16,
+            3
+          ],
+          "summed_head_coordinate_shape_per_input": [
+            3
+          ],
+          "reduced_output_matrices": {
+            "H0": [
+              [
+                -0.44830185174942017,
+                0.6955057978630066,
+                -0.23571406304836273
+              ],
+              [
+                0.38873356580734253,
+                -0.9399077892303467,
+                0.3036714792251587
+              ],
+              [
+                0.5315337181091309,
+                -1.031943678855896,
+                0.5276081562042236
+              ],
+              [
+                -0.3934774100780487,
+                0.9302195310592651,
+                -0.2953750789165497
+              ],
+              [
+                0.30949631333351135,
+                -1.316977858543396,
+                0.45389118790626526
+              ],
+              [
+                -0.44575104117393494,
+                0.7786113023757935,
+                -0.1772339940071106
+              ],
+              [
+                -0.4084140956401825,
+                1.305594563484192,
+                -0.4537350833415985
+              ],
+              [
+                0.5110276937484741,
+                -0.9823494553565979,
+                0.2927020192146301
+              ],
+              [
+                0.4785799980163574,
+                -1.1796587705612183,
+                0.4950611889362335
+              ],
+              [
+                0.5045797824859619,
+                -0.9813170433044434,
+                0.4818671941757202
+              ],
+              [
+                0.4932190477848053,
+                -0.7951306700706482,
+                0.2432175725698471
+              ],
+              [
+                0.33029770851135254,
+                -1.1843689680099487,
+                0.3574289381504059
+              ],
+              [
+                -0.37924155592918396,
+                0.877124547958374,
+                -0.26085224747657776
+              ],
+              [
+                0.5240915417671204,
+                -0.8976070880889893,
+                0.3250058591365814
+              ],
+              [
+                -0.3814200460910797,
+                1.0550869703292847,
+                -0.39807218313217163
+              ],
+              [
+                0.44407549500465393,
+                -1.1969993114471436,
+                0.26175957918167114
+              ]
+            ],
+            "H1": [
+              [
+                -0.31495219469070435,
+                0.060596272349357605,
+                0.1350514143705368
+              ],
+              [
+                0.07763068377971649,
+                0.737213134765625,
+                -0.27143681049346924
+              ],
+              [
+                -0.0626097321510315,
+                -0.749991774559021,
+                0.26663240790367126
+              ],
+              [
+                0.12795118987560272,
+                -0.536230206489563,
+                0.30821359157562256
+              ],
+              [
+                0.006352560594677925,
+                -0.585564911365509,
+                0.22636698186397552
+              ],
+              [
+                -0.08343194425106049,
+                0.6980863213539124,
+                -0.31594011187553406
+              ],
+              [
+                -0.06023471802473068,
+                0.6644653081893921,
+                -0.14711308479309082
+              ],
+              [
+                0.10861200094223022,
+                -0.5295295119285583,
+                0.13598212599754333
+              ],
+              [
+                -0.29916146397590637,
+                -0.20629480481147766,
+                0.20588967204093933
+              ],
+              [
+                0.07840369641780853,
+                0.7189716696739197,
+                -0.29323631525039673
+              ],
+              [
+                0.015180051326751709,
+                -0.7379575967788696,
+                0.33777403831481934
+              ],
+              [
+                0.0679900124669075,
+                -0.5359085202217102,
+                0.28004151582717896
+              ],
+              [
+                0.03141864761710167,
+                0.7593674063682556,
+                -0.18701311945915222
+              ],
+              [
+                -0.30563318729400635,
+                0.030209479853510857,
+                0.0003452007658779621
+              ],
+              [
+                -0.09107878804206848,
+                0.5881305932998657,
+                -0.257490873336792
+              ],
+              [
+                -0.021528460085392,
+                -0.6827529668807983,
+                0.2421821504831314
+              ]
+            ],
+            "H2": [
+              [
+                -0.9432262778282166,
+                0.756864070892334,
+                0.3494829833507538
+              ],
+              [
+                0.8333621025085449,
+                -0.9587698578834534,
+                -0.522088348865509
+              ],
+              [
+                0.760648250579834,
+                -0.9415083527565002,
+                -0.352271169424057
+              ],
+              [
+                -0.9249894022941589,
+                0.8857964277267456,
+                0.47361862659454346
+              ],
+              [
+                -0.8392953276634216,
+                1.0736202001571655,
+                0.461299866437912
+              ],
+              [
+                0.9687922596931458,
+                -1.094268560409546,
+                -0.5712022185325623
+              ],
+              [
+                -1.0449317693710327,
+                0.7573097944259644,
+                0.24374833703041077
+              ],
+              [
+                -0.8718628883361816,
+                0.6689274907112122,
+                0.35180675983428955
+              ],
+              [
+                -0.9067549705505371,
+                0.6190628409385681,
+                0.4414384663105011
+              ],
+              [
+                -0.7675455212593079,
+                0.7001571655273438,
+                0.27890509366989136
+              ],
+              [
+                0.7275686860084534,
+                -0.82703697681427,
+                -0.2289905697107315
+              ],
+              [
+                0.7707672119140625,
+                -0.8641656041145325,
+                -0.34517595171928406
+              ],
+              [
+                -0.7609845399856567,
+                0.8832479119300842,
+                0.31311866641044617
+              ],
+              [
+                1.0767407417297363,
+                -0.898963451385498,
+                -0.46510565280914307
+              ],
+              [
+                0.803169310092926,
+                -0.7386375665664673,
+                -0.4907594323158264
+              ],
+              [
+                -0.8318964838981628,
+                0.9797654747962952,
+                0.47972920536994934
+              ]
+            ],
+            "H3": [
+              [
+                -3.101210594177246,
+                -0.05860992893576622,
+                -0.07421211898326874
+              ],
+              [
+                -1.7060784101486206,
+                -0.10907751321792603,
+                0.05300851911306381
+              ],
+              [
+                -1.8514821529388428,
+                -0.178762286901474,
+                -0.14066293835639954
+              ],
+              [
+                1.5663880109786987,
+                0.18148905038833618,
+                0.20105886459350586
+              ],
+              [
+                -2.276977062225342,
+                -0.34968090057373047,
+                -0.2967108488082886
+              ],
+              [
+                1.598056435585022,
+                0.2304883897304535,
+                0.22364428639411926
+              ],
+              [
+                -1.882304310798645,
+                -0.294716477394104,
+                -0.24728839099407196
+              ],
+              [
+                2.0618088245391846,
+                0.3945070207118988,
+                0.2638029158115387
+              ],
+              [
+                2.539675712585449,
+                0.2598574459552765,
+                0.2880277633666992
+              ],
+              [
+                2.064934015274048,
+                0.22498732805252075,
+                0.22745458781719208
+              ],
+              [
+                1.6853898763656616,
+                0.12053924798965454,
+                0.08300470560789108
+              ],
+              [
+                2.201785087585449,
+                0.3953283131122589,
+                0.165974959731102
+              ],
+              [
+                -2.0498337745666504,
+                -0.3388806879520416,
+                -0.22906054556369781
+              ],
+              [
+                2.307023048400879,
+                0.46200668811798096,
+                0.35222703218460083
+              ],
+              [
+                -1.9981403350830078,
+                -0.2152530401945114,
+                -0.2144518494606018
+              ],
+              [
+                -1.8138395547866821,
+                -0.2749914526939392,
+                -0.10312451422214508
+              ]
+            ]
+          },
+          "max_abs_coordinate_error_vs_64d_route": 0.0001373291015625,
+          "special_token_prediction_count": null,
+          "prediction_distribution": {
+            "0": 1,
+            "1": 31,
+            "2": 211,
+            "3": 781,
+            "4": 2101,
+            "5": 4651,
+            "6": 9031,
+            "7": 15961,
+            "8": 26281,
+            "9": 40951
+          }
+        }
+      }
+    }
+  }
+}

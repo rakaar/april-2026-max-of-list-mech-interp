@@ -15,6 +15,7 @@ site/
 
 # Local tunnel/runtime files. Do not publish tunnel state or secrets.
 .ngrok*
+.cloudflared*
 
 # Local Codex/session metadata
 .codex/

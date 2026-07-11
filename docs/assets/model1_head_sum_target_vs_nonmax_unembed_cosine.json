@@ -1,0 +1,195 @@
+{
+  "description": "All 10^5 Model 1 inputs. For each input, target_cosine compares head_sum with W_U[true_max]. query_nonmax_avg_cosine first computes cosine(head_sum, W_U[n_i]) for each query position whose value is not the true max, then averages those position-level cosines within the input. Duplicate non-max query entries count as repeated positions. Inputs with no non-max positions are excluded from the non-max summary.",
+  "n_inputs_total": 100000,
+  "sequence_format": "[BOS] n0 [SEP] n1 [SEP] n2 [SEP] n3 [SEP] n4 [ANS]",
+  "counts_by_true_max": {
+    "0": 1,
+    "1": 31,
+    "2": 211,
+    "3": 781,
+    "4": 2101,
+    "5": 4651,
+    "6": 9031,
+    "7": 15961,
+    "8": 26281,
+    "9": 40951
+  },
+  "nonmax_input_counts_by_true_max": {
+    "0": 0,
+    "1": 30,
+    "2": 210,
+    "3": 780,
+    "4": 2100,
+    "5": 4650,
+    "6": 9030,
+    "7": 15960,
+    "8": 26280,
+    "9": 40950
+  },
+  "rows": [
+    {
+      "true_max": 0,
+      "target": {
+        "count": 1,
+        "mean_cosine": 0.8123788833618164,
+        "std_cosine": 0.0,
+        "min_cosine": 0.8123788833618164,
+        "max_cosine": 0.8123788833618164
+      },
+      "query_nonmax_average": null
+    },
+    {
+      "true_max": 1,
+      "target": {
+        "count": 31,
+        "mean_cosine": 0.9068952164342327,
+        "std_cosine": 0.017138605324145666,
+        "min_cosine": 0.8728628754615784,
+        "max_cosine": 0.9344909191131592
+      },
+      "query_nonmax_average": {
+        "count": 30,
+        "mean_cosine": 0.6771726906299591,
+        "std_cosine": 0.03864339356598136,
+        "min_cosine": 0.6250027418136597,
+        "max_cosine": 0.7443675994873047
+      }
+    },
+    {
+      "true_max": 2,
+      "target": {
+        "count": 211,
+        "mean_cosine": 0.9386900024956436,
+        "std_cosine": 0.001255830285703927,
+        "min_cosine": 0.9366984367370605,
+        "max_cosine": 0.9404960870742798
+      },
+      "query_nonmax_average": {
+        "count": 210,
+        "mean_cosine": 0.562580167395728,
+        "std_cosine": 0.10635144451632626,
+        "min_cosine": 0.3816884756088257,
+        "max_cosine": 0.7418259382247925
+      }
+    },
+    {
+      "true_max": 3,
+      "target": {
+        "count": 781,
+        "mean_cosine": 0.9439993936487411,
+        "std_cosine": 0.0010188308850291143,
+        "min_cosine": 0.9428240656852722,
+        "max_cosine": 0.9474624395370483
+      },
+      "query_nonmax_average": {
+        "count": 780,
+        "mean_cosine": 0.41953521716909914,
+        "std_cosine": 0.17305586417242316,
+        "min_cosine": 0.030555974692106247,
+        "max_cosine": 0.7814844846725464
+      }
+    },
+    {
+      "true_max": 4,
+      "target": {
+        "count": 2101,
+        "mean_cosine": 0.9286491064047144,
+        "std_cosine": 0.000478301462729928,
+        "min_cosine": 0.9281221628189087,
+        "max_cosine": 0.9304409623146057
+      },
+      "query_nonmax_average": {
+        "count": 2100,
+        "mean_cosine": 0.23133787970191666,
+        "std_cosine": 0.23652293620522474,
+        "min_cosine": -0.3631688356399536,
+        "max_cosine": 0.7938027381896973
+      }
+    },
+    {
+      "true_max": 5,
+      "target": {
+        "count": 4651,
+        "mean_cosine": 0.9477708585491439,
+        "std_cosine": 0.0002533513102563249,
+        "min_cosine": 0.946516752243042,
+        "max_cosine": 0.9480194449424744
+      },
+      "query_nonmax_average": {
+        "count": 4650,
+        "mean_cosine": 0.08757462226335079,
+        "std_cosine": 0.28963478842934093,
+        "min_cosine": -0.6614962816238403,
+        "max_cosine": 0.8296617269515991
+      }
+    },
+    {
+      "true_max": 6,
+      "target": {
+        "count": 9031,
+        "mean_cosine": 0.8012992557715293,
+        "std_cosine": 0.0007770984831463671,
+        "min_cosine": 0.7973666191101074,
+        "max_cosine": 0.8020325899124146
+      },
+      "query_nonmax_average": {
+        "count": 9030,
+        "mean_cosine": 0.05562274962958105,
+        "std_cosine": 0.33399593722215387,
+        "min_cosine": -0.8119490742683411,
+        "max_cosine": 0.933729887008667
+      }
+    },
+    {
+      "true_max": 7,
+      "target": {
+        "count": 15961,
+        "mean_cosine": 0.8747066337432966,
+        "std_cosine": 0.003554673513198382,
+        "min_cosine": 0.8596174716949463,
+        "max_cosine": 0.8827912211418152
+      },
+      "query_nonmax_average": {
+        "count": 15960,
+        "mean_cosine": 0.23409931603486517,
+        "std_cosine": 0.2748524732134981,
+        "min_cosine": -0.6847567558288574,
+        "max_cosine": 0.8707829713821411
+      }
+    },
+    {
+      "true_max": 8,
+      "target": {
+        "count": 26281,
+        "mean_cosine": 0.9274745572557243,
+        "std_cosine": 0.0007628190866109084,
+        "min_cosine": 0.9185422658920288,
+        "max_cosine": 0.9290890693664551
+      },
+      "query_nonmax_average": {
+        "count": 26280,
+        "mean_cosine": 0.04316228564064581,
+        "std_cosine": 0.3444121902632443,
+        "min_cosine": -0.9178876876831055,
+        "max_cosine": 0.7716199159622192
+      }
+    },
+    {
+      "true_max": 9,
+      "target": {
+        "count": 40951,
+        "mean_cosine": 0.9038709884542694,
+        "std_cosine": 0.000544646580845684,
+        "min_cosine": 0.9033294916152954,
+        "max_cosine": 0.9056181907653809
+      },
+      "query_nonmax_average": {
+        "count": 40950,
+        "mean_cosine": -0.07655499113483698,
+        "std_cosine": 0.3559573990265625,
+        "min_cosine": -0.9394227266311646,
+        "max_cosine": 0.8375577926635742
+      }
+    }
+  ]
+}
