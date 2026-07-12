@@ -317,28 +317,6 @@
   
 </li>
         
-          <li class="md-nav__item">
-  <a href="#value-vector" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Value vector
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#sum-of-head-outputs" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Sum of head outputs
-      
-    </span>
-  </a>
-  
-</li>
-        
       </ul>
     </nav>
   
@@ -990,28 +968,6 @@
   
 </li>
         
-          <li class="md-nav__item">
-  <a href="#value-vector" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Value vector
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#sum-of-head-outputs" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Sum of head outputs
-      
-    </span>
-  </a>
-  
-</li>
-        
       </ul>
     </nav>
   
@@ -1217,8 +1173,6 @@
   <div class="architecture-loading">Loading transformer architecture...</div>
 </div>
 </p>
-<div class="notation-grid">
-<div class="notation-matrices">
 <h3 id="matrices">Matrices<a class="headerlink" href="#matrices" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
@@ -1263,28 +1217,6 @@
 </table>
 <p>It is generally considered to be one large matrix while computing (<code>64 x 64</code>).
 But to interpret its easy to think that each head has its own output matrix.</p>
-</div>
-<div class="notation-vectors">
-<h3 id="value-vector">Value vector<a class="headerlink" href="#value-vector" title="Permanent link">&para;</a></h3>
-<p>Value vector after doing weighted attention of head h (<code>N x 16</code>, but last row
-would suffice to explain so considered <code>1 x 16</code>): <span class="arithmatex">\(V_h\)</span>, which is basically
-(Attention x (<span class="arithmatex">\(W_V\)</span> x residual stream)).</p>
-<h3 id="sum-of-head-outputs">Sum of head outputs<a class="headerlink" href="#sum-of-head-outputs" title="Permanent link">&para;</a></h3>
-<p>Sum of all heads output just before multiplying with unembdding matrix (<code>N x
-64</code>, but last row suffices so <code>1 x 64</code>):</p>
-<div class="arithmatex">\[
-\Sigma_h W_O^h V_h
-\]</div>
-<div class="admonition note">
-<p class="admonition-title">Notation check</p>
-<p>The draft above is preserved. With the displayed row-vector shapes,
-<span class="arithmatex">\(V_h\)</span> is <code>1 x 16</code> and <span class="arithmatex">\(W_O^h\)</span> is <code>16 x 64</code>, so the dimensionally
-consistent product is <span class="arithmatex">\(V_h W_O^h\)</span>. The summed final-row write is therefore
-<span class="arithmatex">\(\sum_h V_h W_O^h\)</span>. PyTorch stores linear-layer weights transposed relative
-to this mathematical row-vector convention.</p>
-</div>
-</div>
-</div>
 <h2 id="attention-routing-at-the-ans-token">Attention routing at the <code>[ANS]</code> token<a class="headerlink" href="#attention-routing-at-the-ans-token" title="Permanent link">&para;</a></h2>
 <h3 id="looking-at-attention-patterns-in-each-head-at-ans-token">Looking at attention patterns in each head at ANS token<a class="headerlink" href="#looking-at-attention-patterns-in-each-head-at-ans-token" title="Permanent link">&para;</a></h3>
 <p>The final response we care about is the prediction of the model at last token
@@ -1293,11 +1225,18 @@ which is of size <code>N x Vocab Size</code>. We only need <code>-1 x Vocab size
 back down, in each head, all that matters for the computation is the last row
 of the attention matrix. The last row of the attention matrix checks what
 tokens the ANS token attends to?</p>
-<p>Below is the plot for</p>
+<p>Using the notation in the architecture diagram, the query, keys, and final
+attention row for head <span class="arithmatex">\(h\)</span> are</p>
 <div class="arithmatex">\[
-W_Q^h [\text{ANS token in residual stream}] \cdot
-W_K^h [\text{Embedding vector of n}]
+Q_h = R W_Q^h,
+\qquad
+K_h = R W_K^h,
+\qquad
+a_h = \operatorname{softmax}\left(
+\frac{Q_h[-1,:]K_h^\top}{\sqrt{16}} + M_{\mathrm{causal}}[-1,:]
+\right).
 \]</div>
+<p>Below, each row is the resulting <span class="arithmatex">\(a_h \in \mathbb{R}^{1 \times N}\)</span>.</p>
 <blockquote>
 <p><strong>Display specification</strong></p>
 <p>Show every maximum from <code>0</code> through <code>9</code> separately. In each case, show a
@@ -1332,9 +1271,6 @@ identities at the top. Matrices are laid out in rows as:
 </figure>
 
 <p><a class="main-results-data-link" href="../assets/main_results_ans_attention_regimes.json">Open the exact plotted values</a></p>
-<ul>
-<li><span class="arithmatex">\(W_Q\)</span> ANS x <span class="arithmatex">\(W_K\)</span> max number vs <span class="arithmatex">\(W_Q\)</span> ANS x <span class="arithmatex">\(W_K\)</span> ANS in each head</li>
-</ul>
 <div class="admonition info">
 <p class="admonition-title">How to read this diagnostic</p>
 <p>These are the model's actual attention distributions after softmax over all
@@ -1348,124 +1284,112 @@ heads place nearly all their attention on the maximum token.</p>
 <h3 id="causal-manipulation-of-the-ans-attention-rows">Causal manipulation of the <code>[ANS]</code> attention rows<a class="headerlink" href="#causal-manipulation-of-the-ans-attention-rows" title="Permanent link">&para;</a></h3>
 <p>As the maximum number increases, more heads are recruited. The all-head
 <code>[ANS]</code>-self pattern acts as a baseline that decodes as <code>0</code>. A recruited head
-changes its final attention row from <code>[ANS]</code> to the maximum-number token,
-thereby adding a number-dependent correction through its value and output
-matrices. H3 is recruited for maxima <code>2–6</code>; H2 joins H3 for maxima <code>7–8</code>; and
-H0 joins H2 and H3 for maximum <code>9</code>.</p>
-<p>This interpretation makes a causal prediction: changing only the final
-<code>[ANS]</code> attention rows should change the answer, even while every model weight,
-token embedding, positional embedding, and all earlier attention rows remain
-fixed. The prediction holds.</p>
+changes <span class="arithmatex">\(a_h\)</span> from <code>[ANS]</code> to the maximum-number token, thereby changing
+<span class="arithmatex">\(V_h = a_h S_h\)</span> and the residual-stream write <span class="arithmatex">\(z_h = V_h W_O^h\)</span>. H3 is
+recruited for maxima <code>2–6</code>; H2 joins H3 for maxima <code>7–8</code>; and H0 joins H2 and
+H3 for maximum <code>9</code>.</p>
+<p>This interpretation makes a causal prediction: changing only <span class="arithmatex">\(a_h\)</span> should
+change the answer, even while every model weight, token embedding, positional
+embedding, and all earlier attention rows remain fixed. The prediction holds.</p>
 <h4 id="h3-steers-2-3-4-5-6">H3 steers <code>[2, 3, 4, 5, 6]</code><a class="headerlink" href="#h3-steers-2-3-4-5-6" title="Permanent link">&para;</a></h4>
-<p>The unmodified model answers <code>6</code>. In each intervention below, H0, H1, and H2
-are forced one-hot to <code>[ANS]</code>; only H3 is forced one-hot to a selected digit
-position.</p>
+<p>The unmodified model answers <code>6</code>. In each intervention below, <span class="arithmatex">\(a_0\)</span>, <span class="arithmatex">\(a_1\)</span>,
+and <span class="arithmatex">\(a_2\)</span> are forced one-hot to <code>[ANS]</code>; only <span class="arithmatex">\(a_3\)</span> is forced one-hot to a
+selected digit position.</p>
 <table>
 <thead>
 <tr>
 <th>Input</th>
-<th>Forced final <code>[ANS]</code> attention rows</th>
+<th>Forced attention rows <span class="arithmatex">\(a_h\)</span></th>
 <th style="text-align: right;">Model output</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><code>[2, 3, 4, 5, 6]</code></td>
-<td>H0/H1/H2 <span class="arithmatex">\(\rightarrow\)</span> <code>[ANS]</code>; H3 <span class="arithmatex">\(\rightarrow\)</span> <code>2</code></td>
+<td><span class="arithmatex">\(a_0,a_1,a_2 \rightarrow\)</span> <code>[ANS]</code>; <span class="arithmatex">\(a_3 \rightarrow 2\)</span></td>
 <td style="text-align: right;"><strong>2</strong></td>
 </tr>
 <tr>
 <td><code>[2, 3, 4, 5, 6]</code></td>
-<td>H0/H1/H2 <span class="arithmatex">\(\rightarrow\)</span> <code>[ANS]</code>; H3 <span class="arithmatex">\(\rightarrow\)</span> <code>3</code></td>
+<td><span class="arithmatex">\(a_0,a_1,a_2 \rightarrow\)</span> <code>[ANS]</code>; <span class="arithmatex">\(a_3 \rightarrow 3\)</span></td>
 <td style="text-align: right;"><strong>3</strong></td>
 </tr>
 <tr>
 <td><code>[2, 3, 4, 5, 6]</code></td>
-<td>H0/H1/H2 <span class="arithmatex">\(\rightarrow\)</span> <code>[ANS]</code>; H3 <span class="arithmatex">\(\rightarrow\)</span> <code>4</code></td>
+<td><span class="arithmatex">\(a_0,a_1,a_2 \rightarrow\)</span> <code>[ANS]</code>; <span class="arithmatex">\(a_3 \rightarrow 4\)</span></td>
 <td style="text-align: right;"><strong>4</strong></td>
 </tr>
 <tr>
 <td><code>[2, 3, 4, 5, 6]</code></td>
-<td>H0/H1/H2 <span class="arithmatex">\(\rightarrow\)</span> <code>[ANS]</code>; H3 <span class="arithmatex">\(\rightarrow\)</span> <code>5</code></td>
+<td><span class="arithmatex">\(a_0,a_1,a_2 \rightarrow\)</span> <code>[ANS]</code>; <span class="arithmatex">\(a_3 \rightarrow 5\)</span></td>
 <td style="text-align: right;"><strong>5</strong></td>
 </tr>
 </tbody>
 </table>
 <h4 id="h2-is-recruited-at-7">H2 is recruited at <code>7</code><a class="headerlink" href="#h2-is-recruited-at-7" title="Permanent link">&para;</a></h4>
 <p>The unmodified model answers <code>8</code> for <code>[4, 5, 6, 7, 8]</code>. Targets <code>4–6</code> use
-the lower-number circuit: H2 stays on <code>[ANS]</code> while H3 reads the requested
-digit. To produce <code>7</code>, both H2 and H3 must read the <code>7</code> token.</p>
+the lower-number circuit: <span class="arithmatex">\(a_2\)</span> stays on <code>[ANS]</code> while <span class="arithmatex">\(a_3\)</span> reads the
+requested digit. To produce <code>7</code>, both <span class="arithmatex">\(a_2\)</span> and <span class="arithmatex">\(a_3\)</span> must read the <code>7</code> token.</p>
 <table>
 <thead>
 <tr>
 <th>Input</th>
-<th>Forced final <code>[ANS]</code> attention rows</th>
+<th>Forced attention rows <span class="arithmatex">\(a_h\)</span></th>
 <th style="text-align: right;">Model output</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><code>[4, 5, 6, 7, 8]</code></td>
-<td>H0/H1/H2 <span class="arithmatex">\(\rightarrow\)</span> <code>[ANS]</code>; H3 <span class="arithmatex">\(\rightarrow\)</span> <code>4</code></td>
+<td><span class="arithmatex">\(a_0,a_1,a_2 \rightarrow\)</span> <code>[ANS]</code>; <span class="arithmatex">\(a_3 \rightarrow 4\)</span></td>
 <td style="text-align: right;"><strong>4</strong></td>
 </tr>
 <tr>
 <td><code>[4, 5, 6, 7, 8]</code></td>
-<td>H0/H1/H2 <span class="arithmatex">\(\rightarrow\)</span> <code>[ANS]</code>; H3 <span class="arithmatex">\(\rightarrow\)</span> <code>5</code></td>
+<td><span class="arithmatex">\(a_0,a_1,a_2 \rightarrow\)</span> <code>[ANS]</code>; <span class="arithmatex">\(a_3 \rightarrow 5\)</span></td>
 <td style="text-align: right;"><strong>5</strong></td>
 </tr>
 <tr>
 <td><code>[4, 5, 6, 7, 8]</code></td>
-<td>H0/H1/H2 <span class="arithmatex">\(\rightarrow\)</span> <code>[ANS]</code>; H3 <span class="arithmatex">\(\rightarrow\)</span> <code>6</code></td>
+<td><span class="arithmatex">\(a_0,a_1,a_2 \rightarrow\)</span> <code>[ANS]</code>; <span class="arithmatex">\(a_3 \rightarrow 6\)</span></td>
 <td style="text-align: right;"><strong>6</strong></td>
 </tr>
 <tr>
 <td><code>[4, 5, 6, 7, 8]</code></td>
-<td>H0/H1 <span class="arithmatex">\(\rightarrow\)</span> <code>[ANS]</code>; H2/H3 <span class="arithmatex">\(\rightarrow\)</span> <code>7</code></td>
+<td><span class="arithmatex">\(a_0,a_1 \rightarrow\)</span> <code>[ANS]</code>; <span class="arithmatex">\(a_2,a_3 \rightarrow 7\)</span></td>
 <td style="text-align: right;"><strong>7</strong></td>
 </tr>
 </tbody>
 </table>
-<div class="admonition success">
-<p class="admonition-title">Causal result</p>
-<p>The true maxima are <code>6</code> and <code>8</code>, but replacing only the <code>[ANS]</code> query row
-of the attention matrices makes the frozen model output the selected
-non-maximum digit. The attention pattern therefore does not merely
-correlate with the answer: the head-specific source choices causally
-determine it.</p>
-</div>
-<p>The intervention is implemented by replacing each selected <code>1 x 11</code>
-post-softmax attention row with a one-hot row, then applying the model's
-unchanged <span class="arithmatex">\(W_V^h\)</span>, <span class="arithmatex">\(W_O^h\)</span>, residual addition, and <span class="arithmatex">\(W_U\)</span>. The special maximum
-<code>1</code> regime is excluded here because H3 uses a soft <code>[ANS]</code>/<code>1</code> mixture rather
-than a one-hot row.</p>
-<p>Reproducible analysis:
-<code>scripts/analysis/model1_counterfactual_attention_steering_examples.py</code>.
-<a class="main-results-data-link" href="../assets/model1_counterfactual_attention_steering_examples.json">Open the exact logits and interventions</a></p>
 <h2 id="low-dimensional-computation">Low-dimensional computation<a class="headerlink" href="#low-dimensional-computation" title="Permanent link">&para;</a></h2>
+<p>For the <code>[ANS]</code> prediction, head <span class="arithmatex">\(h\)</span> uses the quantities defined in the
+architecture diagram:</p>
+<div class="arithmatex">\[
+S_h = R W_V^h \in \mathbb{R}^{N \times 16},
+\qquad
+a_h = A_h[-1,:] \in \mathbb{R}^{1 \times N},
+\]</div>
+<div class="arithmatex">\[
+V_h = a_h S_h \in \mathbb{R}^{1 \times 16},
+\qquad
+z_h = V_h W_O^h \in \mathbb{R}^{1 \times 64}.
+\]</div>
 <p>Except for the soft-attention case at maximum <code>1</code>, the successful one-hot
-interventions let us treat each head's final value as a choice between its
-source value at <code>[ANS]</code>, <span class="arithmatex">\(V_h[\mathrm{ANS}]\)</span>, and its source value at the
-selected number, <span class="arithmatex">\(V_h[n]\)</span>. Here <span class="arithmatex">\(V_h[n]\)</span> is shorthand for the value of the
-complete residual vector at that source position, including both token and
-positional embedding.</p>
-<p>In row-vector notation, each selected <code>1 x 16</code> value is mapped into the
-<code>64</code>-dimensional residual stream by its head's <code>16 x 64</code> output matrix:</p>
+interventions make <span class="arithmatex">\(a_h\)</span> select either the <code>[ANS]</code> row or a number row of
+<span class="arithmatex">\(S_h\)</span>. The four head writes are then added:</p>
 <div class="arithmatex">\[
-z_h = V_h W_O^h \in \mathbb{R}^{1 \times 64},
-\qquad
-z = \sum_{h=0}^{3} z_h.
+z = \sum_{h=0}^{3} z_h \in \mathbb{R}^{1 \times 64}.
 \]</div>
-<p>The head writes are added and scored against the unembedding matrix:</p>
+<p>The actual model computes</p>
 <div class="arithmatex">\[
-\ell = z W_U \in \mathbb{R}^{1 \times |\mathcal{V}|},
+R_{\mathrm{final}}[-1,:] = R[-1,:] + z,
 \qquad
-\widehat{y} = \operatorname*{argmax}_t \ell_t.
+\ell = R_{\mathrm{final}}[-1,:] W_U.
 \]</div>
-<p>For this model, the attention-head sum <span class="arithmatex">\(z\)</span> by itself already gives <code>100%</code>
-accuracy over all <code>100,000</code> possible five-digit inputs. The experiment below
-therefore isolates this sufficient attention-write computation; it does not
-add the original <code>[ANS]</code> residual before unembedding.</p>
+<p>For this model, the isolated head readout <span class="arithmatex">\(\ell_{\mathrm{heads}} = z W_U\)</span>
+already gives <code>100%</code> accuracy over all <code>100,000</code> possible five-digit inputs.
+The experiment below therefore studies this sufficient head-write computation
+without adding the original <code>[ANS]</code> residual.</p>
 <h3 id="output-matrix-pca">Output-matrix PCA<a class="headerlink" href="#output-matrix-pca" title="Permanent link">&para;</a></h3>
 <p>Let the four output maps be stacked into the mathematical <code>64 x 64</code> output
 matrix:</p>
@@ -1554,12 +1478,13 @@ matrix.</p>
 <h4 id="baseline-plus-recruited-corrections">Baseline plus recruited corrections<a class="headerlink" href="#baseline-plus-recruited-corrections" title="Permanent link">&para;</a></h4>
 <p>The first panel presents the computation as a fixed baseline followed by
 answer-dependent corrections. The baseline is
-<span class="arithmatex">\(B=H0([\mathrm{ANS}])+H1([\mathrm{ANS}])+H2([\mathrm{ANS}])\)</span>. H3 supplies the
-first answer-dependent write. For outputs <code>7–9</code>, H2's <code>[ANS]</code> write is replaced
-by its number write; for output <code>9</code>, H0 is replaced in the same way. Thus the
-H2 and H0 arrows are replacement differences such as
-<span class="arithmatex">\(H2(n)-H2([\mathrm{ANS}])\)</span>, avoiding double-counting the self write already in
-<span class="arithmatex">\(B\)</span>.</p>
+<span class="arithmatex">\(B=z_0([\mathrm{ANS}])+z_1([\mathrm{ANS}])+z_2([\mathrm{ANS}])\)</span>, where
+<span class="arithmatex">\(z_h(x)\)</span> denotes the write produced when <span class="arithmatex">\(a_h\)</span> reads source <span class="arithmatex">\(x\)</span>. The term
+<span class="arithmatex">\(z_3\)</span> supplies the first answer-dependent write. For outputs <code>7–9</code>,
+<span class="arithmatex">\(z_2([\mathrm{ANS}])\)</span> is replaced by <span class="arithmatex">\(z_2(n)\)</span>; for output <code>9</code>, <span class="arithmatex">\(z_0\)</span> is
+replaced in the same way. Thus the <span class="arithmatex">\(z_2\)</span> and <span class="arithmatex">\(z_0\)</span> arrows are replacement
+differences such as <span class="arithmatex">\(z_2(n)-z_2([\mathrm{ANS}])\)</span>, avoiding double-counting the
+self write already in <span class="arithmatex">\(B\)</span>.</p>
 <p><a class="main-results-data-link" href="../assets/model1_output_pca_piecewise_interactive.html" target="_blank">Open the baseline-and-corrections interactive</a></p>
 <p><iframe
   src="../assets/model1_output_pca_piecewise_interactive.html"
@@ -1578,7 +1503,7 @@ than a baseline and corrections. Each colored arrow starts at the origin and
 is the projected vector <span class="arithmatex">\(V_hW_O^h\)</span>. The black arrow is their sum
 <span class="arithmatex">\(z=\sum_h V_hW_O^h\)</span>. Select an output <code>0–9</code> to see which source each head reads
 and how the resulting sum scores all <code>14</code> vocabulary tokens.</p>
-<p>For output <code>1</code>, H3 uses its measured soft <code>[ANS]</code>/<code>1</code> attention row. Every
+<p>For output <code>1</code>, <span class="arithmatex">\(a_3\)</span> is the measured soft <code>[ANS]</code>/<code>1</code> attention row. Every
 other endpoint uses the verified one-hot attention recipe. For all ten
 requested outputs, both the <code>3d</code> and full <code>64d</code> head sums predict the requested
 token.</p>
