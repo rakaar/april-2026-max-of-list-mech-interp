@@ -23,7 +23,7 @@
     9,
     10
   ],
-  "grouped_regimes_are_means": true,
+  "figure_uses_grouped_means": false,
   "individual_cases": [
     {
       "max_value": 0,

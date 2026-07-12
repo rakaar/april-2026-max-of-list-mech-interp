@@ -948,9 +948,8 @@ W_K^h [\text{Embedding vector of n}]
 \]</div>
 <blockquote>
 <p><strong>Display specification</strong></p>
-<p>Show number <code>0</code> in one row, number <code>1</code> in the next row, numbers <code>2-6</code> in the
-next, numbers <code>7-8</code> next, and number <code>9</code> last. In each case, show a colored
-<code>4 x N</code> matrix: four attention heads by <code>N</code> source tokens, with token
+<p>Show every maximum from <code>0</code> through <code>9</code> separately. In each case, show a
+colored <code>4 x N</code> matrix: four attention heads by <code>N</code> source tokens, with token
 identities at the top. Each matrix is the softmaxed last row for the <code>[ANS]</code>
 query.</p>
 </blockquote>
@@ -958,17 +957,17 @@ query.</p>
   <picture>
     <source
       media="(max-width: 760px)"
-      srcset="../assets/main_results_ans_attention_regimes_mobile.png"
+      srcset="../assets/main_results_ans_attention_by_max_mobile.png"
     >
     <img
-      src="../assets/main_results_ans_attention_regimes.png"
-      alt="Five heatmaps showing the actual ANS attention row for four heads across all eleven source tokens"
+      src="../assets/main_results_ans_attention_by_max.png"
+      alt="Ten heatmaps showing the exact ANS attention row for four heads across all eleven source tokens"
     >
   </picture>
   <figcaption>
     Actual final-row softmax attention for the <code>[ANS]</code> query. Each
-    matrix has four head rows and eleven source-token columns. Grouped regimes
-    show the mean over matched inputs with the same routing pattern.
+    matrix has four head rows and eleven source-token columns. All ten maxima
+    are shown separately; no attention matrices are averaged.
   </figcaption>
 </figure>
 <p><a class="main-results-data-link" href="../assets/main_results_ans_attention_regimes.json">Open the exact plotted values</a></p>
@@ -979,8 +978,8 @@ query.</p>
 <p class="admonition-title">How to read this diagnostic</p>
 <p>These are the model's actual attention distributions after softmax over all
 <code>11</code> source positions. The coral outline marks the largest entry in each
-head row. For grouped regimes, the colors are means over the listed maximum
-values; every member was checked to have the same largest-attended source.</p>
+head row. Inputs use the matched form <code>[0, 0, m, 0, 0]</code>, with the unique
+nonzero maximum at source position <code>5</code>.</p>
 <p>Max <code>1</code> is the important soft case: H3 gives approximately <code>62%</code> to
 <code>[ANS]</code> and <code>38%</code> to the <code>1</code> token. From max <code>2</code> onward, the recruited
 heads place nearly all their attention on the maximum token.</p>
