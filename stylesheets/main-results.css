@@ -1,0 +1,168 @@
+:root {
+  --main-ink: #172126;
+  --main-muted: #58666d;
+  --main-line: #d8dedf;
+  --main-surface: #f6f8f7;
+  --main-teal: #147d71;
+  --main-coral: #d1495b;
+  --main-gold: #c56f08;
+}
+
+.main-results {
+  color: var(--main-ink);
+  font-size: 0.84rem;
+  line-height: 1.72;
+}
+
+.main-results > h1 {
+  margin: 0 0 2.4rem;
+  padding: 0.35rem 0 1.15rem;
+  border-bottom: 3px solid var(--main-ink);
+  color: var(--main-ink);
+  font-size: clamp(2.2rem, 5vw, 3.8rem);
+  font-weight: 720;
+  line-height: 1.02;
+  letter-spacing: 0;
+}
+
+.main-results > h2 {
+  margin-top: 3.7rem;
+  padding-top: 0.55rem;
+  border-top: 1px solid var(--main-line);
+  color: var(--main-ink);
+  font-size: 1.55rem;
+  line-height: 1.25;
+  letter-spacing: 0;
+}
+
+.main-results h3 {
+  margin-top: 2rem;
+  color: var(--main-teal);
+  font-size: 1rem;
+  line-height: 1.3;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+.main-results table:not([class]) {
+  display: table;
+  width: 100%;
+  margin: 1.2rem 0 1.6rem;
+  overflow: hidden;
+  border: 1px solid var(--main-line);
+  border-radius: 6px;
+  box-shadow: none;
+  font-size: 0.78rem;
+}
+
+.main-results table:not([class]) th {
+  padding: 0.75rem 0.85rem;
+  background: var(--main-ink);
+  color: #ffffff;
+  font-weight: 650;
+}
+
+.main-results table:not([class]) td {
+  padding: 0.72rem 0.85rem;
+  border-top: 1px solid var(--main-line);
+  background: #ffffff;
+}
+
+.main-results table:not([class]) tr:nth-child(even) td {
+  background: var(--main-surface);
+}
+
+.main-results .arithmatex {
+  color: #102e35;
+}
+
+.main-results div.arithmatex {
+  margin: 1.35rem 0;
+  padding: 1.05rem 1rem;
+  overflow-x: auto;
+  border-left: 4px solid var(--main-teal);
+  background: var(--main-surface);
+}
+
+.main-results blockquote {
+  margin: 1.25rem 0 1.8rem;
+  padding: 1rem 1.15rem;
+  border: 1px solid #ead7ad;
+  border-left: 4px solid var(--main-gold);
+  border-radius: 4px;
+  background: #fffaf0;
+  color: #4b4539;
+}
+
+.main-results blockquote p {
+  margin: 0;
+}
+
+.main-results-plot {
+  margin: 1.65rem 0 0.8rem;
+}
+
+.main-results-plot img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: 1px solid var(--main-line);
+  border-radius: 6px;
+  background: #ffffff;
+}
+
+.main-results-plot picture {
+  display: block;
+}
+
+.main-results-plot figcaption {
+  padding: 0.7rem 0.15rem 0;
+  color: var(--main-muted);
+  font-size: 0.72rem;
+  line-height: 1.55;
+}
+
+.main-results-data-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2rem;
+  margin: 0.2rem 0 1.2rem;
+  padding: 0.25rem 0.7rem;
+  border: 1px solid var(--main-line);
+  border-radius: 4px;
+  color: var(--main-teal);
+  font-size: 0.72rem;
+  font-weight: 650;
+}
+
+.main-results .admonition {
+  border-radius: 6px;
+  box-shadow: none;
+}
+
+@media screen and (max-width: 760px) {
+  .main-results {
+    font-size: 0.78rem;
+  }
+
+  .main-results > h1 {
+    margin-bottom: 1.6rem;
+    font-size: 2.25rem;
+  }
+
+  .main-results > h2 {
+    margin-top: 2.7rem;
+    font-size: 1.3rem;
+  }
+
+  .main-results table:not([class]) {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+
+  .main-results-plot {
+    margin-right: -0.45rem;
+    margin-left: -0.45rem;
+  }
+}
