@@ -947,42 +947,43 @@ W_Q^h [\text{ANS token in residual stream}] \cdot
 W_K^h [\text{Embedding vector of n}]
 \]</div>
 <blockquote>
-<p><strong>Plot specification</strong>
-Plot a <code>4 x 9</code> plot. <code>4</code> is for <code>4</code> heads, and <code>9</code> is for <code>9</code> columns.
-You can plot it like bar graph, with token number written at x-axis. Also do
-a softmax before making bar graph.</p>
+<p><strong>Display specification</strong></p>
+<p>Show number <code>0</code> in one row, number <code>1</code> in the next row, numbers <code>2-6</code> in the
+next, numbers <code>7-8</code> next, and number <code>9</code> last. In each case, show a colored
+<code>4 x N</code> matrix: four attention heads by <code>N</code> source tokens, with token
+identities at the top. Each matrix is the softmaxed last row for the <code>[ANS]</code>
+query.</p>
 </blockquote>
 <figure class="main-results-plot">
   <picture>
     <source
       media="(max-width: 760px)"
-      srcset="../assets/main_results_ans_qk_pairwise_softmax_mobile.png"
+      srcset="../assets/main_results_ans_attention_regimes_mobile.png"
     >
     <img
-      src="../assets/main_results_ans_qk_pairwise_softmax.png"
-      alt="Four attention-head bar charts comparing each digit key with the ANS self key after a pairwise softmax"
+      src="../assets/main_results_ans_attention_regimes.png"
+      alt="Five heatmaps showing the actual ANS attention row for four heads across all eleven source tokens"
     >
   </picture>
   <figcaption>
-    Pairwise softmax between each token-only digit key and the
-    <code>[ANS]@position-10</code> self key. Crossing 50% means the digit key
-    scores above the self key.
+    Actual final-row softmax attention for the <code>[ANS]</code> query. Each
+    matrix has four head rows and eleven source-token columns. Grouped regimes
+    show the mean over matched inputs with the same routing pattern.
   </figcaption>
 </figure>
-<p><a class="main-results-data-link" href="../assets/main_results_ans_qk_pairwise_softmax.json">Open the exact plotted values</a></p>
+<p><a class="main-results-data-link" href="../assets/main_results_ans_attention_regimes.json">Open the exact plotted values</a></p>
 <ul>
 <li><span class="arithmatex">\(W_Q\)</span> ANS x <span class="arithmatex">\(W_K\)</span> max number vs <span class="arithmatex">\(W_Q\)</span> ANS x <span class="arithmatex">\(W_K\)</span> ANS in each head</li>
 </ul>
 <div class="admonition info">
 <p class="admonition-title">How to read this diagnostic</p>
-<p>There are ten number tokens (<code>0</code> through <code>9</code>), so the completed figure has
-four head panels with ten digit bars rather than nine columns. Each bar is
-a two-way softmax over one digit-key score and the <code>[ANS]</code> self-key score.
-This makes the self-crossing threshold visible at <code>50%</code>.</p>
-<p>This is not a complete sequence attention distribution. Actual attention
-normalizes over every source position, and an actual number key also
-contains its source-position embedding. The plot intentionally uses the
-token-only number keys specified above.</p>
+<p>These are the model's actual attention distributions after softmax over all
+<code>11</code> source positions. The coral outline marks the largest entry in each
+head row. For grouped regimes, the colors are means over the listed maximum
+values; every member was checked to have the same largest-attended source.</p>
+<p>Max <code>1</code> is the important soft case: H3 gives approximately <code>62%</code> to
+<code>[ANS]</code> and <code>38%</code> to the <code>1</code> token. From max <code>2</code> onward, the recruited
+heads place nearly all their attention on the maximum token.</p>
 </div>
 </div>
 
