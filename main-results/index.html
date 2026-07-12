@@ -1285,7 +1285,7 @@ heads place nearly all their attention on the maximum token.</p>
 <p>As the maximum number increases, more heads are recruited. The all-head
 <code>[ANS]</code>-self pattern acts as a baseline that decodes as <code>0</code>. A recruited head
 changes <span class="arithmatex">\(a_h\)</span> from <code>[ANS]</code> to the maximum-number token, thereby changing
-<span class="arithmatex">\(V_h = a_h S_h\)</span> and the residual-stream write <span class="arithmatex">\(z_h = V_h W_O^h\)</span>. H3 is
+<span class="arithmatex">\(V_h^a = a_h V_h\)</span> and the residual-stream write <span class="arithmatex">\(z_h = V_h^a W_O^h\)</span>. H3 is
 recruited for maxima <code>2–6</code>; H2 joins H3 for maxima <code>7–8</code>; and H0 joins H2 and
 H3 for maximum <code>9</code>.</p>
 <p>This interpretation makes a causal prediction: changing only <span class="arithmatex">\(a_h\)</span> should
@@ -1365,18 +1365,18 @@ requested digit. To produce <code>7</code>, both <span class="arithmatex">\(a_2\
 <p>For the <code>[ANS]</code> prediction, head <span class="arithmatex">\(h\)</span> uses the quantities defined in the
 architecture diagram:</p>
 <div class="arithmatex">\[
-S_h = R W_V^h \in \mathbb{R}^{N \times 16},
+V_h = R W_V^h \in \mathbb{R}^{N \times 16},
 \qquad
 a_h = A_h[-1,:] \in \mathbb{R}^{1 \times N},
 \]</div>
 <div class="arithmatex">\[
-V_h = a_h S_h \in \mathbb{R}^{1 \times 16},
+V_h^a = a_h V_h \in \mathbb{R}^{1 \times 16},
 \qquad
-z_h = V_h W_O^h \in \mathbb{R}^{1 \times 64}.
+z_h = V_h^a W_O^h \in \mathbb{R}^{1 \times 64}.
 \]</div>
 <p>Except for the soft-attention case at maximum <code>1</code>, the successful one-hot
 interventions make <span class="arithmatex">\(a_h\)</span> select either the <code>[ANS]</code> row or a number row of
-<span class="arithmatex">\(S_h\)</span>. The four head writes are then added:</p>
+<span class="arithmatex">\(V_h\)</span>. The four head writes are then added:</p>
 <div class="arithmatex">\[
 z = \sum_{h=0}^{3} z_h \in \mathbb{R}^{1 \times 64}.
 \]</div>
@@ -1414,7 +1414,7 @@ and the unembedding can be expressed in the same reduced basis:</p>
 \]</div>
 <p>The complete reduced computation is then</p>
 <div class="arithmatex">\[
-z_k = \sum_h V_h \widetilde{W}_O^h
+z_k = \sum_h V_h^a \widetilde{W}_O^h
     \in \mathbb{R}^{1 \times k},
 \qquad
 \ell_k = z_k \widetilde{W}_U.
@@ -1500,9 +1500,9 @@ Source: <code>scripts/analysis/model1_output_pca_piecewise_interactive.py</code>
 <h4 id="direct-output-from-each-head">Direct output from each head<a class="headerlink" href="#direct-output-from-each-head" title="Permanent link">&para;</a></h4>
 <p>The second panel regroups the same endpoint as four direct head writes rather
 than a baseline and corrections. Each colored arrow starts at the origin and
-is the projected vector <span class="arithmatex">\(V_hW_O^h\)</span>. The black arrow is their sum
-<span class="arithmatex">\(z=\sum_h V_hW_O^h\)</span>. Select an output <code>0–9</code> to see which source each head reads
-and how the resulting sum scores all <code>14</code> vocabulary tokens.</p>
+is the projected vector <span class="arithmatex">\(V_h^aW_O^h\)</span>. The black arrow is their sum
+<span class="arithmatex">\(z=\sum_h V_h^aW_O^h\)</span>. Select an output <code>0–9</code> to see which source each head
+reads and how the resulting sum scores all <code>14</code> vocabulary tokens.</p>
 <p>For output <code>1</code>, <span class="arithmatex">\(a_3\)</span> is the measured soft <code>[ANS]</code>/<code>1</code> attention row. Every
 other endpoint uses the verified one-hot attention recipe. For all ten
 requested outputs, both the <code>3d</code> and full <code>64d</code> head sums predict the requested
