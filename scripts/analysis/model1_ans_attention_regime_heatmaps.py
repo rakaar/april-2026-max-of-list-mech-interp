@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Plot actual ANS-query attention rows for the five routing regimes."""
+"""Plot the exact ANS-query attention rows for every possible maximum."""
 
 from __future__ import annotations
 
@@ -16,9 +16,9 @@ from model1_piecewise_write_animation import load_model
 
 
 ROOT = Path(__file__).resolve().parents[2]
-PNG_OUT = ROOT / "docs" / "assets" / "main_results_ans_attention_regimes.png"
+PNG_OUT = ROOT / "docs" / "assets" / "main_results_ans_attention_by_max.png"
 PNG_MOBILE_OUT = (
-    ROOT / "docs" / "assets" / "main_results_ans_attention_regimes_mobile.png"
+    ROOT / "docs" / "assets" / "main_results_ans_attention_by_max_mobile.png"
 )
 JSON_OUT = ROOT / "docs" / "assets" / "main_results_ans_attention_regimes.json"
 GROUPS = (
@@ -78,8 +78,8 @@ def ans_attention_rows(model, max_value: int) -> torch.Tensor:
     return torch.stack(rows)
 
 
-def draw_heatmap(ax, group: dict, compact: bool) -> None:
-    matrix = np.asarray(group["mean_attention"], dtype=float)
+def draw_heatmap(ax, case: dict, compact: bool) -> None:
+    matrix = np.asarray(case["attention"], dtype=float)
     image = ax.imshow(
         matrix,
         vmin=0.0,
@@ -92,7 +92,7 @@ def draw_heatmap(ax, group: dict, compact: bool) -> None:
         ),
     )
 
-    labels = token_labels(group["max_token_label"])
+    labels = token_labels(str(case["max_value"]))
     ax.set_xticks(np.arange(11))
     ax.set_xticklabels(labels, fontsize=7.5 if compact else 8.5, linespacing=1.25)
     ax.xaxis.tick_top()
@@ -101,7 +101,7 @@ def draw_heatmap(ax, group: dict, compact: bool) -> None:
     ax.set_yticklabels(["H0", "H1", "H2", "H3"], fontsize=9 if compact else 10)
     ax.tick_params(axis="y", left=False, pad=7)
     ax.set_title(
-        group["label"],
+        f"max = {case['max_value']}",
         loc="left",
         pad=22 if compact else 24,
         fontsize=12 if compact else 14,
@@ -143,23 +143,23 @@ def draw_heatmap(ax, group: dict, compact: bool) -> None:
     return image
 
 
-def make_figure(groups: list[dict], compact: bool) -> plt.Figure:
-    figsize = (7.4, 14.8) if compact else (13.2, 13.0)
+def make_figure(cases: list[dict], compact: bool) -> plt.Figure:
+    figsize = (7.4, 25.5) if compact else (13.2, 23.0)
     fig, axes = plt.subplots(
-        5,
+        10,
         1,
         figsize=figsize,
         constrained_layout=False,
     )
     fig.patch.set_facecolor("#ffffff")
     image = None
-    for ax, group in zip(axes, groups):
-        image = draw_heatmap(ax, group, compact)
+    for ax, case in zip(axes, cases):
+        image = draw_heatmap(ax, case, compact)
 
     title = (
-        "Actual [ANS] attention routing\nby maximum regime"
+        "Actual [ANS] attention\nfor every maximum"
         if compact
-        else "Actual [ANS] attention routing by maximum regime"
+        else "Actual [ANS] attention for every maximum"
     )
     fig.suptitle(
         title,
@@ -173,7 +173,7 @@ def make_figure(groups: list[dict], compact: bool) -> plt.Figure:
     fig.text(
         0.075 if compact else 0.08,
         0.934 if compact else 0.954,
-        "Each matrix is the final softmax row: 4 heads x 11 source tokens.",
+        "Ten exact matrices; each is the final softmax row: 4 heads x 11 source tokens.",
         ha="left",
         fontsize=9 if compact else 10.5,
         color="#58666d",
@@ -182,25 +182,26 @@ def make_figure(groups: list[dict], compact: bool) -> plt.Figure:
         0.075 if compact else 0.08,
         0.014,
         (
-            "Inputs are [0, 0, m, 0, 0]. Grouped regimes show means.\n"
-            "Every member has the same highest-attended source pattern."
+            "Inputs are [0, 0, m, 0, 0]. No cases are averaged.\n"
+            "Coral outlines mark each head's highest-attended source."
             if compact
-            else "Inputs are [0, 0, m, 0, 0]. Grouped regimes show the mean over the "
-            "listed m values; every member has the same highest-attended source pattern."
+            else "Inputs are [0, 0, m, 0, 0]. Every matrix is an exact model attention "
+            "distribution; no cases are averaged."
         ),
         ha="left",
         fontsize=8 if compact else 9,
         color="#58666d",
     )
-    fig.text(
-        0.925 if compact else 0.94,
-        0.934 if compact else 0.954,
-        "coral outline = row maximum",
-        ha="right",
-        fontsize=8 if compact else 9,
-        color="#d1495b",
-        fontweight="bold",
-    )
+    if not compact:
+        fig.text(
+            0.94,
+            0.954,
+            "coral outline = row maximum",
+            ha="right",
+            fontsize=9,
+            color="#d1495b",
+            fontweight="bold",
+        )
     if image is None:
         raise AssertionError("no attention heatmaps were drawn")
     left = 0.11 if compact else 0.09
@@ -218,7 +219,7 @@ def make_figure(groups: list[dict], compact: bool) -> plt.Figure:
         right=right,
         top=0.85 if compact else 0.875,
         bottom=0.125,
-        hspace=1.02 if compact else 0.96,
+        hspace=1.16 if compact else 1.08,
     )
     return fig
 
@@ -289,11 +290,19 @@ def main() -> None:
             }
         )
 
+    cases = [
+        {
+            "max_value": max_value,
+            "attention": individual[max_value]["attention"],
+        }
+        for max_value in range(10)
+    ]
+
     PNG_OUT.parent.mkdir(parents=True, exist_ok=True)
-    desktop_figure = make_figure(groups, compact=False)
+    desktop_figure = make_figure(cases, compact=False)
     desktop_figure.savefig(PNG_OUT, dpi=190, facecolor="#ffffff")
     plt.close(desktop_figure)
-    mobile_figure = make_figure(groups, compact=True)
+    mobile_figure = make_figure(cases, compact=True)
     mobile_figure.savefig(PNG_MOBILE_OUT, dpi=190, facecolor="#ffffff")
     plt.close(mobile_figure)
 
@@ -305,7 +314,7 @@ def main() -> None:
         "matrix_shape": [4, 11],
         "head_axis": ["H0", "H1", "H2", "H3"],
         "source_positions": list(range(11)),
-        "grouped_regimes_are_means": True,
+        "figure_uses_grouped_means": False,
         "individual_cases": [individual[max_value] for max_value in range(10)],
         "groups": groups,
         "validation": {

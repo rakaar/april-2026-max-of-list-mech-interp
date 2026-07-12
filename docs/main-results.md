@@ -64,9 +64,8 @@ $$
 
 > **Display specification**
 >
-> Show number `0` in one row, number `1` in the next row, numbers `2-6` in the
-> next, numbers `7-8` next, and number `9` last. In each case, show a colored
-> `4 x N` matrix: four attention heads by `N` source tokens, with token
+> Show every maximum from `0` through `9` separately. In each case, show a
+> colored `4 x N` matrix: four attention heads by `N` source tokens, with token
 > identities at the top. Each matrix is the softmaxed last row for the `[ANS]`
 > query.
 
@@ -74,17 +73,17 @@ $$
   <picture>
     <source
       media="(max-width: 760px)"
-      srcset="../assets/main_results_ans_attention_regimes_mobile.png"
+      srcset="../assets/main_results_ans_attention_by_max_mobile.png"
     >
     <img
-      src="../assets/main_results_ans_attention_regimes.png"
-      alt="Five heatmaps showing the actual ANS attention row for four heads across all eleven source tokens"
+      src="../assets/main_results_ans_attention_by_max.png"
+      alt="Ten heatmaps showing the exact ANS attention row for four heads across all eleven source tokens"
     >
   </picture>
   <figcaption>
     Actual final-row softmax attention for the <code>[ANS]</code> query. Each
-    matrix has four head rows and eleven source-token columns. Grouped regimes
-    show the mean over matched inputs with the same routing pattern.
+    matrix has four head rows and eleven source-token columns. All ten maxima
+    are shown separately; no attention matrices are averaged.
   </figcaption>
 </figure>
 
@@ -95,8 +94,8 @@ $$
 !!! info "How to read this diagnostic"
     These are the model's actual attention distributions after softmax over all
     `11` source positions. The coral outline marks the largest entry in each
-    head row. For grouped regimes, the colors are means over the listed maximum
-    values; every member was checked to have the same largest-attended source.
+    head row. Inputs use the matched form `[0, 0, m, 0, 0]`, with the unique
+    nonzero maximum at source position `5`.
 
     Max `1` is the important soft case: H3 gives approximately `62%` to
     `[ANS]` and `38%` to the `1` token. From max `2` onward, the recruited
