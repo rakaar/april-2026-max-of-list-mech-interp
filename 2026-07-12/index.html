@@ -69,7 +69,7 @@
     
     
     
-    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="teal">
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom">
   
     
     <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
@@ -127,7 +127,7 @@
     
     
     
-    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="teal"  aria-hidden="true"  type="radio" name="__palette" id="__palette_0">
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom"  aria-hidden="true"  type="radio" name="__palette" id="__palette_0">
     
   
 </form>
@@ -685,6 +685,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#model-1-are-the-w_o-and-w_u-top-three-pc-subspaces-the-same" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Model 1: Are The W_O And W_U Top-Three PC Subspaces The Same?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#model-1-piecewise-head-writes-from-baseline-to-answer" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -799,6 +810,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#model-1-are-the-w_o-and-w_u-top-three-pc-subspaces-the-same" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Model 1: Are The W_O And W_U Top-Three PC Subspaces The Same?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#model-1-piecewise-head-writes-from-baseline-to-answer" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -888,6 +910,136 @@
 
 
 <h1 id="results-2026-07-12">Results - 2026-07-12<a class="headerlink" href="#results-2026-07-12" title="Permanent link">&para;</a></h1>
+<h2 id="model-1-are-the-w_o-and-w_u-top-three-pc-subspaces-the-same">Model 1: Are The W_O And W_U Top-Three PC Subspaces The Same?<a class="headerlink" href="#model-1-are-the-w_o-and-w_u-top-three-pc-subspaces-the-same" title="Permanent link">&para;</a></h2>
+<p>Question:</p>
+<p>Does the reverse-basis experiment work because the top-three output-matrix PCs
+and digit-unembedding PCs identify the same residual-stream subspace?</p>
+<p>Method:</p>
+<p>Fitted the two PCA bases independently after centering rows:</p>
+<div class="highlight"><pre><span></span><code>U_digits = model.unembed.weight[0:10]                 # 10 x 64
+O_all    = stack(O_0, O_1, O_2, O_3)                 # 64 x 64
+
+Q_U = top 3 right singular vectors of centered U     # 64 x 3
+Q_O = top 3 right singular vectors of centered O     # 64 x 3
+C   = Q_U.T @ Q_O                                    # 3 x 3
+</code></pre></div>
+<p>Each entry <code>C[i,j]</code> is the exact <code>64d</code> cosine between digit-unembedding PC <code>i</code>
+and output-matrix PC <code>j</code>. Output-PC signs were chosen so the same-index
+cosines are positive. This resolves the arbitrary sign of PCA directions but
+does not change either subspace.</p>
+<p>The principal angles between the complete subspaces are:</p>
+<div class="highlight"><pre><span></span><code>theta_i = arccos(singular_value_i(C))
+</code></pre></div>
+<p>If the subspaces were exactly equal, all three singular values would be <code>1</code>
+and all three angles would be <code>0</code> degrees.</p>
+<p>The union of two distinct <code>3d</code> subspaces can span up to six dimensions, so six
+<code>64d</code> vectors cannot generally be displayed exactly in one <code>3d</code> scene. The
+interactive therefore has two mathematically explicit views:</p>
+<div class="highlight"><pre><span></span><code>W_U frame: W_U PCs = I; W_O PCs = coordinates Q_U.T @ Q_O
+W_O frame: W_O PCs = I; W_U PCs = coordinates Q_O.T @ Q_U
+</code></pre></div>
+<p>The selected frame's three PCs are exact unit axes. The other three arrows are
+orthogonal projections; a shortened arrow indicates a component outside the
+displayed subspace. The adjacent heatmap always shows the exact <code>64d</code> cosines.
+Source:
+<code>scripts/analysis/model1_output_unembedding_pc_alignment_interactive.py</code>.</p>
+<p>Result:</p>
+<p><a href="../assets/model1_output_unembedding_pc_alignment.html" target="_blank">Open the interactive W_O/W_U PC comparison</a></p>
+<p><iframe
+  src="../assets/model1_output_unembedding_pc_alignment.html"
+  title="Interactive comparison of output-matrix and digit-unembedding PCs"
+  style="width: 100%; height: 840px; border: 1px solid #d1d5db;"
+  loading="lazy"
+  allowfullscreen>
+</iframe>
+</p>
+<p>Exact values:
+<a href="../assets/model1_output_unembedding_pc_alignment.json">model1_output_unembedding_pc_alignment.json</a>.</p>
+<p>The exact <code>64d</code> PC cosine matrix is:</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th style="text-align: right;">W_O PC1</th>
+<th style="text-align: right;">W_O PC2</th>
+<th style="text-align: right;">W_O PC3</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>digit W_U PC1</strong></td>
+<td style="text-align: right;"><strong>0.9694</strong></td>
+<td style="text-align: right;">0.1880</td>
+<td style="text-align: right;">-0.0225</td>
+</tr>
+<tr>
+<td><strong>digit W_U PC2</strong></td>
+<td style="text-align: right;">-0.1978</td>
+<td style="text-align: right;"><strong>0.9261</strong></td>
+<td style="text-align: right;">0.0294</td>
+</tr>
+<tr>
+<td><strong>digit W_U PC3</strong></td>
+<td style="text-align: right;">0.0416</td>
+<td style="text-align: right;">-0.0233</td>
+<td style="text-align: right;"><strong>0.9741</strong></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Quantity</th>
+<th style="text-align: right;">PC1</th>
+<th style="text-align: right;">PC2</th>
+<th style="text-align: right;">PC3</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Same-index PC cosine</td>
+<td style="text-align: right;">0.9694</td>
+<td style="text-align: right;">0.9261</td>
+<td style="text-align: right;">0.9741</td>
+</tr>
+<tr>
+<td>Principal angle between subspaces</td>
+<td style="text-align: right;">6.94 degrees</td>
+<td style="text-align: right;">13.49 degrees</td>
+<td style="text-align: right;">19.04 degrees</td>
+</tr>
+<tr>
+<td>Digit-W_U variance per PC</td>
+<td style="text-align: right;">69.47%</td>
+<td style="text-align: right;">17.04%</td>
+<td style="text-align: right;">8.75%</td>
+</tr>
+<tr>
+<td>Output-W_O variance per PC</td>
+<td style="text-align: right;">59.23%</td>
+<td style="text-align: right;">24.83%</td>
+<td style="text-align: right;">4.28%</td>
+</tr>
+</tbody>
+</table>
+<p>The cumulative top-three variance is <code>95.26%</code> for the centered digit
+unembeddings and <code>88.34%</code> for the centered output matrix.</p>
+<p>Interpretation:</p>
+<p>The bases are very similar, but not identical. PC3 is almost directly matched,
+while PC1 and PC2 include a visible rotation into one another, represented by
+the approximately <code>+0.188</code> and <code>-0.198</code> off-diagonal cosines. At the subspace
+level, even the largest principal angle is only <code>19.04</code> degrees.</p>
+<p>This strong overlap is likely a major reason the reverse experiment works:
+both PCA procedures recover nearby parts of residual space containing the
+digit-readout computation. It is not, by itself, a complete explanation of
+perfect accuracy. Perfect accuracy additionally says that the differences
+between these subspaces and the discarded directions never move any tested
+example across a competing digit's dot-product decision boundary.</p>
+<p>Next step:</p>
+<p>Decompose actual head-sum writes into the shared principal-vector directions
+and the subspace-specific remainders. Testing accuracy after removing each
+part would distinguish the genuinely shared computation from directions that
+are unique to one PCA basis but behaviorally redundant.</p>
 <h2 id="model-1-piecewise-head-writes-from-baseline-to-answer">Model 1: Piecewise Head Writes From Baseline To Answer<a class="headerlink" href="#model-1-piecewise-head-writes-from-baseline-to-answer" title="Permanent link">&para;</a></h2>
 <p>Question:</p>
 <p>Can the complete attention-routing abstraction be visualized as a fixed
@@ -1468,6 +1620,12 @@ explicit one-dimensional threshold model.</p>
 <script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
         </div>
         
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
       </main>
       
         <footer class="md-footer">
@@ -1497,12 +1655,14 @@ explicit one-dimensional threshold model.</p>
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.sections", "navigation.indexes", "content.code.copy", "content.tabs.link"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.sections", "navigation.indexes", "navigation.top", "toc.follow", "content.code.copy", "content.tabs.link"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
       <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
       
         <script src="../javascripts/mathjax.js"></script>
+      
+        <script src="../javascripts/main-results.js"></script>
       
         <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
       
