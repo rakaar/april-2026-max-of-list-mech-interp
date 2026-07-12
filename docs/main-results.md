@@ -111,7 +111,7 @@ Below, each row is the resulting $a_h \in \mathbb{R}^{1 \times N}$.
 As the maximum number increases, more heads are recruited. The all-head
 `[ANS]`-self pattern acts as a baseline that decodes as `0`. A recruited head
 changes $a_h$ from `[ANS]` to the maximum-number token, thereby changing
-$V_h = a_h S_h$ and the residual-stream write $z_h = V_h W_O^h$. H3 is
+$V_h^a = a_h V_h$ and the residual-stream write $z_h = V_h^a W_O^h$. H3 is
 recruited for maxima `2–6`; H2 joins H3 for maxima `7–8`; and H0 joins H2 and
 H3 for maximum `9`.
 
@@ -151,20 +151,20 @@ For the `[ANS]` prediction, head $h$ uses the quantities defined in the
 architecture diagram:
 
 $$
-S_h = R W_V^h \in \mathbb{R}^{N \times 16},
+V_h = R W_V^h \in \mathbb{R}^{N \times 16},
 \qquad
 a_h = A_h[-1,:] \in \mathbb{R}^{1 \times N},
 $$
 
 $$
-V_h = a_h S_h \in \mathbb{R}^{1 \times 16},
+V_h^a = a_h V_h \in \mathbb{R}^{1 \times 16},
 \qquad
-z_h = V_h W_O^h \in \mathbb{R}^{1 \times 64}.
+z_h = V_h^a W_O^h \in \mathbb{R}^{1 \times 64}.
 $$
 
 Except for the soft-attention case at maximum `1`, the successful one-hot
 interventions make $a_h$ select either the `[ANS]` row or a number row of
-$S_h$. The four head writes are then added:
+$V_h$. The four head writes are then added:
 
 $$
 z = \sum_{h=0}^{3} z_h \in \mathbb{R}^{1 \times 64}.
@@ -213,7 +213,7 @@ $$
 The complete reduced computation is then
 
 $$
-z_k = \sum_h V_h \widetilde{W}_O^h
+z_k = \sum_h V_h^a \widetilde{W}_O^h
     \in \mathbb{R}^{1 \times k},
 \qquad
 \ell_k = z_k \widetilde{W}_U.
@@ -286,9 +286,9 @@ Source: `scripts/analysis/model1_output_pca_piecewise_interactive.py`.
 
 The second panel regroups the same endpoint as four direct head writes rather
 than a baseline and corrections. Each colored arrow starts at the origin and
-is the projected vector $V_hW_O^h$. The black arrow is their sum
-$z=\sum_h V_hW_O^h$. Select an output `0–9` to see which source each head reads
-and how the resulting sum scores all `14` vocabulary tokens.
+is the projected vector $V_h^aW_O^h$. The black arrow is their sum
+$z=\sum_h V_h^aW_O^h$. Select an output `0–9` to see which source each head
+reads and how the resulting sum scores all `14` vocabulary tokens.
 
 For output `1`, $a_3$ is the measured soft `[ANS]`/`1` attention row. Every
 other endpoint uses the verified one-hot attention recipe. For all ten

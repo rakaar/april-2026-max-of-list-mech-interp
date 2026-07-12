@@ -86,8 +86,8 @@
                 <small>W<sub>K</sub><sup>h</sup>: 64 &times; 16</small>
               </div>
               <div>
-                <b>Value sources</b>
-                <span>S<sub>h</sub> = R W<sub>V</sub><sup>h</sup></span>
+                <b>Value vectors</b>
+                <span>V<sub>h</sub> = R W<sub>V</sub><sup>h</sup></span>
                 <small>W<sub>V</sub><sup>h</sup>: 64 &times; 16</small>
               </div>
             </div>
@@ -106,14 +106,14 @@
               </div>
               <span class="architecture-down-arrow" aria-hidden="true">&#8594;</span>
               <div class="architecture-head-step">
-                <span class="architecture-step-label">Weighted value vector</span>
-                <strong>V<sub>h</sub> = a<sub>h</sub>S<sub>h</sub></strong>
+                <span class="architecture-step-label">Attention-weighted value</span>
+                <strong>V<sub>h</sub><sup>a</sup> = a<sub>h</sub>V<sub>h</sub></strong>
                 <small>1 &times; 16</small>
               </div>
               <span class="architecture-down-arrow" aria-hidden="true">&#8594;</span>
               <div class="architecture-head-step architecture-head-output">
                 <span class="architecture-step-label">Residual-stream write</span>
-                <strong>z<sub>h</sub> = V<sub>h</sub>W<sub>O</sub><sup>h</sup></strong>
+                <strong>z<sub>h</sub> = V<sub>h</sub><sup>a</sup>W<sub>O</sub><sup>h</sup></strong>
                 <small>W<sub>O</sub><sup>h</sup>: 16 &times; 64 &nbsp;&rarr;&nbsp; z<sub>h</sub>: 1 &times; 64</small>
               </div>
             </div>
