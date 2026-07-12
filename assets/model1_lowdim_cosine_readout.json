@@ -1,0 +1,619 @@
+{
+  "description": "All 100000 Model 1 inputs. The actual four-head ANS output sum is projected onto the top three PCA directions of the centered digit unembeddings. dot_product predicts argmax_d z dot U3[d]. cosine_only normalizes both z and each U3[d]. norm_weighted_cosine multiplies cosine by ||U3[d]|| and must match dot_product because ||z|| is common across candidate digits.",
+  "hf_repo": "andyrdt/04_2026_puzzle_1a",
+  "model_config": {
+    "vocab_size": 14,
+    "d_model": 64,
+    "n_heads": 4,
+    "n_layers": 1,
+    "max_seq_len": 12
+  },
+  "n_inputs_total": 100000,
+  "sequence_format": "[BOS] n0 [SEP] n1 [SEP] n2 [SEP] n3 [SEP] n4 [ANS]",
+  "counts_by_true_max": {
+    "0": 1,
+    "1": 31,
+    "2": 211,
+    "3": 781,
+    "4": 2101,
+    "5": 4651,
+    "6": 9031,
+    "7": 15961,
+    "8": 26281,
+    "9": 40951
+  },
+  "digit_pca_explained_variance": [
+    0.6946886777877808,
+    0.17044764757156372,
+    0.08746828883886337
+  ],
+  "digit_pca_top3_cumulative_variance": 0.9526045918464661,
+  "digit_coordinates": [
+    [
+      1.1645445823669434,
+      -0.5404122471809387,
+      0.029518544673919678
+    ],
+    [
+      0.9452436566352844,
+      -0.07596579194068909,
+      -0.0265580415725708
+    ],
+    [
+      0.650179386138916,
+      0.24574421346187592,
+      -0.019849639385938644
+    ],
+    [
+      0.2929122745990753,
+      0.40961387753486633,
+      0.007161568850278854
+    ],
+    [
+      -0.0632343590259552,
+      0.4123211205005646,
+      0.1520751565694809
+    ],
+    [
+      -0.40873685479164124,
+      0.23464131355285645,
+      0.14382532238960266
+    ],
+    [
+      -0.692402184009552,
+      -0.10476119071245193,
+      0.47110387682914734
+    ],
+    [
+      -0.43926802277565,
+      0.14745008945465088,
+      -0.5234545469284058
+    ],
+    [
+      -0.7068970203399658,
+      -0.14951398968696594,
+      -0.20820489525794983
+    ],
+    [
+      -0.7423413991928101,
+      -0.5791175365447998,
+      -0.025617320090532303
+    ]
+  ],
+  "digit_coordinate_norms": [
+    1.284165382385254,
+    0.9486631155014038,
+    0.6953542232513428,
+    0.5036193132400513,
+    0.44399788975715637,
+    0.49275559186935425,
+    0.8439991474151611,
+    0.6990727186203003,
+    0.7519355416297913,
+    0.9418620467185974
+  ],
+  "overall": {
+    "dot_product_accuracy": 1.0,
+    "norm_weighted_cosine_accuracy": 1.0,
+    "cosine_only_correct": 13334,
+    "cosine_only_accuracy": 0.13334,
+    "macro_cosine_only_accuracy": 0.32207298048019484,
+    "perfect_cosine_only_true_max_groups": [
+      3,
+      4,
+      5
+    ],
+    "dot_vs_norm_weighted_prediction_mismatches": 0
+  },
+  "rows": [
+    {
+      "true_max": 0,
+      "count": 1,
+      "dot_product": {
+        "correct": 1,
+        "accuracy": 1.0,
+        "prediction_distribution": {
+          "0": 1
+        }
+      },
+      "cosine_only": {
+        "correct": 0,
+        "accuracy": 0.0,
+        "prediction_distribution": {
+          "2": 1
+        },
+        "mean_target_cosine": 0.7217531204223633,
+        "std_target_cosine": 0.0,
+        "min_target_cosine": 0.7217531204223633,
+        "max_target_cosine": 0.7217531204223633,
+        "mean_winner_margin": 0.0796021819114685
+      }
+    },
+    {
+      "true_max": 1,
+      "count": 31,
+      "dot_product": {
+        "correct": 31,
+        "accuracy": 1.0,
+        "prediction_distribution": {
+          "1": 31
+        }
+      },
+      "cosine_only": {
+        "correct": 0,
+        "accuracy": 0.0,
+        "prediction_distribution": {
+          "2": 30,
+          "3": 1
+        },
+        "mean_target_cosine": 0.7977238778145083,
+        "std_target_cosine": 0.03646785325432858,
+        "min_target_cosine": 0.7313774228096008,
+        "max_target_cosine": 0.8602248430252075,
+        "mean_winner_margin": 0.055530321213506886
+      }
+    },
+    {
+      "true_max": 2,
+      "count": 211,
+      "dot_product": {
+        "correct": 211,
+        "accuracy": 1.0,
+        "prediction_distribution": {
+          "2": 211
+        }
+      },
+      "cosine_only": {
+        "correct": 0,
+        "accuracy": 0.0,
+        "prediction_distribution": {
+          "3": 211
+        },
+        "mean_target_cosine": 0.8368808870066964,
+        "std_target_cosine": 0.0026395909022579223,
+        "min_target_cosine": 0.8327181935310364,
+        "max_target_cosine": 0.8406890630722046,
+        "mean_winner_margin": 0.16189415307971539
+      }
+    },
+    {
+      "true_max": 3,
+      "count": 781,
+      "dot_product": {
+        "correct": 781,
+        "accuracy": 1.0,
+        "prediction_distribution": {
+          "3": 781
+        }
+      },
+      "cosine_only": {
+        "correct": 781,
+        "accuracy": 1.0,
+        "prediction_distribution": {
+          "3": 781
+        },
+        "mean_target_cosine": 0.9266653606589411,
+        "std_target_cosine": 0.0022447158897520823,
+        "min_target_cosine": 0.9240938425064087,
+        "max_target_cosine": 0.9344590902328491,
+        "mean_winner_margin": 0.05648596079187723
+      }
+    },
+    {
+      "true_max": 4,
+      "count": 2101,
+      "dot_product": {
+        "correct": 2101,
+        "accuracy": 1.0,
+        "prediction_distribution": {
+          "4": 2101
+        }
+      },
+      "cosine_only": {
+        "correct": 2101,
+        "accuracy": 1.0,
+        "prediction_distribution": {
+          "4": 2101
+        },
+        "mean_target_cosine": 0.9510384026111619,
+        "std_target_cosine": 0.00017691935474923635,
+        "min_target_cosine": 0.9507923722267151,
+        "max_target_cosine": 0.9515771865844727,
+        "mean_winner_margin": 0.28147136767894415
+      }
+    },
+    {
+      "true_max": 5,
+      "count": 4651,
+      "dot_product": {
+        "correct": 4651,
+        "accuracy": 1.0,
+        "prediction_distribution": {
+          "5": 4651
+        }
+      },
+      "cosine_only": {
+        "correct": 4651,
+        "accuracy": 1.0,
+        "prediction_distribution": {
+          "5": 4651
+        },
+        "mean_target_cosine": 0.8907012784386215,
+        "std_target_cosine": 0.0014734289534876193,
+        "min_target_cosine": 0.8838324546813965,
+        "max_target_cosine": 0.8921651244163513,
+        "mean_winner_margin": 0.03270925929074235
+      }
+    },
+    {
+      "true_max": 6,
+      "count": 9031,
+      "dot_product": {
+        "correct": 9031,
+        "accuracy": 1.0,
+        "prediction_distribution": {
+          "6": 9031
+        }
+      },
+      "cosine_only": {
+        "correct": 0,
+        "accuracy": 0.0,
+        "prediction_distribution": {
+          "5": 9031
+        },
+        "mean_target_cosine": 0.6147030751420841,
+        "std_target_cosine": 0.0014764749238096089,
+        "min_target_cosine": 0.6072722673416138,
+        "max_target_cosine": 0.6161114573478699,
+        "mean_winner_margin": 0.2568038056662624
+      }
+    },
+    {
+      "true_max": 7,
+      "count": 15961,
+      "dot_product": {
+        "correct": 15961,
+        "accuracy": 1.0,
+        "prediction_distribution": {
+          "7": 15961
+        }
+      },
+      "cosine_only": {
+        "correct": 0,
+        "accuracy": 0.0,
+        "prediction_distribution": {
+          "5": 15961
+        },
+        "mean_target_cosine": 0.7495651732268739,
+        "std_target_cosine": 0.007320711995111365,
+        "min_target_cosine": 0.7424183487892151,
+        "max_target_cosine": 0.7764700651168823,
+        "mean_winner_margin": 0.0215783675327448
+      }
+    },
+    {
+      "true_max": 8,
+      "count": 26281,
+      "dot_product": {
+        "correct": 26281,
+        "accuracy": 1.0,
+        "prediction_distribution": {
+          "8": 26281
+        }
+      },
+      "cosine_only": {
+        "correct": 5801,
+        "accuracy": 0.22072980480194818,
+        "prediction_distribution": {
+          "5": 20480,
+          "8": 5801
+        },
+        "mean_target_cosine": 0.873796033188386,
+        "std_target_cosine": 0.012923016423731788,
+        "min_target_cosine": 0.8668116927146912,
+        "max_target_cosine": 0.9336638450622559,
+        "mean_winner_margin": 0.014170429551988327
+      }
+    },
+    {
+      "true_max": 9,
+      "count": 40951,
+      "dot_product": {
+        "correct": 40951,
+        "accuracy": 1.0,
+        "prediction_distribution": {
+          "9": 40951
+        }
+      },
+      "cosine_only": {
+        "correct": 0,
+        "accuracy": 0.0,
+        "prediction_distribution": {
+          "8": 40951
+        },
+        "mean_target_cosine": 0.8774667016499407,
+        "std_target_cosine": 0.0013689470818125772,
+        "min_target_cosine": 0.8760647773742676,
+        "max_target_cosine": 0.8818565607070923,
+        "mean_winner_margin": 0.08051907394555942
+      }
+    }
+  ],
+  "cosine_confusion_counts": [
+    [
+      0,
+      0,
+      1,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      30,
+      1,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      211,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      781,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      2101,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      0,
+      4651,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      0,
+      9031,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      0,
+      15961,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      0,
+      20480,
+      0,
+      0,
+      5801,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      40951,
+      0
+    ]
+  ],
+  "cosine_confusion_row_normalized": [
+    [
+      0.0,
+      0.0,
+      1.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    [
+      0.0,
+      0.0,
+      0.967741935483871,
+      0.03225806451612903,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    [
+      0.0,
+      0.0,
+      0.0,
+      1.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    [
+      0.0,
+      0.0,
+      0.0,
+      1.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      1.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      1.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      1.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      1.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.7792701951980519,
+      0.0,
+      0.0,
+      0.22072980480194818,
+      0.0
+    ],
+    [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      1.0,
+      0.0
+    ]
+  ],
+  "max0_details": {
+    "head_sum_coordinates": [
+      343.2668762207031,
+      115.25081634521484,
+      -28.272720336914062
+    ],
+    "cosine_by_digit": [
+      0.7217531204223633,
+      0.9184805750846863,
+      0.9980827569961548,
+      0.8066768646240234,
+      0.13341496884822845,
+      -0.6555864810943604,
+      -0.8581963181495667,
+      -0.46865469217300415,
+      -0.9300498962402344,
+      -0.9378995299339294
+    ],
+    "dot_product_by_digit": [
+      336.6320495605469,
+      316.466552734375,
+      252.06846618652344,
+      147.5529327392578,
+      21.514507293701172,
+      -117.32954406738281,
+      -263.0719299316406,
+      -118.99293518066406,
+      -253.99940490722656,
+      -320.8406982421875
+    ],
+    "cosine_prediction": 2,
+    "dot_product_prediction": 0
+  }
+}
