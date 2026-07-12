@@ -17,6 +17,7 @@ theme:
     - content.tabs.link
 
 nav:
+  - Main Results: main-results.md
   - Home: index.md
   - Setup: setup.md
   - First Part: first-part.md
@@ -35,6 +36,8 @@ markdown_extensions:
   - admonition
   - attr_list
   - md_in_html
+  - pymdownx.arithmatex:
+      generic: true
   - tables
   - toc:
       permalink: true
@@ -43,3 +46,10 @@ markdown_extensions:
   - pymdownx.superfences
   - pymdownx.tasklist:
       custom_checkbox: true
+
+extra_css:
+  - stylesheets/main-results.css
+
+extra_javascript:
+  - javascripts/mathjax.js
+  - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
