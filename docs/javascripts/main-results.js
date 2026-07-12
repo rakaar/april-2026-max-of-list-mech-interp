@@ -62,63 +62,63 @@
     document
       .querySelectorAll(".architecture-diagram[data-transformer-architecture]:not([data-rendered])")
       .forEach((root) => {
-        const headMarkup = Array.from({ length: 4 }, (_, headIndex) => `
+        const headMarkup = `
           <article
-            class="architecture-head architecture-head-${headIndex}"
-            aria-label="Attention head ${headIndex} computation"
+            class="architecture-head architecture-head-generic"
+            aria-label="Generic attention head h computation"
           >
             <header class="architecture-head-header">
-              <span class="architecture-head-index">H${headIndex}</span>
+              <span class="architecture-head-index">h</span>
               <div>
-                <strong>Attention head ${headIndex}</strong>
-                <small>independent learned weights</small>
+                <strong>Generic attention head h</strong>
+                <small>the same computation is applied independently in H0, H1, H2, and H3</small>
               </div>
             </header>
             <div class="architecture-projections">
               <div>
                 <b>Q</b>
-                <span>Q<sub>${headIndex}</sub> = R W<sub>Q</sub><sup>${headIndex}</sup></span>
-                <small>W<sub>Q</sub><sup>${headIndex}</sup>: 64 &times; 16</small>
+                <span>Q<sub>h</sub> = R W<sub>Q</sub><sup>h</sup></span>
+                <small>W<sub>Q</sub><sup>h</sup>: 64 &times; 16</small>
               </div>
               <div>
                 <b>K</b>
-                <span>K<sub>${headIndex}</sub> = R W<sub>K</sub><sup>${headIndex}</sup></span>
-                <small>W<sub>K</sub><sup>${headIndex}</sup>: 64 &times; 16</small>
+                <span>K<sub>h</sub> = R W<sub>K</sub><sup>h</sup></span>
+                <small>W<sub>K</sub><sup>h</sup>: 64 &times; 16</small>
               </div>
               <div>
                 <b>Value sources</b>
-                <span>S<sub>${headIndex}</sub> = R W<sub>V</sub><sup>${headIndex}</sup></span>
-                <small>W<sub>V</sub><sup>${headIndex}</sup>: 64 &times; 16</small>
+                <span>S<sub>h</sub> = R W<sub>V</sub><sup>h</sup></span>
+                <small>W<sub>V</sub><sup>h</sup>: 64 &times; 16</small>
               </div>
             </div>
             <div class="architecture-attention-equation">
               <span class="architecture-step-label">Full attention matrix</span>
               <strong>
-                A<sub>${headIndex}</sub> = softmax((Q<sub>${headIndex}</sub>K<sub>${headIndex}</sub><sup>T</sup>) / &radic;16 + M<sub>causal</sub>)
+                A<sub>h</sub> = softmax((Q<sub>h</sub>K<sub>h</sub><sup>T</sup>) / &radic;16 + M<sub>causal</sub>)
               </strong>
               <small>N &times; N</small>
             </div>
             <div class="architecture-head-path">
               <div class="architecture-head-step">
                 <span class="architecture-step-label">ANS attention row</span>
-                <strong>a<sub>${headIndex}</sub> = A<sub>${headIndex}</sub>[-1, :]</strong>
+                <strong>a<sub>h</sub> = A<sub>h</sub>[-1, :]</strong>
                 <small>1 &times; N</small>
               </div>
-              <span class="architecture-down-arrow" aria-hidden="true">&#8595;</span>
+              <span class="architecture-down-arrow" aria-hidden="true">&#8594;</span>
               <div class="architecture-head-step">
                 <span class="architecture-step-label">Weighted value vector</span>
-                <strong>V<sub>${headIndex}</sub> = a<sub>${headIndex}</sub>S<sub>${headIndex}</sub></strong>
+                <strong>V<sub>h</sub> = a<sub>h</sub>S<sub>h</sub></strong>
                 <small>1 &times; 16</small>
               </div>
-              <span class="architecture-down-arrow" aria-hidden="true">&#8595;</span>
+              <span class="architecture-down-arrow" aria-hidden="true">&#8594;</span>
               <div class="architecture-head-step architecture-head-output">
                 <span class="architecture-step-label">Residual-stream write</span>
-                <strong>z<sub>${headIndex}</sub> = V<sub>${headIndex}</sub>W<sub>O</sub><sup>${headIndex}</sup></strong>
-                <small>W<sub>O</sub><sup>${headIndex}</sup>: 16 &times; 64 &nbsp;&rarr;&nbsp; z<sub>${headIndex}</sub>: 1 &times; 64</small>
+                <strong>z<sub>h</sub> = V<sub>h</sub>W<sub>O</sub><sup>h</sup></strong>
+                <small>W<sub>O</sub><sup>h</sup>: 16 &times; 64 &nbsp;&rarr;&nbsp; z<sub>h</sub>: 1 &times; 64</small>
               </div>
             </div>
           </article>
-        `).join("");
+        `;
 
         root.innerHTML = `
           <div class="architecture-rules" aria-label="Model rules">
@@ -142,13 +142,13 @@
             </div>
           </div>
           <div class="architecture-fanout">
-            <span>R is sent to all four heads in parallel</span>
+            <span>For each h in {0, 1, 2, 3}, R is processed by the generic head below</span>
           </div>
           <div class="architecture-head-grid">
             ${headMarkup}
           </div>
           <div class="architecture-merge-cue">
-            <span>Only the four final-position writes continue to the answer readout</span>
+            <span>The four instances produce one final-position write each</span>
           </div>
           <div class="architecture-merge-row">
             <div class="architecture-write-chips" aria-label="Four head output vectors">

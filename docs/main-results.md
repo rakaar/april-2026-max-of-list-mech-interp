@@ -21,10 +21,6 @@ toc_depth: 3
   <div class="architecture-loading">Loading transformer architecture...</div>
 </div>
 
-<div class="notation-grid" markdown>
-
-<div class="notation-matrices" markdown>
-
 ### Matrices
 
 | Matrix | Shape | Symbol |
@@ -39,36 +35,6 @@ toc_depth: 3
 It is generally considered to be one large matrix while computing (`64 x 64`).
 But to interpret its easy to think that each head has its own output matrix.
 
-</div>
-
-<div class="notation-vectors" markdown>
-
-### Value vector
-
-Value vector after doing weighted attention of head h (`N x 16`, but last row
-would suffice to explain so considered `1 x 16`): $V_h$, which is basically
-(Attention x ($W_V$ x residual stream)).
-
-### Sum of head outputs
-
-Sum of all heads output just before multiplying with unembdding matrix (`N x
-64`, but last row suffices so `1 x 64`):
-
-$$
-\Sigma_h W_O^h V_h
-$$
-
-!!! note "Notation check"
-    The draft above is preserved. With the displayed row-vector shapes,
-    $V_h$ is `1 x 16` and $W_O^h$ is `16 x 64`, so the dimensionally
-    consistent product is $V_h W_O^h$. The summed final-row write is therefore
-    $\sum_h V_h W_O^h$. PyTorch stores linear-layer weights transposed relative
-    to this mathematical row-vector convention.
-
-</div>
-
-</div>
-
 ## Attention routing at the `[ANS]` token
 
 ### Looking at attention patterns in each head at ANS token
@@ -80,12 +46,20 @@ back down, in each head, all that matters for the computation is the last row
 of the attention matrix. The last row of the attention matrix checks what
 tokens the ANS token attends to?
 
-Below is the plot for
+Using the notation in the architecture diagram, the query, keys, and final
+attention row for head $h$ are
 
 $$
-W_Q^h [\text{ANS token in residual stream}] \cdot
-W_K^h [\text{Embedding vector of n}]
+Q_h = R W_Q^h,
+\qquad
+K_h = R W_K^h,
+\qquad
+a_h = \operatorname{softmax}\left(
+\frac{Q_h[-1,:]K_h^\top}{\sqrt{16}} + M_{\mathrm{causal}}[-1,:]
+\right).
 $$
+
+Below, each row is the resulting $a_h \in \mathbb{R}^{1 \times N}$.
 
 > **Display specification**
 >
@@ -122,8 +96,6 @@ $$
 
 [Open the exact plotted values](assets/main_results_ans_attention_regimes.json){ .main-results-data-link }
 
-- $W_Q$ ANS x $W_K$ max number vs $W_Q$ ANS x $W_K$ ANS in each head
-
 !!! info "How to read this diagnostic"
     These are the model's actual attention distributions after softmax over all
     `11` source positions. The coral outline marks the largest entry in each
@@ -138,89 +110,78 @@ $$
 
 As the maximum number increases, more heads are recruited. The all-head
 `[ANS]`-self pattern acts as a baseline that decodes as `0`. A recruited head
-changes its final attention row from `[ANS]` to the maximum-number token,
-thereby adding a number-dependent correction through its value and output
-matrices. H3 is recruited for maxima `2–6`; H2 joins H3 for maxima `7–8`; and
-H0 joins H2 and H3 for maximum `9`.
+changes $a_h$ from `[ANS]` to the maximum-number token, thereby changing
+$V_h = a_h S_h$ and the residual-stream write $z_h = V_h W_O^h$. H3 is
+recruited for maxima `2–6`; H2 joins H3 for maxima `7–8`; and H0 joins H2 and
+H3 for maximum `9`.
 
-This interpretation makes a causal prediction: changing only the final
-`[ANS]` attention rows should change the answer, even while every model weight,
-token embedding, positional embedding, and all earlier attention rows remain
-fixed. The prediction holds.
+This interpretation makes a causal prediction: changing only $a_h$ should
+change the answer, even while every model weight, token embedding, positional
+embedding, and all earlier attention rows remain fixed. The prediction holds.
 
 #### H3 steers `[2, 3, 4, 5, 6]`
 
-The unmodified model answers `6`. In each intervention below, H0, H1, and H2
-are forced one-hot to `[ANS]`; only H3 is forced one-hot to a selected digit
-position.
+The unmodified model answers `6`. In each intervention below, $a_0$, $a_1$,
+and $a_2$ are forced one-hot to `[ANS]`; only $a_3$ is forced one-hot to a
+selected digit position.
 
-| Input | Forced final `[ANS]` attention rows | Model output |
+| Input | Forced attention rows $a_h$ | Model output |
 |---|---|---:|
-| `[2, 3, 4, 5, 6]` | H0/H1/H2 $\rightarrow$ `[ANS]`; H3 $\rightarrow$ `2` | **2** |
-| `[2, 3, 4, 5, 6]` | H0/H1/H2 $\rightarrow$ `[ANS]`; H3 $\rightarrow$ `3` | **3** |
-| `[2, 3, 4, 5, 6]` | H0/H1/H2 $\rightarrow$ `[ANS]`; H3 $\rightarrow$ `4` | **4** |
-| `[2, 3, 4, 5, 6]` | H0/H1/H2 $\rightarrow$ `[ANS]`; H3 $\rightarrow$ `5` | **5** |
+| `[2, 3, 4, 5, 6]` | $a_0,a_1,a_2 \rightarrow$ `[ANS]`; $a_3 \rightarrow 2$ | **2** |
+| `[2, 3, 4, 5, 6]` | $a_0,a_1,a_2 \rightarrow$ `[ANS]`; $a_3 \rightarrow 3$ | **3** |
+| `[2, 3, 4, 5, 6]` | $a_0,a_1,a_2 \rightarrow$ `[ANS]`; $a_3 \rightarrow 4$ | **4** |
+| `[2, 3, 4, 5, 6]` | $a_0,a_1,a_2 \rightarrow$ `[ANS]`; $a_3 \rightarrow 5$ | **5** |
 
 #### H2 is recruited at `7`
 
 The unmodified model answers `8` for `[4, 5, 6, 7, 8]`. Targets `4–6` use
-the lower-number circuit: H2 stays on `[ANS]` while H3 reads the requested
-digit. To produce `7`, both H2 and H3 must read the `7` token.
+the lower-number circuit: $a_2$ stays on `[ANS]` while $a_3$ reads the
+requested digit. To produce `7`, both $a_2$ and $a_3$ must read the `7` token.
 
-| Input | Forced final `[ANS]` attention rows | Model output |
+| Input | Forced attention rows $a_h$ | Model output |
 |---|---|---:|
-| `[4, 5, 6, 7, 8]` | H0/H1/H2 $\rightarrow$ `[ANS]`; H3 $\rightarrow$ `4` | **4** |
-| `[4, 5, 6, 7, 8]` | H0/H1/H2 $\rightarrow$ `[ANS]`; H3 $\rightarrow$ `5` | **5** |
-| `[4, 5, 6, 7, 8]` | H0/H1/H2 $\rightarrow$ `[ANS]`; H3 $\rightarrow$ `6` | **6** |
-| `[4, 5, 6, 7, 8]` | H0/H1 $\rightarrow$ `[ANS]`; H2/H3 $\rightarrow$ `7` | **7** |
-
-!!! success "Causal result"
-    The true maxima are `6` and `8`, but replacing only the `[ANS]` query row
-    of the attention matrices makes the frozen model output the selected
-    non-maximum digit. The attention pattern therefore does not merely
-    correlate with the answer: the head-specific source choices causally
-    determine it.
-
-The intervention is implemented by replacing each selected `1 x 11`
-post-softmax attention row with a one-hot row, then applying the model's
-unchanged $W_V^h$, $W_O^h$, residual addition, and $W_U$. The special maximum
-`1` regime is excluded here because H3 uses a soft `[ANS]`/`1` mixture rather
-than a one-hot row.
-
-Reproducible analysis:
-`scripts/analysis/model1_counterfactual_attention_steering_examples.py`.
-[Open the exact logits and interventions](assets/model1_counterfactual_attention_steering_examples.json){ .main-results-data-link }
+| `[4, 5, 6, 7, 8]` | $a_0,a_1,a_2 \rightarrow$ `[ANS]`; $a_3 \rightarrow 4$ | **4** |
+| `[4, 5, 6, 7, 8]` | $a_0,a_1,a_2 \rightarrow$ `[ANS]`; $a_3 \rightarrow 5$ | **5** |
+| `[4, 5, 6, 7, 8]` | $a_0,a_1,a_2 \rightarrow$ `[ANS]`; $a_3 \rightarrow 6$ | **6** |
+| `[4, 5, 6, 7, 8]` | $a_0,a_1 \rightarrow$ `[ANS]`; $a_2,a_3 \rightarrow 7$ | **7** |
 
 ## Low-dimensional computation
 
+For the `[ANS]` prediction, head $h$ uses the quantities defined in the
+architecture diagram:
+
+$$
+S_h = R W_V^h \in \mathbb{R}^{N \times 16},
+\qquad
+a_h = A_h[-1,:] \in \mathbb{R}^{1 \times N},
+$$
+
+$$
+V_h = a_h S_h \in \mathbb{R}^{1 \times 16},
+\qquad
+z_h = V_h W_O^h \in \mathbb{R}^{1 \times 64}.
+$$
+
 Except for the soft-attention case at maximum `1`, the successful one-hot
-interventions let us treat each head's final value as a choice between its
-source value at `[ANS]`, $V_h[\mathrm{ANS}]$, and its source value at the
-selected number, $V_h[n]$. Here $V_h[n]$ is shorthand for the value of the
-complete residual vector at that source position, including both token and
-positional embedding.
-
-In row-vector notation, each selected `1 x 16` value is mapped into the
-`64`-dimensional residual stream by its head's `16 x 64` output matrix:
+interventions make $a_h$ select either the `[ANS]` row or a number row of
+$S_h$. The four head writes are then added:
 
 $$
-z_h = V_h W_O^h \in \mathbb{R}^{1 \times 64},
+z = \sum_{h=0}^{3} z_h \in \mathbb{R}^{1 \times 64}.
+$$
+
+The actual model computes
+
+$$
+R_{\mathrm{final}}[-1,:] = R[-1,:] + z,
 \qquad
-z = \sum_{h=0}^{3} z_h.
+\ell = R_{\mathrm{final}}[-1,:] W_U.
 $$
 
-The head writes are added and scored against the unembedding matrix:
-
-$$
-\ell = z W_U \in \mathbb{R}^{1 \times |\mathcal{V}|},
-\qquad
-\widehat{y} = \operatorname*{argmax}_t \ell_t.
-$$
-
-For this model, the attention-head sum $z$ by itself already gives `100%`
-accuracy over all `100,000` possible five-digit inputs. The experiment below
-therefore isolates this sufficient attention-write computation; it does not
-add the original `[ANS]` residual before unembedding.
+For this model, the isolated head readout $\ell_{\mathrm{heads}} = z W_U$
+already gives `100%` accuracy over all `100,000` possible five-digit inputs.
+The experiment below therefore studies this sufficient head-write computation
+without adding the original `[ANS]` residual.
 
 ### Output-matrix PCA
 
@@ -299,12 +260,13 @@ matrix.
 
 The first panel presents the computation as a fixed baseline followed by
 answer-dependent corrections. The baseline is
-$B=H0([\mathrm{ANS}])+H1([\mathrm{ANS}])+H2([\mathrm{ANS}])$. H3 supplies the
-first answer-dependent write. For outputs `7–9`, H2's `[ANS]` write is replaced
-by its number write; for output `9`, H0 is replaced in the same way. Thus the
-H2 and H0 arrows are replacement differences such as
-$H2(n)-H2([\mathrm{ANS}])$, avoiding double-counting the self write already in
-$B$.
+$B=z_0([\mathrm{ANS}])+z_1([\mathrm{ANS}])+z_2([\mathrm{ANS}])$, where
+$z_h(x)$ denotes the write produced when $a_h$ reads source $x$. The term
+$z_3$ supplies the first answer-dependent write. For outputs `7–9`,
+$z_2([\mathrm{ANS}])$ is replaced by $z_2(n)$; for output `9`, $z_0$ is
+replaced in the same way. Thus the $z_2$ and $z_0$ arrows are replacement
+differences such as $z_2(n)-z_2([\mathrm{ANS}])$, avoiding double-counting the
+self write already in $B$.
 
 [Open the baseline-and-corrections interactive](assets/model1_output_pca_piecewise_interactive.html){ target=_blank .main-results-data-link }
 
@@ -328,7 +290,7 @@ is the projected vector $V_hW_O^h$. The black arrow is their sum
 $z=\sum_h V_hW_O^h$. Select an output `0–9` to see which source each head reads
 and how the resulting sum scores all `14` vocabulary tokens.
 
-For output `1`, H3 uses its measured soft `[ANS]`/`1` attention row. Every
+For output `1`, $a_3$ is the measured soft `[ANS]`/`1` attention row. Every
 other endpoint uses the verified one-hot attention recipe. For all ten
 requested outputs, both the `3d` and full `64d` head sums predict the requested
 token.
