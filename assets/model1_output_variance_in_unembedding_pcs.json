@@ -1,0 +1,148 @@
+{
+  "description": "Centered row variance of each 16x64 per-head output matrix and the combined 64x64 output matrix captured by the top three centered digit-unembedding PCs.",
+  "hf_repo": "andyrdt/04_2026_puzzle_1a",
+  "unembedding_basis": {
+    "tokens": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9
+    ],
+    "matrix_shape": [
+      10,
+      64
+    ],
+    "centering": "subtract the mean of the ten digit-unembedding rows",
+    "basis_shape": [
+      64,
+      3
+    ],
+    "variance_fraction_by_pc": [
+      0.6946896019892347,
+      0.1704471148258168,
+      0.08746801869907393
+    ],
+    "top3_explained_variance_fraction": 0.9526047355141254
+  },
+  "output_matrix_orientation": "O_h is 16x64 and value_h @ O_h is a 64D residual write; stacking O_h gives the 64x64 row-vector map, equal to the stored PyTorch W_O.weight.T.",
+  "centering": "Each Hh matrix is centered across its own 16 rows. The All heads matrix is centered once across all 64 stacked rows.",
+  "formula": "fraction_j = q_j^T C_O q_j / trace(C_O), where C_O = O_centered^T O_centered / (n_rows - 1).",
+  "matrices": {
+    "H0": {
+      "shape": [
+        16,
+        64
+      ],
+      "n_centered_rows": 16,
+      "total_centered_variance": 1.6722852203497764,
+      "variance_by_unembedding_pc": [
+        0.18960570211174327,
+        1.0226328171751151,
+        0.12510135914679954
+      ],
+      "fraction_by_unembedding_pc": [
+        0.11338119825760655,
+        0.6115181816659364,
+        0.0748086257203381
+      ],
+      "top3_captured_variance": 1.3373398784336579,
+      "top3_captured_fraction": 0.799708005643881,
+      "top3_captured_percent": 79.9708005643881,
+      "residual_fraction_outside_top3": 0.200291994356119
+    },
+    "H1": {
+      "shape": [
+        16,
+        64
+      ],
+      "n_centered_rows": 16,
+      "total_centered_variance": 0.8224129777693443,
+      "variance_by_unembedding_pc": [
+        0.02124897087749366,
+        0.3816180216035576,
+        0.06015170860700787
+      ],
+      "fraction_by_unembedding_pc": [
+        0.0258373486944818,
+        0.46402237308879996,
+        0.07314051484226232
+      ],
+      "top3_captured_variance": 0.46301870108805915,
+      "top3_captured_fraction": 0.5630002366255441,
+      "top3_captured_percent": 56.30002366255441,
+      "residual_fraction_outside_top3": 0.4369997633744559
+    },
+    "H2": {
+      "shape": [
+        16,
+        64
+      ],
+      "n_centered_rows": 16,
+      "total_centered_variance": 2.1188562031961986,
+      "variance_by_unembedding_pc": [
+        0.7923986121581618,
+        0.7913036650211698,
+        0.17893787209675793
+      ],
+      "fraction_by_unembedding_pc": [
+        0.3739746996341065,
+        0.3734579363278754,
+        0.0844502198057793
+      ],
+      "top3_captured_variance": 1.7626401492760895,
+      "top3_captured_fraction": 0.8318828557677611,
+      "top3_captured_percent": 83.18828557677611,
+      "residual_fraction_outside_top3": 0.1681171442322389
+    },
+    "H3": {
+      "shape": [
+        16,
+        64
+      ],
+      "n_centered_rows": 16,
+      "total_centered_variance": 5.188507838110621,
+      "variance_by_unembedding_pc": [
+        4.608305636520217,
+        0.08164783089806836,
+        0.048034878732963096
+      ],
+      "fraction_by_unembedding_pc": [
+        0.8881755179536004,
+        0.015736283618644424,
+        0.009257937008428004
+      ],
+      "top3_captured_variance": 4.737988346151248,
+      "top3_captured_fraction": 0.9131697385806729,
+      "top3_captured_percent": 91.31697385806729,
+      "residual_fraction_outside_top3": 0.08683026141932715
+    },
+    "All heads": {
+      "shape": [
+        64,
+        64
+      ],
+      "n_centered_rows": 64,
+      "total_centered_variance": 2.3779403464157602,
+      "variance_by_unembedding_pc": [
+        1.3446115408959067,
+        0.5635181677728415,
+        0.09958797213632839
+      ],
+      "fraction_by_unembedding_pc": [
+        0.5654521749978392,
+        0.23697741981720666,
+        0.04187992868973189
+      ],
+      "top3_captured_variance": 2.0077176808050767,
+      "top3_captured_fraction": 0.8443095235047777,
+      "top3_captured_percent": 84.43095235047777,
+      "residual_fraction_outside_top3": 0.15569047649522227
+    }
+  }
+}
