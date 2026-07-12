@@ -62,63 +62,142 @@
     document
       .querySelectorAll(".architecture-diagram[data-transformer-architecture]:not([data-rendered])")
       .forEach((root) => {
+        const headMarkup = Array.from({ length: 4 }, (_, headIndex) => `
+          <article
+            class="architecture-head architecture-head-${headIndex}"
+            aria-label="Attention head ${headIndex} computation"
+          >
+            <header class="architecture-head-header">
+              <span class="architecture-head-index">H${headIndex}</span>
+              <div>
+                <strong>Attention head ${headIndex}</strong>
+                <small>independent learned weights</small>
+              </div>
+            </header>
+            <div class="architecture-projections">
+              <div>
+                <b>Q</b>
+                <span>Q<sub>${headIndex}</sub> = R W<sub>Q</sub><sup>${headIndex}</sup></span>
+                <small>W<sub>Q</sub><sup>${headIndex}</sup>: 64 &times; 16</small>
+              </div>
+              <div>
+                <b>K</b>
+                <span>K<sub>${headIndex}</sub> = R W<sub>K</sub><sup>${headIndex}</sup></span>
+                <small>W<sub>K</sub><sup>${headIndex}</sup>: 64 &times; 16</small>
+              </div>
+              <div>
+                <b>Value sources</b>
+                <span>S<sub>${headIndex}</sub> = R W<sub>V</sub><sup>${headIndex}</sup></span>
+                <small>W<sub>V</sub><sup>${headIndex}</sup>: 64 &times; 16</small>
+              </div>
+            </div>
+            <div class="architecture-attention-equation">
+              <span class="architecture-step-label">Full attention matrix</span>
+              <strong>
+                A<sub>${headIndex}</sub> = softmax((Q<sub>${headIndex}</sub>K<sub>${headIndex}</sub><sup>T</sup>) / &radic;16 + M<sub>causal</sub>)
+              </strong>
+              <small>N &times; N</small>
+            </div>
+            <div class="architecture-head-path">
+              <div class="architecture-head-step">
+                <span class="architecture-step-label">ANS attention row</span>
+                <strong>a<sub>${headIndex}</sub> = A<sub>${headIndex}</sub>[-1, :]</strong>
+                <small>1 &times; N</small>
+              </div>
+              <span class="architecture-down-arrow" aria-hidden="true">&#8595;</span>
+              <div class="architecture-head-step">
+                <span class="architecture-step-label">Weighted value vector</span>
+                <strong>V<sub>${headIndex}</sub> = a<sub>${headIndex}</sub>S<sub>${headIndex}</sub></strong>
+                <small>1 &times; 16</small>
+              </div>
+              <span class="architecture-down-arrow" aria-hidden="true">&#8595;</span>
+              <div class="architecture-head-step architecture-head-output">
+                <span class="architecture-step-label">Residual-stream write</span>
+                <strong>z<sub>${headIndex}</sub> = V<sub>${headIndex}</sub>W<sub>O</sub><sup>${headIndex}</sup></strong>
+                <small>W<sub>O</sub><sup>${headIndex}</sup>: 16 &times; 64 &nbsp;&rarr;&nbsp; z<sub>${headIndex}</sub>: 1 &times; 64</small>
+              </div>
+            </div>
+          </article>
+        `).join("");
+
         root.innerHTML = `
-          <div class="architecture-pipeline">
-            <div class="architecture-node architecture-node-input">
-              <span class="architecture-eyebrow">Input</span>
-              <strong>Token sequence</strong>
-              <code>[BOS] n0 [SEP] ... n4 [ANS]</code>
+          <div class="architecture-rules" aria-label="Model rules">
+            <div><strong>1</strong><span>attention-only layer</span></div>
+            <div><strong>64</strong><span>residual dimensions</span></div>
+            <div><strong>4 &times; 16</strong><span>heads &times; dimensions</span></div>
+            <div><strong>Causal</strong><span>masked self-attention</span></div>
+            <div><strong>[ANS]</strong><span>final row is read out</span></div>
+          </div>
+          <div class="architecture-source-flow">
+            <div class="architecture-source architecture-source-tokens">
+              <span class="architecture-eyebrow">Input sequence</span>
+              <code>[BOS] n0 [SEP] n1 ... n4 [ANS]</code>
               <small>N tokens</small>
             </div>
-            <span class="architecture-arrow" aria-hidden="true">&#8594;</span>
-            <div class="architecture-node">
-              <span class="architecture-eyebrow">Residual stream</span>
-              <strong>Embedding + position</strong>
-              <span class="architecture-math">R = W<sub>E</sub>[token] + P</span>
+            <span class="architecture-flow-arrow" aria-hidden="true">&#8594;</span>
+            <div class="architecture-source architecture-source-residual">
+              <span class="architecture-eyebrow">Shared residual stream</span>
+              <strong>R = W<sub>E</sub>[token] + P</strong>
               <small>N &times; 64</small>
             </div>
-            <span class="architecture-arrow" aria-hidden="true">&#8594;</span>
-            <div class="architecture-node architecture-node-attention">
-              <span class="architecture-eyebrow">Layer 0</span>
-              <strong>Four parallel heads</strong>
-              <span>H0 &nbsp; H1 &nbsp; H2 &nbsp; H3</span>
-              <small>16 dimensions per head</small>
+          </div>
+          <div class="architecture-fanout">
+            <span>R is sent to all four heads in parallel</span>
+          </div>
+          <div class="architecture-head-grid">
+            ${headMarkup}
+          </div>
+          <div class="architecture-merge-cue">
+            <span>Only the four final-position writes continue to the answer readout</span>
+          </div>
+          <div class="architecture-merge-row">
+            <div class="architecture-write-chips" aria-label="Four head output vectors">
+              ${Array.from({ length: 4 }, (_, headIndex) => `
+                <div class="architecture-write architecture-write-${headIndex}">
+                  <strong>z<sub>${headIndex}</sub></strong>
+                  <small>1 &times; 64</small>
+                </div>
+              `).join("")}
             </div>
-            <span class="architecture-arrow" aria-hidden="true">&#8594;</span>
-            <div class="architecture-node">
-              <span class="architecture-eyebrow">Readout</span>
-              <strong>Unembedding</strong>
-              <span class="architecture-math">logits = R<sub>final</sub> W<sub>U</sub></span>
-              <small>N &times; 14</small>
-            </div>
-            <span class="architecture-arrow" aria-hidden="true">&#8594;</span>
-            <div class="architecture-node architecture-node-output">
-              <span class="architecture-eyebrow">Prediction</span>
-              <strong>[ANS] row</strong>
-              <span>argmax over vocabulary</span>
-              <small>1 &times; 14</small>
+            <span class="architecture-flow-arrow" aria-hidden="true">&#8594;</span>
+            <div class="architecture-sum">
+              <span class="architecture-step-label">Summed head write</span>
+              <strong>z = &Sigma;<sub>h=0</sub><sup>3</sup> z<sub>h</sub></strong>
+              <small>1 &times; 64</small>
             </div>
           </div>
-          <div class="architecture-head-detail">
-            <div class="architecture-head-label">
-              <span class="architecture-eyebrow">Inside head h</span>
-              <strong>ANS selects a source value, then writes to the residual stream</strong>
-            </div>
-            <div class="architecture-qkv">
-              <div><strong>Query</strong><span>Q<sub>h</sub> = R W<sub>Q</sub><sup>h</sup></span><small>N &times; 16</small></div>
-              <div><strong>Key</strong><span>K<sub>h</sub> = R W<sub>K</sub><sup>h</sup></span><small>N &times; 16</small></div>
-              <div><strong>Value</strong><span>V<sub>source,h</sub> = R W<sub>V</sub><sup>h</sup></span><small>N &times; 16</small></div>
-            </div>
-            <div class="architecture-head-flow">
-              <span>Q<sub>h</sub>K<sub>h</sub><sup>T</sup></span><b aria-hidden="true">&#8594;</b>
-              <span>softmax attention A<sub>h</sub></span><b aria-hidden="true">&#8594;</b>
-              <span>A<sub>h</sub>V<sub>source,h</sub></span><b aria-hidden="true">&#8594;</b>
-              <span>W<sub>O</sub><sup>h</sup></span><b aria-hidden="true">&#8594;</b>
-              <span>head write, N &times; 64</span>
-            </div>
-            <div class="architecture-residual-line">
-              <span>sum H0 + H1 + H2 + H3</span><b aria-hidden="true">+</b>
-              <span>residual R</span><b aria-hidden="true">&#8594;</b><span>R<sub>final</sub></span>
+          <div class="architecture-readout">
+            <span class="architecture-eyebrow">Final [ANS] computation</span>
+            <div class="architecture-readout-flow">
+              <div>
+                <span class="architecture-step-label">Original residual</span>
+                <strong>R[-1, :]</strong>
+                <small>1 &times; 64</small>
+              </div>
+              <b aria-hidden="true">+</b>
+              <div>
+                <span class="architecture-step-label">Head sum</span>
+                <strong>z</strong>
+                <small>1 &times; 64</small>
+              </div>
+              <b aria-hidden="true">=</b>
+              <div>
+                <span class="architecture-step-label">Final residual</span>
+                <strong>R<sub>final</sub>[-1, :]</strong>
+                <small>1 &times; 64</small>
+              </div>
+              <b aria-hidden="true">&#8594;</b>
+              <div>
+                <span class="architecture-step-label">Unembedding</span>
+                <strong>&ell; = R<sub>final</sub>[-1, :] W<sub>U</sub></strong>
+                <small>W<sub>U</sub>: 64 &times; 14 &nbsp;&rarr;&nbsp; &ell;: 1 &times; 14</small>
+              </div>
+              <b aria-hidden="true">&#8594;</b>
+              <div class="architecture-prediction">
+                <span class="architecture-step-label">Prediction</span>
+                <strong>argmax<sub>t</sub> &ell;<sub>t</sub></strong>
+                <small>one vocabulary token</small>
+              </div>
             </div>
           </div>
         `;
