@@ -1,6 +1,6 @@
 site_name: April 2026 Max of List Result Book
 site_description: Working notes and results for the April 2026 Mech Interp Puzzle.
-site_url: ""
+site_url: "https://rakaar.github.io/april-2026-max-of-list-mech-interp/"
 docs_dir: docs
 site_dir: site
 
@@ -29,6 +29,7 @@ nav:
       - 2026-07-07: 2026-07-07.md
       - 2026-07-09: 2026-07-09.md
       - 2026-07-11: 2026-07-11.md
+      - 2026-07-12: 2026-07-12.md
 
 markdown_extensions:
   - admonition
