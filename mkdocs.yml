@@ -8,11 +8,13 @@ theme:
   name: material
   palette:
     - scheme: default
-      primary: indigo
-      accent: teal
+      primary: custom
+      accent: custom
   features:
     - navigation.sections
     - navigation.indexes
+    - navigation.top
+    - toc.follow
     - content.code.copy
     - content.tabs.link
 
@@ -52,4 +54,5 @@ extra_css:
 
 extra_javascript:
   - javascripts/mathjax.js
+  - javascripts/main-results.js
   - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js

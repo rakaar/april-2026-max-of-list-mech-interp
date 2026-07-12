@@ -622,8 +622,11 @@ def plotly_dynamic_traces(data: dict, state: RenderState) -> list:
 def plotly_title(data: dict, state: RenderState) -> str:
     prediction = state_vectors(data, state)["prediction"]
     status = "target wins" if prediction == state.true_max else f"current winner: {prediction}"
+    basis_prefix = (
+        f"{data['basis_label']} | " if data.get("basis_label") else ""
+    )
     return (
-        f"<b>Piecewise low-dimensional writes | target max {state.true_max}</b>"
+        f"<b>{basis_prefix}piecewise writes | target max {state.true_max}</b>"
         f"<br><span style='font-size:15px'>{state.stage} | {status}</span>"
         f"<br><span style='font-size:12px;color:#64748b'>{state.note}</span>"
     )
@@ -654,7 +657,7 @@ def all_interactive_scores(data: dict, states: list[RenderState]) -> np.ndarray:
     return np.concatenate([state_vectors(data, state)["scores"] for state in states])
 
 
-def render_interactive(data: dict) -> None:
+def render_interactive(data: dict, output_path: Path = HTML_OUT) -> None:
     states = build_interactive_states(data)
     digit_coordinates = np.asarray(data["pca"]["digit_coordinates"], dtype=float)
     fig = make_subplots(
@@ -810,8 +813,11 @@ def render_interactive(data: dict) -> None:
         annotations=[
             {
                 "text": (
-                    "Head and sum arrows share one positive display scale; digit unembeddings are unscaled. "
-                    "The bars use the raw, unscaled 3D dot products."
+                    data.get(
+                        "interactive_note",
+                        "Head and sum arrows share one positive display scale; digit unembeddings are unscaled. "
+                        "The bars use the raw, unscaled 3D dot products.",
+                    )
                 ),
                 "x": 0.5,
                 "y": -0.17,
@@ -823,7 +829,7 @@ def render_interactive(data: dict) -> None:
         ],
     )
     fig.write_html(
-        HTML_OUT,
+        output_path,
         include_plotlyjs=True,
         full_html=True,
         config={"responsive": True, "displaylogo": False},

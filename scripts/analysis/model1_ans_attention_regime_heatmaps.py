@@ -121,21 +121,6 @@ def draw_heatmap(ax, case: dict, compact: bool) -> None:
                 linewidth=2.0,
             )
         )
-        for position_idx in range(11):
-            probability = matrix[head_idx, position_idx]
-            if probability < 0.005:
-                continue
-            label = f"{probability:.0%}"
-            ax.text(
-                position_idx,
-                head_idx,
-                label,
-                ha="center",
-                va="center",
-                fontsize=7 if compact else 8,
-                fontweight="bold" if probability >= 0.5 else "normal",
-                color="#ffffff" if probability >= 0.48 else "#23433f",
-            )
 
     for spine in ax.spines.values():
         spine.set_edgecolor("#cfd8d6")
@@ -144,17 +129,37 @@ def draw_heatmap(ax, case: dict, compact: bool) -> None:
 
 
 def make_figure(cases: list[dict], compact: bool) -> plt.Figure:
-    figsize = (7.4, 25.5) if compact else (13.2, 23.0)
+    case_map = {case["max_value"]: case for case in cases}
+    max_cols = max(len(max_values) for _, max_values in GROUPS)
+    figsize = (7.4, 17.0) if compact else (17.6, 16.5)
     fig, axes = plt.subplots(
-        10,
-        1,
+        len(GROUPS),
+        max_cols,
         figsize=figsize,
+        squeeze=False,
         constrained_layout=False,
     )
     fig.patch.set_facecolor("#ffffff")
     image = None
-    for ax, case in zip(axes, cases):
-        image = draw_heatmap(ax, case, compact)
+    for row_idx, (_, max_values) in enumerate(GROUPS):
+        for col_idx, max_value in enumerate(max_values):
+            ax = axes[row_idx, col_idx]
+            image = draw_heatmap(ax, case_map[max_value], compact)
+            if col_idx == 0:
+                label = list(GROUPS[row_idx])[0]
+                ax.set_ylabel(
+                    label,
+                    rotation=0,
+                    labelpad=54,
+                    ha="right",
+                    va="center",
+                    fontsize=11 if not compact else 9.5,
+                    fontweight="bold",
+                    color="#263238",
+                )
+
+        for col_idx in range(len(max_values), max_cols):
+            axes[row_idx, col_idx].axis("off")
 
     title = (
         "Actual [ANS] attention\nfor every maximum"
@@ -172,8 +177,9 @@ def make_figure(cases: list[dict], compact: bool) -> plt.Figure:
     )
     fig.text(
         0.075 if compact else 0.08,
-        0.934 if compact else 0.954,
-        "Ten exact matrices; each is the final softmax row: 4 heads x 11 source tokens.",
+        0.954,
+        "Ten exact matrices; each is the final softmax row: 4 heads x 11 source tokens. "
+        "Rows are grouped as max=0, max=1, max=2-6, max=7-8, max=9.",
         ha="left",
         fontsize=9 if compact else 10.5,
         color="#58666d",
@@ -195,7 +201,7 @@ def make_figure(cases: list[dict], compact: bool) -> plt.Figure:
     if not compact:
         fig.text(
             0.94,
-            0.954,
+            0.978,
             "coral outline = row maximum",
             ha="right",
             fontsize=9,
@@ -215,11 +221,12 @@ def make_figure(cases: list[dict], compact: bool) -> plt.Figure:
     colorbar.ax.tick_params(length=0, labelsize=8)
 
     fig.subplots_adjust(
-        left=left,
-        right=right,
-        top=0.85 if compact else 0.875,
-        bottom=0.125,
-        hspace=1.16 if compact else 1.08,
+        left=0.13,
+        right=0.965,
+        top=0.922 if compact else 0.928,
+        bottom=0.115,
+        hspace=0.52 if compact else 0.58,
+        wspace=0.22,
     )
     return fig
 
