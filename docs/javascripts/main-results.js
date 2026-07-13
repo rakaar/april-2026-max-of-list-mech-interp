@@ -58,156 +58,13 @@
     return node;
   }
 
-  function initializeArchitecture() {
-    document
-      .querySelectorAll(".architecture-diagram[data-transformer-architecture]:not([data-rendered])")
-      .forEach((root) => {
-        const headMarkup = `
-          <article
-            class="architecture-head architecture-head-generic"
-            aria-label="Generic attention head h computation"
-          >
-            <header class="architecture-head-header">
-              <span class="architecture-head-index">h</span>
-              <div>
-                <strong>Generic attention head h</strong>
-                <small>the same computation is applied independently in H0, H1, H2, and H3</small>
-              </div>
-            </header>
-            <div class="architecture-projections">
-              <div>
-                <b>Q</b>
-                <span>Q<sub>h</sub> = R W<sub>Q</sub><sup>h</sup></span>
-                <small>W<sub>Q</sub><sup>h</sup>: 64 &times; 16</small>
-              </div>
-              <div>
-                <b>K</b>
-                <span>K<sub>h</sub> = R W<sub>K</sub><sup>h</sup></span>
-                <small>W<sub>K</sub><sup>h</sup>: 64 &times; 16</small>
-              </div>
-              <div>
-                <b>Value vectors</b>
-                <span>V<sub>h</sub> = R W<sub>V</sub><sup>h</sup></span>
-                <small>W<sub>V</sub><sup>h</sup>: 64 &times; 16</small>
-              </div>
-            </div>
-            <div class="architecture-attention-equation">
-              <span class="architecture-step-label">Full attention matrix</span>
-              <strong>
-                A<sub>h</sub> = softmax((Q<sub>h</sub>K<sub>h</sub><sup>T</sup>) / &radic;16 + M<sub>causal</sub>)
-              </strong>
-              <small>N &times; N</small>
-            </div>
-            <div class="architecture-head-path">
-              <div class="architecture-head-step">
-                <span class="architecture-step-label">ANS attention row</span>
-                <strong>a<sub>h</sub> = A<sub>h</sub>[-1, :]</strong>
-                <small>1 &times; N</small>
-              </div>
-              <span class="architecture-down-arrow" aria-hidden="true">&#8594;</span>
-              <div class="architecture-head-step">
-                <span class="architecture-step-label">Attention-weighted value</span>
-                <strong>V<sub>h</sub><sup>a</sup> = a<sub>h</sub>V<sub>h</sub></strong>
-                <small>1 &times; 16</small>
-              </div>
-              <span class="architecture-down-arrow" aria-hidden="true">&#8594;</span>
-              <div class="architecture-head-step architecture-head-output">
-                <span class="architecture-step-label">Residual-stream write</span>
-                <strong>z<sub>h</sub> = V<sub>h</sub><sup>a</sup>W<sub>O</sub><sup>h</sup></strong>
-                <small>W<sub>O</sub><sup>h</sup>: 16 &times; 64 &nbsp;&rarr;&nbsp; z<sub>h</sub>: 1 &times; 64</small>
-              </div>
-            </div>
-          </article>
-        `;
-
-        root.innerHTML = `
-          <div class="architecture-rules" aria-label="Model rules">
-            <div><strong>1</strong><span>attention-only layer</span></div>
-            <div><strong>64</strong><span>residual dimensions</span></div>
-            <div><strong>4 &times; 16</strong><span>heads &times; dimensions</span></div>
-            <div><strong>Causal</strong><span>masked self-attention</span></div>
-            <div><strong>[ANS]</strong><span>final row is read out</span></div>
-          </div>
-          <div class="architecture-source-flow">
-            <div class="architecture-source architecture-source-tokens">
-              <span class="architecture-eyebrow">Input sequence</span>
-              <code>[BOS] n0 [SEP] n1 ... n4 [ANS]</code>
-              <small>N tokens</small>
-            </div>
-            <span class="architecture-flow-arrow" aria-hidden="true">&#8594;</span>
-            <div class="architecture-source architecture-source-residual">
-              <span class="architecture-eyebrow">Shared residual stream</span>
-              <strong>R = W<sub>E</sub>[token] + P</strong>
-              <small>N &times; 64</small>
-            </div>
-          </div>
-          <div class="architecture-fanout">
-            <span>For each h in {0, 1, 2, 3}, R is processed by the generic head below</span>
-          </div>
-          <div class="architecture-head-grid">
-            ${headMarkup}
-          </div>
-          <div class="architecture-merge-cue">
-            <span>The four instances produce one final-position write each</span>
-          </div>
-          <div class="architecture-merge-row">
-            <div class="architecture-write-chips" aria-label="Four head output vectors">
-              ${Array.from({ length: 4 }, (_, headIndex) => `
-                <div class="architecture-write architecture-write-${headIndex}">
-                  <strong>z<sub>${headIndex}</sub></strong>
-                  <small>1 &times; 64</small>
-                </div>
-              `).join("")}
-            </div>
-            <span class="architecture-flow-arrow" aria-hidden="true">&#8594;</span>
-            <div class="architecture-sum">
-              <span class="architecture-step-label">Summed head write</span>
-              <strong>z = &Sigma;<sub>h=0</sub><sup>3</sup> z<sub>h</sub></strong>
-              <small>1 &times; 64</small>
-            </div>
-          </div>
-          <div class="architecture-readout">
-            <span class="architecture-eyebrow">Final [ANS] computation</span>
-            <div class="architecture-readout-flow">
-              <div>
-                <span class="architecture-step-label">Original residual</span>
-                <strong>R[-1, :]</strong>
-                <small>1 &times; 64</small>
-              </div>
-              <b aria-hidden="true">+</b>
-              <div>
-                <span class="architecture-step-label">Head sum</span>
-                <strong>z</strong>
-                <small>1 &times; 64</small>
-              </div>
-              <b aria-hidden="true">=</b>
-              <div>
-                <span class="architecture-step-label">Final residual</span>
-                <strong>R<sub>final</sub>[-1, :]</strong>
-                <small>1 &times; 64</small>
-              </div>
-              <b aria-hidden="true">&#8594;</b>
-              <div>
-                <span class="architecture-step-label">Unembedding</span>
-                <strong>F = R<sub>final</sub>[-1, :] W<sub>U</sub></strong>
-                <small>W<sub>U</sub>: 64 &times; 14 &nbsp;&rarr;&nbsp; F: 1 &times; 14</small>
-              </div>
-              <b aria-hidden="true">&#8594;</b>
-              <div class="architecture-prediction">
-                <span class="architecture-step-label">Prediction</span>
-                <strong>argmax<sub>t</sub> F<sub>t</sub></strong>
-                <small>one vocabulary token</small>
-              </div>
-            </div>
-          </div>
-        `;
-        root.dataset.rendered = "true";
-      });
-  }
-
   function renderCase(caseData) {
     const card = element("article", "attention-case");
-    const title = element("div", "attention-case-title", `max = ${caseData.max_value}`);
+    const title = element("div", "attention-case-title");
+    title.appendChild(element("span", "attention-case-maximum", `max = ${caseData.max_value}`));
+    title.appendChild(
+      element("span", "attention-case-count", `n = ${caseData.count.toLocaleString()}`),
+    );
     card.appendChild(title);
 
     const matrix = element("div", "attention-matrix");
@@ -221,14 +78,13 @@
     corner.setAttribute("aria-hidden", "true");
     matrix.appendChild(corner);
 
-    caseData.tokens.forEach((token, position) => {
+    caseData.token_ids.forEach((token) => {
       const label = element("div", "attention-source-label");
       label.innerHTML = `
         <span class="attention-token-full">${tokenName(token)}</span>
         <span class="attention-token-short">${shortTokenName(token)}</span>
-        <small>${position}</small>
       `;
-      label.title = `${tokenName(token)} at source position ${position}`;
+      label.title = `Token identity ${tokenName(token)}`;
       matrix.appendChild(label);
     });
 
@@ -236,15 +92,15 @@
       const head = element("div", "attention-head-label", `H${headIndex}`);
       head.setAttribute("role", "rowheader");
       matrix.appendChild(head);
-      row.forEach((probability, position) => {
+      row.forEach((probability, tokenIndex) => {
         const cell = element("div", "attention-cell");
         cell.style.backgroundColor = attentionColor(probability);
-        cell.title = `H${headIndex} to ${tokenName(caseData.tokens[position])}@${position}: ${(
-          probability * 100
-        ).toFixed(3)}%`;
+        cell.title = `H${headIndex} mean attention to token ${tokenName(
+          caseData.token_ids[tokenIndex],
+        )}: ${(probability * 100).toFixed(3)}% over ${caseData.count.toLocaleString()} inputs`;
         cell.setAttribute("role", "cell");
         cell.setAttribute("aria-label", cell.title);
-        if (position === caseData.top_positions_by_head[headIndex]) {
+        if (tokenIndex === caseData.top_token_indices_by_head[headIndex]) {
           cell.classList.add("is-row-maximum");
         }
         matrix.appendChild(cell);
@@ -316,7 +172,7 @@
             element(
               "p",
               "attention-error",
-              "The attention matrices could not be loaded. Open the exact values below.",
+              "The conditional mean attention matrices could not be loaded.",
             ),
           );
         }
@@ -329,7 +185,6 @@
     const article = marker && marker.closest(".md-content__inner");
     if (!article) return Promise.resolve();
     article.classList.add("main-results");
-    initializeArchitecture();
     return initializeAttentionGrids();
   }
 

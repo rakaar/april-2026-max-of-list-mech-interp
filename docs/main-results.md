@@ -10,15 +10,23 @@ toc_depth: 3
 
 ## Model and notation
 
-### Transformer architecture
+### Transformer computation
 
-<div
-  class="architecture-diagram"
-  data-transformer-architecture
-  role="img"
-  aria-label="One-layer attention-only transformer architecture with matrix notation"
->
-  <div class="architecture-loading">Loading transformer architecture...</div>
+The model has one attention-only layer, a `64`-dimensional residual stream,
+and four `16`-dimensional attention heads. For a generic head $h$:
+
+<div class="transformer-notation-table" markdown>
+
+| Stage | Notation |
+|---|---|
+| Input residual stream | $R = W_E[\text{token}] + P \in \mathbb{R}^{N \times 64}$ |
+| Attention processing | $Q_h = R W_Q^h,\quad K_h = R W_K^h,\quad V_h = R W_V^h \in \mathbb{R}^{N \times 16}$<br>$A_h = \operatorname{softmax}\!\left(\frac{Q_h K_h^T}{\sqrt{16}} + M_{\text{causal}}\right) \in \mathbb{R}^{N \times N}$<br>$a_h = A_h[-1,:] \in \mathbb{R}^{1 \times N}$<br>$V_h^a = a_h V_h \in \mathbb{R}^{1 \times 16}$ |
+| Attention output multiplied with output matrix | $z_h = V_h^a W_O^h \in \mathbb{R}^{1 \times 64},\quad W_O^h \in \mathbb{R}^{16 \times 64}$ |
+| Addition of all heads | $z = \sum_{h=0}^{3} z_h \in \mathbb{R}^{1 \times 64}$ |
+| Residual addition at `[ANS]` | $R_{\text{final}}[-1,:] = R[-1,:] + z$ |
+| Unembedding | $F = R_{\text{final}}[-1,:] W_U \in \mathbb{R}^{1 \times 14},\quad W_U \in \mathbb{R}^{64 \times 14}$ |
+| Prediction | $\operatorname*{argmax}_t F_t$ |
+
 </div>
 
 ## Attention routing at the `[ANS]` token
@@ -26,10 +34,12 @@ toc_depth: 3
 ### Looking at attention patterns
 
 We only care about the model's response at the `[ANS]` token, which is the
-final score vector $F$ in the transformer diagram. In each head, the attention
+final score vector $F$ in the table above. In each head, the attention
 component that influences $F$ is $a_h$: the vector that says which source
 tokens `[ANS]` attends to. Below, we visualize this attention when each digit
-$d$ is the maximum number.
+$d$ is the maximum number. For each input, attention to repeated occurrences
+of the same token is first summed; these token-level distributions are then
+averaged over every input whose true maximum is $d$.
 
 <figure class="main-results-plot attention-explorer">
   <div
@@ -37,7 +47,7 @@ $d$ is the maximum number.
     data-attention-source="../assets/main_results_ans_attention_regimes.json"
     aria-live="polite"
   >
-    <div class="attention-loading">Loading exact attention matrices...</div>
+    <div class="attention-loading">Loading conditional mean attention matrices...</div>
   </div>
   <noscript>
     <picture>
@@ -47,15 +57,17 @@ $d$ is the maximum number.
       >
       <img
         src="../assets/main_results_ans_attention_by_max.png"
-        alt="Ten heatmaps showing the exact ANS attention row for four heads across all eleven source tokens"
+        alt="Ten heatmaps showing mean ANS attention for four heads across fourteen token identities, conditioned on the true maximum"
       >
     </picture>
   </noscript>
   <div class="main-results-figure-caption">
-    Final-row softmax attention for the <code>[ANS]</code> query. Each matrix
-    uses the matched input <code>[0, 0, d, 0, 0]</code>, with <code>d</code> at
-    the central number position. These are exact representative cases, not
-    averages over all inputs with the same maximum.
+    Conditional mean of the final-row softmax attention for the
+    <code>[ANS]</code> query. Each matrix is 4 heads x 14 token identities and
+    includes every five-digit input whose true maximum is <code>d</code>. If a
+    token occurs more than once in an input, its attention mass is summed
+    before averaging. The ten conditions partition all 100,000 inputs, and
+    every head row sums to 100%.
   </div>
 </figure>
 
@@ -164,10 +176,11 @@ does the same for output `9`.
 #### Direct output from each head
 
 The second interactive shows the same computation without regrouping it into
-a baseline and corrections. Each colored arrow is one head's complete output
-$z_h = V_h^a W_O^h$ in the three-dimensional space. The black arrow is the sum
-of all four head outputs. The bar chart shows the dot product of this sum with
-each vocabulary token's projected unembedding vector.
+a baseline and corrections. The selected maximum is the enlarged green dot.
+Each thin colored arrow is one head's complete output
+$z_h = V_h^a W_O^h$ in the three-dimensional space. The thicker black arrow is
+the sum of all four head outputs. The bar chart shows the dot product of this
+sum with each vocabulary token's projected unembedding vector.
 
 [Open the direct-head-writes interactive](assets/model1_output_pca_head_contributions_interactive.html){ target=_blank .main-results-data-link }
 
@@ -178,3 +191,149 @@ each vocabulary token's projected unembedding vector.
   loading="lazy"
   allowfullscreen>
 </iframe>
+
+## Supplementary results
+
+### H0's partial attention to `8` is inconsequential
+
+Although `7` and `8` are placed in the same row of the attention figure, the
+max-`8` pattern is slightly different. Across all `26,281` inputs whose true
+maximum is `8`, H0 assigns `16.83%` of its attention to token `8`, while
+`82.40%` remains on `[ANS]`. Thus H0 partially attends to `8`, but `[ANS]` is
+still its largest source.
+
+This H0 attention to `8` is not consequential. We tested two interventions
+while leaving the measured outputs of H1, H2, and H3 unchanged:
+
+1. Set H0's attention to every `8` position to zero and move exactly that
+   probability mass to the `[ANS]` position.
+2. Replace H0's complete attention row with one-hot attention to `[ANS]`.
+
+Both interventions were checked in the full model and in the
+three-dimensional computation.
+
+| H0 attention at `[ANS]` | Full 64D model | Top 3 output-matrix PCs | Top 3 unembedding PCs |
+|---|---:|---:|---:|
+| Measured attention | 26,281 / 26,281 | 26,281 / 26,281 | 26,281 / 26,281 |
+| Move all H0 `8` mass to `[ANS]` | **26,281 / 26,281** | **26,281 / 26,281** | **26,281 / 26,281** |
+| Force H0 one-hot to `[ANS]` | **26,281 / 26,281** | **26,281 / 26,281** | **26,281 / 26,281** |
+
+Therefore H0's secondary `16.83%` read of token `8` is unnecessary for the
+max-`8` decision, including inside either three-dimensional subspace. H2 and
+H3 already supply sufficient routing for the model to answer `8`.
+
+### PCs of the unembedding matrix also work
+
+Above, we used the basis obtained from PCA of the output matrix. Since the
+output and unembedding matrices operate in nearby low-dimensional subspaces,
+the construction can also be reversed: fit PCA to the full `14`-token
+unembedding matrix, use those same directions to reduce each head's output
+matrix, and perform the readout in that shared basis.
+
+The following check again covers all `100,000` inputs and takes the argmax over
+the full `14`-token vocabulary. Every row uses PCs obtained only from the
+centered unembedding matrix.
+
+| Unembedding-PCA basis retained | Unembedding-matrix variance captured | Output-matrix variance captured | 14-way accuracy |
+|---|---:|---:|---:|
+| PC1 | 62.01% | 56.45% | 40.952% |
+| PC1 + PC2 | 87.37% | 82.01% | 86.318% |
+| **PC1 + PC2 + PC3** | **94.04%** | **86.23%** | **100.000%** |
+
+Thus the PCs of the unembedding matrix also work: three dimensions still give
+`100%` accuracy when the same basis is applied to the output matrix.
+
+The two top-three subspaces are close, though not exactly identical. The plot
+below shows the exact `64`-dimensional cosine between each full-vocabulary
+$W_U$ PC and each stacked-output $W_O$ PC. Because a PCA axis has an arbitrary
+sign, each $W_O$ PC is sign-aligned with the corresponding $W_U$ PC before the
+matrix is displayed.
+
+<figure class="main-results-plot">
+  <img
+    src="../assets/model1_main_results_pc_alignment.png"
+    alt="Three by three heatmap of cosine similarities between the first three unembedding and output-matrix principal directions"
+  >
+  <figcaption>
+    Same-index PC cosines are 0.969, 0.965, and 0.968. The principal angles
+    between the complete three-dimensional subspaces are 5.24, 11.03, and
+    14.34 degrees.
+  </figcaption>
+</figure>
+
+### The angle mystery
+
+If you have used the interactive panel above, you may notice a strange result. When
+the maximum is `1`, the final output is more closely aligned by cosine with the
+unembedding of `2`, yet its dot product is highest with the unembedding of `1`.
+Similarly, when the maximum is `2`, the output aligns more closely with the
+unembedding of `3`, while the dot product is highest for `2`.
+
+The interactive displays the head sum $z$. The table below goes one step
+further and uses the actual final state
+$R_{\text{final}}[-1,:] = R[-1,:] + z$, so the effect is not caused by omitting
+the initial `[ANS]` residual. These are the canonical interactive examples
+`[0, 0, 1, 0, 0]` and `[0, 0, 2, 0, 0]` in the same top-three output-PCA basis.
+
+| True maximum | Candidate $d$ | Cosine with $R_{\text{final}}^{(3)}[-1,:]$ | $\lVert U_d^{(3)}\rVert$ | Dot product |
+|---:|---:|---:|---:|---:|
+| 1 | **1** | 0.931245 | **0.822791** | **222.0728** |
+| 1 | 2 | **0.993939** | 0.643628 | 185.4116 |
+| 2 | **2** | 0.916275 | **0.643628** | **108.2686** |
+| 2 | 3 | **0.973806** | 0.539593 | 96.4673 |
+
+For one input, the norm of $R_{\text{final}}^{(3)}[-1,:]$ is common to every
+candidate. Therefore the only candidate-dependent norm in the dot-product
+argmax is the norm of the projected unembedding vector:
+
+$$
+F_d^{(3)} = \lVert R_{\text{final}}^{(3)}[-1,:] \rVert
+             \lVert U_d^{(3)} \rVert \cos(\theta_d).
+$$
+
+One might therefore expect that forcing every unembedding vector to norm `1`
+would create a purely angular decoder. In the full `64`-dimensional space it
+does. However, projection does not preserve those individual norms: in the
+unit-unembedding retrain, the top-three output-PCA unembedding norms range from
+`0.732` to `0.956`. Its three-dimensional dot-product accuracy remains `100%`,
+while cosine-only accuracy is `95.317%`. The full-space angular code therefore
+does not remain purely angular after projection. See the
+[unit-norm retraining experiment](2026-07-12.md#model-1-retrain-unit-norm-unembedding-rows)
+for the complete check.
+
+### Why we did not add the initial residual stream
+
+It turns out that just using the output of the heads and processing it through
+the unembedding matrix already gives `100%` accuracy. We therefore skipped one
+extra step in the low-dimensional explanation because it does not change any
+of the model's decisions.
+
+| State passed to the full $14$-token unembedding | Correct | Accuracy |
+|---|---:|---:|
+| Head sum only, $z$ | 100,000 / 100,000 | **100.000%** |
+| Full state, $R[-1,:] + z$ | 100,000 / 100,000 | **100.000%** |
+
+The initial residual is not numerically zero and it does change the logits. It
+is omitted here only because it never changes the argmax on this task.
+
+### Head 1 is almost, but not completely, dispensable
+
+From the attention figures, H1 never switches from `[ANS]` to a digit token.
+However, attending to `[ANS]` still produces a nonzero output vector. The
+zero-ablation experiment shows that removing the complete output of H1
+preserves near-perfect accuracy.
+
+| Intervention | Correct | Accuracy |
+|---|---:|---:|
+| No ablation | 100,000 / 100,000 | **100.000%** |
+| Set the complete H1 output to zero | 99,997 / 100,000 | **99.997%** |
+
+It gets all but three cases correct. The H1-ablation failures are:
+
+| Input | Correct answer | Output after H1 ablation |
+|---|---:|---:|
+| `[0, 0, 0, 1, 0]` | 1 | 0 |
+| `[0, 0, 1, 0, 0]` | 1 | 0 |
+| `[8, 8, 8, 8, 8]` | 8 | 9 |
+
+[Analysis code](https://github.com/rakaar/april-2026-max-of-list-mech-interp/blob/agent/document-low-dimensional-readout/scripts/analysis/model1_main_results_supplementary.py)

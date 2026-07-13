@@ -215,12 +215,8 @@ def vector_traces(
         x=[0.0, end[0]],
         y=[0.0, end[1]],
         z=[0.0, end[2]],
-        mode="lines+markers+text",
+        mode="lines",
         line={"color": color, "width": width},
-        marker={"color": color, "size": [2, 6]},
-        text=[None, name],
-        textposition="top center",
-        textfont={"color": color, "size": 11},
         name=name,
         legendgroup=name,
         showlegend=showlegend,
@@ -239,7 +235,7 @@ def vector_traces(
         w=[end[2]],
         anchor="tip",
         sizemode="absolute",
-        sizeref=0.095 if name != "sum z" else 0.12,
+        sizeref=0.065 if name != "sum z" else 0.115,
         colorscale=[[0.0, color], [1.0, color]],
         showscale=False,
         name=name,
@@ -261,10 +257,15 @@ def dynamic_traces(data: dict, case: dict) -> list[go.BaseTraceType]:
             y=[target_coordinate[1]],
             z=[target_coordinate[2]],
             mode="markers",
-            marker={"size": 12, "color": "#0f766e", "symbol": "diamond"},
-            name=f"target U{target}",
+            marker={
+                "size": 18,
+                "color": "rgba(15, 118, 110, 0.15)",
+                "symbol": "circle",
+                "line": {"color": "#0f766e", "width": 3},
+            },
+            name=f"maximum U{target}",
             showlegend=False,
-            hovertemplate=f"<b>target U{target}</b><extra></extra>",
+            hovertemplate=f"<b>maximum digit: {target}</b><br>U{target}<extra></extra>",
         )
     ]
     for head_idx, vector in enumerate(case["head_writes_3d"]):
@@ -274,7 +275,7 @@ def dynamic_traces(data: dict, case: dict) -> list[go.BaseTraceType]:
                 f"H{head_idx}({compact_source(source)})",
                 np.asarray(vector, dtype=float),
                 HEAD_COLORS[head_idx],
-                7,
+                3,
                 scale,
                 True,
             )
@@ -284,7 +285,7 @@ def dynamic_traces(data: dict, case: dict) -> list[go.BaseTraceType]:
             "sum z",
             np.asarray(case["sum_3d"], dtype=float),
             "#111827",
-            11,
+            9,
             scale,
             True,
         )
@@ -313,7 +314,9 @@ def title(case: dict) -> str:
         for head, source in case["head_sources"].items()
     )
     return (
-        f"<b>Direct per-head writes | requested output {case['target']}</b>"
+        f"<span style='font-size:22px'><b>Maximum digit: {case['target']}</b></span>"
+        f"<br><span style='font-size:13px'>Direct per-head writes for "
+        f"{case['numbers']}</span>"
         f"<br><span style='font-size:13px'>{recipe}</span>"
         f"<br><span style='font-size:12px;color:#64748b'>"
         f"3D/full-64D winners: {case['prediction_3d']}/{case['prediction_64d']}"
@@ -348,24 +351,6 @@ def render_interactive(data: dict) -> None:
         horizontal_spacing=0.045,
     )
 
-    ray_x, ray_y, ray_z = [], [], []
-    for vector in candidate_coordinates:
-        ray_x.extend([0.0, vector[0], None])
-        ray_y.extend([0.0, vector[1], None])
-        ray_z.extend([0.0, vector[2], None])
-    fig.add_trace(
-        go.Scatter3d(
-            x=ray_x,
-            y=ray_y,
-            z=ray_z,
-            mode="lines",
-            line={"color": "#d1d5db", "width": 2},
-            hoverinfo="skip",
-            showlegend=False,
-        ),
-        row=1,
-        col=1,
-    )
     candidate_colors = list(DIGIT_COLORS) + ["#64748b"] * 4
     fig.add_trace(
         go.Scatter3d(
@@ -373,7 +358,7 @@ def render_interactive(data: dict) -> None:
             y=candidate_coordinates[:, 1],
             z=candidate_coordinates[:, 2],
             mode="markers+text",
-            marker={"size": 6, "color": candidate_colors},
+            marker={"size": 7, "color": candidate_colors},
             text=data["vocab_labels"],
             textposition="top center",
             textfont={"size": 10},
@@ -431,7 +416,7 @@ def render_interactive(data: dict) -> None:
         title={"text": title(data["cases"][0]), "x": 0.5, "xanchor": "center"},
         template="plotly_white",
         height=880,
-        margin={"l": 12, "r": 18, "t": 112, "b": 118},
+        margin={"l": 12, "r": 18, "t": 170, "b": 118},
         font={"family": "Inter, Arial, sans-serif", "size": 13, "color": "#1f2937"},
         uirevision="output-pca-direct-head-writes",
         scene={
@@ -454,7 +439,7 @@ def render_interactive(data: dict) -> None:
             "orientation": "h",
             "x": 0.34,
             "xanchor": "center",
-            "y": 1.01,
+            "y": 0.93,
             "yanchor": "bottom",
             "font": {"size": 10},
         },
@@ -497,7 +482,7 @@ def render_interactive(data: dict) -> None:
         sliders=[
             {
                 "active": 0,
-                "currentvalue": {"prefix": "Requested output: ", "font": {"size": 14}},
+                "currentvalue": {"prefix": "Maximum digit: ", "font": {"size": 14}},
                 "pad": {"t": 42},
                 "x": 0.25,
                 "len": 0.73,
@@ -507,9 +492,9 @@ def render_interactive(data: dict) -> None:
         annotations=[
             {
                 "text": (
-                    "Each colored arrow is one direct V_h W_O^h write from the origin; "
-                    "black z is their sum. Head and sum arrows share one display scale; "
-                    "the 14-token bars use unscaled 3D coordinates."
+                    "Dots are projected unembedding vectors. Thin colored arrows are "
+                    "direct V_h W_O^h writes; the thick black arrow is their sum. "
+                    "All arrows share one display scale; bars use unscaled 3D coordinates."
                 ),
                 "x": 0.5,
                 "y": -0.17,
@@ -526,6 +511,8 @@ def render_interactive(data: dict) -> None:
         full_html=True,
         config={"responsive": True, "displaylogo": False, "scrollZoom": True},
     )
+    html = HTML_OUT.read_text()
+    HTML_OUT.write_text("\n".join(line.rstrip() for line in html.splitlines()) + "\n")
 
 
 def main() -> None:

@@ -543,7 +543,12 @@ def plotly_dynamic_traces(data: dict, state: RenderState) -> list:
             y=[target[1]],
             z=[target[2]],
             mode="markers",
-            marker={"size": 12, "color": COLORS["target"], "symbol": "diamond"},
+            marker={
+                "size": 12,
+                "color": "rgba(15, 118, 110, 0.15)",
+                "symbol": "diamond",
+                "line": {"color": COLORS["target"], "width": 3},
+            },
             name=f"target U{state.true_max}",
             hovertemplate=f"<b>target U{state.true_max}</b><extra></extra>",
             showlegend=False,
@@ -834,6 +839,8 @@ def render_interactive(data: dict, output_path: Path = HTML_OUT) -> None:
         full_html=True,
         config={"responsive": True, "displaylogo": False},
     )
+    html = output_path.read_text()
+    output_path.write_text("\n".join(line.rstrip() for line in html.splitlines()) + "\n")
 
 
 def build_video_states(data: dict) -> list[RenderState]:

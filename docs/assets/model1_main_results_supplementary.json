@@ -1,0 +1,537 @@
+{
+  "description": "Reproducible checks for the supplementary section of the main-results page: full-vocabulary unembedding-PCA readout, PC alignment, canonical max-1/max-2 angle examples, head-sum-only readout, H1 ablation, and max-8 H0 attention interventions in 64D and both 3D bases.",
+  "hf_repo": "andyrdt/04_2026_puzzle_1a",
+  "model_config": {
+    "vocab_size": 14,
+    "d_model": 64,
+    "n_heads": 4,
+    "n_layers": 1,
+    "max_seq_len": 12
+  },
+  "device": "cuda",
+  "unembedding_pca_readout": {
+    "basis_source": "centered rows of the full 14x64 unembedding weight",
+    "unembedding_cumulative_variance": {
+      "1": 0.6201300239607936,
+      "2": 0.8737259619927562,
+      "3": 0.9403514606019787
+    },
+    "output_matrix_cumulative_variance_in_this_basis": {
+      "1": 0.5644592270783003,
+      "2": 0.8201426227581313,
+      "3": 0.862265723428851
+    },
+    "by_k": {
+      "1": {
+        "accuracy": 0.40952,
+        "correct": 40952,
+        "total": 100000,
+        "special_token_prediction_count": 0,
+        "prediction_distribution": {
+          "0": 1024,
+          "9": 98976
+        },
+        "accuracy_by_true_max": {
+          "0": {
+            "accuracy": 1.0,
+            "correct": 1,
+            "total": 1
+          },
+          "1": {
+            "accuracy": 0.0,
+            "correct": 0,
+            "total": 31
+          },
+          "2": {
+            "accuracy": 0.0,
+            "correct": 0,
+            "total": 211
+          },
+          "3": {
+            "accuracy": 0.0,
+            "correct": 0,
+            "total": 781
+          },
+          "4": {
+            "accuracy": 0.0,
+            "correct": 0,
+            "total": 2101
+          },
+          "5": {
+            "accuracy": 0.0,
+            "correct": 0,
+            "total": 4651
+          },
+          "6": {
+            "accuracy": 0.0,
+            "correct": 0,
+            "total": 9031
+          },
+          "7": {
+            "accuracy": 0.0,
+            "correct": 0,
+            "total": 15961
+          },
+          "8": {
+            "accuracy": 0.0,
+            "correct": 0,
+            "total": 26281
+          },
+          "9": {
+            "accuracy": 1.0,
+            "correct": 40951,
+            "total": 40951
+          }
+        },
+        "max_abs_coordinate_error_per_head_vs_sum_then_project": 6.103515625e-05,
+        "centered_vs_raw_unembedding_argmax_mismatches": 0
+      },
+      "2": {
+        "accuracy": 0.86318,
+        "correct": 86318,
+        "total": 100000,
+        "special_token_prediction_count": 0,
+        "prediction_distribution": {
+          "0": 1,
+          "1": 31,
+          "2": 211,
+          "3": 781,
+          "4": 2101,
+          "7": 20612,
+          "8": 35312,
+          "9": 40951
+        },
+        "accuracy_by_true_max": {
+          "0": {
+            "accuracy": 1.0,
+            "correct": 1,
+            "total": 1
+          },
+          "1": {
+            "accuracy": 1.0,
+            "correct": 31,
+            "total": 31
+          },
+          "2": {
+            "accuracy": 1.0,
+            "correct": 211,
+            "total": 211
+          },
+          "3": {
+            "accuracy": 1.0,
+            "correct": 781,
+            "total": 781
+          },
+          "4": {
+            "accuracy": 1.0,
+            "correct": 2101,
+            "total": 2101
+          },
+          "5": {
+            "accuracy": 0.0,
+            "correct": 0,
+            "total": 4651
+          },
+          "6": {
+            "accuracy": 0.0,
+            "correct": 0,
+            "total": 9031
+          },
+          "7": {
+            "accuracy": 1.0,
+            "correct": 15961,
+            "total": 15961
+          },
+          "8": {
+            "accuracy": 1.0,
+            "correct": 26281,
+            "total": 26281
+          },
+          "9": {
+            "accuracy": 1.0,
+            "correct": 40951,
+            "total": 40951
+          }
+        },
+        "max_abs_coordinate_error_per_head_vs_sum_then_project": 9.1552734375e-05,
+        "centered_vs_raw_unembedding_argmax_mismatches": 0
+      },
+      "3": {
+        "accuracy": 1.0,
+        "correct": 100000,
+        "total": 100000,
+        "special_token_prediction_count": 0,
+        "prediction_distribution": {
+          "0": 1,
+          "1": 31,
+          "2": 211,
+          "3": 781,
+          "4": 2101,
+          "5": 4651,
+          "6": 9031,
+          "7": 15961,
+          "8": 26281,
+          "9": 40951
+        },
+        "accuracy_by_true_max": {
+          "0": {
+            "accuracy": 1.0,
+            "correct": 1,
+            "total": 1
+          },
+          "1": {
+            "accuracy": 1.0,
+            "correct": 31,
+            "total": 31
+          },
+          "2": {
+            "accuracy": 1.0,
+            "correct": 211,
+            "total": 211
+          },
+          "3": {
+            "accuracy": 1.0,
+            "correct": 781,
+            "total": 781
+          },
+          "4": {
+            "accuracy": 1.0,
+            "correct": 2101,
+            "total": 2101
+          },
+          "5": {
+            "accuracy": 1.0,
+            "correct": 4651,
+            "total": 4651
+          },
+          "6": {
+            "accuracy": 1.0,
+            "correct": 9031,
+            "total": 9031
+          },
+          "7": {
+            "accuracy": 1.0,
+            "correct": 15961,
+            "total": 15961
+          },
+          "8": {
+            "accuracy": 1.0,
+            "correct": 26281,
+            "total": 26281
+          },
+          "9": {
+            "accuracy": 1.0,
+            "correct": 40951,
+            "total": 40951
+          }
+        },
+        "max_abs_coordinate_error_per_head_vs_sum_then_project": 9.1552734375e-05,
+        "centered_vs_raw_unembedding_argmax_mismatches": 0
+      }
+    }
+  },
+  "pc_alignment": {
+    "definition": "Rows are full-vocabulary unembedding PCs; columns are stacked-output PCs. Output-PC signs are chosen for a positive same-index cosine.",
+    "output_pc_signs_applied": [
+      1,
+      -1,
+      1
+    ],
+    "pc_cosine_matrix": [
+      [
+        0.9688567186258314,
+        0.18399652678091763,
+        0.03020690937631769
+      ],
+      [
+        -0.20106454370856242,
+        0.9654951244004384,
+        0.07027063848560794
+      ],
+      [
+        -0.026735109127361018,
+        -0.07627725356823686,
+        0.9675695061617071
+      ]
+    ],
+    "same_index_pc_cosines": [
+      0.9688567186258314,
+      0.9654951244004384,
+      0.9675695061617071
+    ],
+    "principal_angles_degrees": [
+      5.2372949820499475,
+      11.033630684023835,
+      14.337183146994203
+    ]
+  },
+  "canonical_output_pca_angle_examples": {
+    "basis": "top three centered stacked-output PCs",
+    "unembedding_centering": "subtract the mean of all 14 vocabulary rows before projection",
+    "state": "R_final[-1,:] = R[-1,:] + sum_h z_h",
+    "rows": [
+      {
+        "true_max": 1,
+        "numbers": [
+          0,
+          0,
+          1,
+          0,
+          0
+        ],
+        "routing": "H0-H2 -> [ANS]; H3 uses its measured soft [ANS]/1 row",
+        "candidate_digit": 1,
+        "cosine": 0.9312449697013164,
+        "projected_unembedding_norm": 0.8227905976599612,
+        "dot_product": 222.0727576105424,
+        "is_dot_product_winner_of_pair": true,
+        "is_cosine_winner_of_pair": false
+      },
+      {
+        "true_max": 1,
+        "numbers": [
+          0,
+          0,
+          1,
+          0,
+          0
+        ],
+        "routing": "H0-H2 -> [ANS]; H3 uses its measured soft [ANS]/1 row",
+        "candidate_digit": 2,
+        "cosine": 0.9939386612986284,
+        "projected_unembedding_norm": 0.6436283749087044,
+        "dot_product": 185.4115528739271,
+        "is_dot_product_winner_of_pair": false,
+        "is_cosine_winner_of_pair": true
+      },
+      {
+        "true_max": 2,
+        "numbers": [
+          0,
+          0,
+          2,
+          0,
+          0
+        ],
+        "routing": "H0-H2 -> [ANS]; H3 -> digit 2 (one-hot)",
+        "candidate_digit": 2,
+        "cosine": 0.9162747942903564,
+        "projected_unembedding_norm": 0.6436283749087044,
+        "dot_product": 108.26860616602713,
+        "is_dot_product_winner_of_pair": true,
+        "is_cosine_winner_of_pair": false
+      },
+      {
+        "true_max": 2,
+        "numbers": [
+          0,
+          0,
+          2,
+          0,
+          0
+        ],
+        "routing": "H0-H2 -> [ANS]; H3 -> digit 2 (one-hot)",
+        "candidate_digit": 3,
+        "cosine": 0.9738056820311533,
+        "projected_unembedding_norm": 0.5395928323415814,
+        "dot_product": 96.46729488157177,
+        "is_dot_product_winner_of_pair": false,
+        "is_cosine_winner_of_pair": true
+      }
+    ]
+  },
+  "exhaustive_state_and_h1_checks": {
+    "n_inputs": 100000,
+    "candidate_vocabulary_size": 14,
+    "variants": {
+      "head_sum_only": {
+        "correct": 100000,
+        "total": 100000,
+        "accuracy": 1.0
+      },
+      "full_model": {
+        "correct": 100000,
+        "total": 100000,
+        "accuracy": 1.0
+      },
+      "h1_ablated_full_model": {
+        "correct": 99997,
+        "total": 100000,
+        "accuracy": 0.99997
+      },
+      "h1_ablated_head_sum_only": {
+        "correct": 99994,
+        "total": 100000,
+        "accuracy": 0.99994
+      }
+    },
+    "h1_ablated_full_model_failures": [
+      {
+        "numbers": [
+          0,
+          0,
+          0,
+          1,
+          0
+        ],
+        "true_max": 1,
+        "prediction": 0,
+        "top_logit": 267.08465576171875,
+        "runner_up_token": 1,
+        "runner_up_logit": 266.98284912109375,
+        "prediction_margin": 0.101806640625,
+        "original_prediction": 1
+      },
+      {
+        "numbers": [
+          0,
+          0,
+          1,
+          0,
+          0
+        ],
+        "true_max": 1,
+        "prediction": 0,
+        "top_logit": 266.65692138671875,
+        "runner_up_token": 1,
+        "runner_up_logit": 266.6526184082031,
+        "prediction_margin": 0.004302978515625,
+        "original_prediction": 1
+      },
+      {
+        "numbers": [
+          8,
+          8,
+          8,
+          8,
+          8
+        ],
+        "true_max": 8,
+        "prediction": 9,
+        "top_logit": 138.0532989501953,
+        "runner_up_token": 8,
+        "runner_up_logit": 137.7071533203125,
+        "prediction_margin": 0.3461456298828125,
+        "original_prediction": 8
+      }
+    ]
+  },
+  "max8_h0_attention_interventions": {
+    "scope": "all five-digit inputs with true maximum 8",
+    "n_inputs": 26281,
+    "h0_mean_attention_mass": {
+      "8": 0.16832254651538006,
+      "7": 0.00764407598465655,
+      "ANS": 0.8240317963042455
+    },
+    "interventions": {
+      "move_h0_8_mass_to_ans": "For each input, set H0 attention to every source token 8 to zero and add exactly that removed probability to the ANS self position.",
+      "force_h0_onehot_ans": "Replace the complete H0 ANS-query attention row by one-hot ANS self.",
+      "other_heads": "Keep the measured H1, H2, and H3 attention outputs unchanged."
+    },
+    "three_dimensional_readout": {
+      "output_pca_basis": "Top three PCs fitted to centered rows of the stacked 64x64 output matrix",
+      "unembedding_pca_basis": "Top three PCs fitted to centered rows of the full 14x64 unembedding",
+      "residual_policy": "Use only the projected sum of head outputs, matching the main low-dimensional computation; do not add the initial ANS residual.",
+      "candidate_vocabulary_size": 14
+    },
+    "readouts": {
+      "full_64d_with_ans_residual": {
+        "actual_attention": {
+          "correct": 26281,
+          "total": 26281,
+          "accuracy": 1.0,
+          "prediction_distribution": {
+            "8": 26281
+          },
+          "mean_target_margin": 17.036511866343556,
+          "minimum_target_margin": 10.200576782226562
+        },
+        "move_h0_8_mass_to_ans": {
+          "correct": 26281,
+          "total": 26281,
+          "accuracy": 1.0,
+          "prediction_distribution": {
+            "8": 26281
+          },
+          "mean_target_margin": 9.120996914952817,
+          "minimum_target_margin": 8.881118774414062
+        },
+        "force_h0_onehot_ans": {
+          "correct": 26281,
+          "total": 26281,
+          "accuracy": 1.0,
+          "prediction_distribution": {
+            "8": 26281
+          },
+          "mean_target_margin": 8.768221858828621,
+          "minimum_target_margin": 7.6389007568359375
+        }
+      },
+      "output_pca_3d_head_sum_only": {
+        "actual_attention": {
+          "correct": 26281,
+          "total": 26281,
+          "accuracy": 1.0,
+          "prediction_distribution": {
+            "8": 26281
+          },
+          "mean_target_margin": 17.30676161307123,
+          "minimum_target_margin": 9.674331665039062
+        },
+        "move_h0_8_mass_to_ans": {
+          "correct": 26281,
+          "total": 26281,
+          "accuracy": 1.0,
+          "prediction_distribution": {
+            "8": 26281
+          },
+          "mean_target_margin": 9.791792609204368,
+          "minimum_target_margin": 9.554580688476562
+        },
+        "force_h0_onehot_ans": {
+          "correct": 26281,
+          "total": 26281,
+          "accuracy": 1.0,
+          "prediction_distribution": {
+            "8": 26281
+          },
+          "mean_target_margin": 9.442399385190347,
+          "minimum_target_margin": 8.3038330078125
+        }
+      },
+      "unembedding_pca_3d_head_sum_only": {
+        "actual_attention": {
+          "correct": 26281,
+          "total": 26281,
+          "accuracy": 1.0,
+          "prediction_distribution": {
+            "8": 26281
+          },
+          "mean_target_margin": 18.99700309277615,
+          "minimum_target_margin": 6.5730438232421875
+        },
+        "move_h0_8_mass_to_ans": {
+          "correct": 26281,
+          "total": 26281,
+          "accuracy": 1.0,
+          "prediction_distribution": {
+            "8": 26281
+          },
+          "mean_target_margin": 11.934050948165975,
+          "minimum_target_margin": 11.7071533203125
+        },
+        "force_h0_onehot_ans": {
+          "correct": 26281,
+          "total": 26281,
+          "accuracy": 1.0,
+          "prediction_distribution": {
+            "8": 26281
+          },
+          "mean_target_margin": 11.588230105042616,
+          "minimum_target_margin": 10.375228881835938
+        }
+      }
+    }
+  }
+}

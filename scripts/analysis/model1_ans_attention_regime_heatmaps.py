@@ -1,10 +1,14 @@
 #!/usr/bin/env python3
-"""Plot the exact ANS-query attention rows for every possible maximum."""
+"""Plot mean ANS-query attention conditioned on each true maximum."""
 
 from __future__ import annotations
 
 import json
 from pathlib import Path
+
+import matplotlib
+
+matplotlib.use("Agg")
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -21,6 +25,10 @@ PNG_MOBILE_OUT = (
     ROOT / "docs" / "assets" / "main_results_ans_attention_by_max_mobile.png"
 )
 JSON_OUT = ROOT / "docs" / "assets" / "main_results_ans_attention_regimes.json"
+BATCH_SIZE = 4096
+VOCAB_SIZE = 14
+TOKEN_LABELS = [str(value) for value in range(10)] + ["BOS", "SEP", "ANS", "EOS"]
+PLOT_TOKEN_LABELS = [str(value) for value in range(10)] + ["B", "S", "A", "E"]
 GROUPS = (
     ("max = 0", (0,)),
     ("max = 1", (1,)),
@@ -28,63 +36,85 @@ GROUPS = (
     ("max = 7-8", (7, 8)),
     ("max = 9", (9,)),
 )
-EXPECTED_TOP_POSITIONS = {
-    0: [10, 10, 10, 10],
-    1: [10, 10, 10, 10],
-    2: [10, 10, 10, 5],
-    3: [10, 10, 10, 5],
-    4: [10, 10, 10, 5],
-    5: [10, 10, 10, 5],
-    6: [10, 10, 10, 5],
-    7: [10, 10, 5, 5],
-    8: [10, 10, 5, 5],
-    9: [5, 10, 5, 5],
-}
 
 
-def tokenize(max_value: int) -> torch.Tensor:
-    return torch.tensor(
-        [[10, 0, 11, 0, 11, max_value, 11, 0, 11, 0, 12]],
-        dtype=torch.long,
-    )
+def make_inputs() -> tuple[torch.Tensor, torch.Tensor]:
+    numbers = torch.cartesian_prod(*[torch.arange(10) for _ in range(5)])
+    tokens = torch.empty((numbers.shape[0], 11), dtype=torch.long)
+    tokens[:, 0] = 10
+    tokens[:, 1] = numbers[:, 0]
+    tokens[:, 2] = 11
+    tokens[:, 3] = numbers[:, 1]
+    tokens[:, 4] = 11
+    tokens[:, 5] = numbers[:, 2]
+    tokens[:, 6] = 11
+    tokens[:, 7] = numbers[:, 3]
+    tokens[:, 8] = 11
+    tokens[:, 9] = numbers[:, 4]
+    tokens[:, 10] = 12
+    return numbers, tokens
 
 
-def token_labels(max_label: str) -> list[str]:
-    return [
-        "BOS\n0",
-        "0\n1",
-        "SEP\n2",
-        "0\n3",
-        "SEP\n4",
-        f"{max_label}\n5",
-        "SEP\n6",
-        "0\n7",
-        "SEP\n8",
-        "0\n9",
-        "ANS\n10",
-    ]
+def conditional_token_attention(model) -> tuple[torch.Tensor, torch.Tensor]:
+    """Average ANS attention by token identity for each true maximum.
 
+    Attention to repeated occurrences of a token is summed within each input
+    before the conditional mean is taken. The resulting rows remain probability
+    distributions over the 14 token identities.
+    """
 
-def ans_attention_rows(model, max_value: int) -> torch.Tensor:
-    tokens = tokenize(max_value)
-    positions = torch.arange(tokens.shape[1]).unsqueeze(0)
-    residual = model.tok_embed(tokens) + model.pos_embed(positions)
-    mask = torch.tril(torch.ones(tokens.shape[1], tokens.shape[1])).unsqueeze(0)
-    rows = []
+    numbers, tokens = make_inputs()
+    true_max = numbers.max(dim=1).values
+    device = next(model.parameters()).device
+    sums = torch.zeros((10, 4, VOCAB_SIZE), dtype=torch.float64)
+    counts = torch.zeros(10, dtype=torch.long)
+
     with torch.no_grad():
-        for head in model.layers[0].heads:
-            _, attention = head(residual, mask)
-            rows.append(attention[0, -1].detach().cpu())
-    return torch.stack(rows)
+        for start in range(0, tokens.shape[0], BATCH_SIZE):
+            end = min(start + BATCH_SIZE, tokens.shape[0])
+            batch_tokens = tokens[start:end].to(device)
+            batch_max = true_max[start:end]
+            _, attention_patterns = model(batch_tokens)
+            ans_attention = attention_patterns[0][:, :, -1, :]
+
+            token_attention = torch.zeros(
+                (batch_tokens.shape[0], 4, VOCAB_SIZE),
+                dtype=ans_attention.dtype,
+                device=device,
+            )
+            token_indices = batch_tokens[:, None, :].expand(-1, 4, -1)
+            token_attention.scatter_add_(2, token_indices, ans_attention)
+
+            sums.index_add_(0, batch_max, token_attention.double().cpu())
+            counts += torch.bincount(batch_max, minlength=10)
+
+    expected_counts = torch.tensor(
+        [(max_value + 1) ** 5 - max_value**5 for max_value in range(10)]
+    )
+    if not torch.equal(counts, expected_counts):
+        raise AssertionError(f"unexpected conditional counts: {counts.tolist()}")
+    if int(counts.sum()) != 100_000:
+        raise AssertionError(f"expected 100,000 inputs, found {int(counts.sum())}")
+
+    means = sums / counts[:, None, None]
+    if not torch.isfinite(means).all():
+        raise AssertionError("conditional attention means contain non-finite values")
+    if not torch.allclose(
+        means.sum(dim=2), torch.ones((10, 4), dtype=torch.float64), atol=2e-6, rtol=0.0
+    ):
+        raise AssertionError("conditional token-attention rows do not sum to one")
+    if not torch.equal(means[:, :, 13], torch.zeros_like(means[:, :, 13])):
+        raise AssertionError("EOS receives attention even though it is not in the input")
+    return means, counts
 
 
-def draw_heatmap(ax, case: dict, compact: bool) -> None:
+def draw_heatmap(ax, case: dict, compact: bool):
     matrix = np.asarray(case["attention"], dtype=float)
     image = ax.imshow(
         matrix,
         vmin=0.0,
         vmax=1.0,
-        aspect="auto",
+        aspect="equal",
         interpolation="nearest",
         cmap=LinearSegmentedColormap.from_list(
             "attention",
@@ -92,33 +122,31 @@ def draw_heatmap(ax, case: dict, compact: bool) -> None:
         ),
     )
 
-    labels = token_labels(str(case["max_value"]))
-    ax.set_xticks(np.arange(11))
-    ax.set_xticklabels(labels, fontsize=7.5 if compact else 8.5, linespacing=1.25)
+    ax.set_xticks(np.arange(VOCAB_SIZE))
+    ax.set_xticklabels(PLOT_TOKEN_LABELS, fontsize=7 if compact else 8)
     ax.xaxis.tick_top()
     ax.tick_params(axis="x", top=False, bottom=False, pad=4)
     ax.set_yticks(np.arange(4))
     ax.set_yticklabels(["H0", "H1", "H2", "H3"], fontsize=9 if compact else 10)
     ax.tick_params(axis="y", left=False, pad=7)
     ax.set_title(
-        f"max = {case['max_value']}",
+        f"max = {case['max_value']}   n = {case['count']:,}",
         loc="left",
-        pad=22 if compact else 24,
-        fontsize=12 if compact else 14,
+        pad=21 if compact else 23,
+        fontsize=10 if compact else 12,
         fontweight="bold",
         color="#172126",
     )
 
-    for head_idx in range(4):
-        top_position = int(np.argmax(matrix[head_idx]))
+    for head_index, top_token_index in enumerate(case["top_token_indices_by_head"]):
         ax.add_patch(
             Rectangle(
-                (top_position - 0.5, head_idx - 0.5),
+                (top_token_index - 0.5, head_index - 0.5),
                 1.0,
                 1.0,
                 fill=False,
                 edgecolor="#d1495b",
-                linewidth=2.0,
+                linewidth=1.8,
             )
         )
 
@@ -130,210 +158,175 @@ def draw_heatmap(ax, case: dict, compact: bool) -> None:
 
 def make_figure(cases: list[dict], compact: bool) -> plt.Figure:
     case_map = {case["max_value"]: case for case in cases}
-    max_cols = max(len(max_values) for _, max_values in GROUPS)
-    figsize = (7.4, 17.0) if compact else (17.6, 16.5)
-    fig, axes = plt.subplots(
+    max_columns = max(len(max_values) for _, max_values in GROUPS)
+    figsize = (8.3, 17.0) if compact else (18.0, 13.5)
+    figure, axes = plt.subplots(
         len(GROUPS),
-        max_cols,
+        max_columns,
         figsize=figsize,
         squeeze=False,
         constrained_layout=False,
     )
-    fig.patch.set_facecolor("#ffffff")
+    figure.patch.set_facecolor("#ffffff")
     image = None
-    for row_idx, (_, max_values) in enumerate(GROUPS):
-        for col_idx, max_value in enumerate(max_values):
-            ax = axes[row_idx, col_idx]
-            image = draw_heatmap(ax, case_map[max_value], compact)
-            if col_idx == 0:
-                label = list(GROUPS[row_idx])[0]
-                ax.set_ylabel(
-                    label,
+    for row_index, (group_label, max_values) in enumerate(GROUPS):
+        for column_index, max_value in enumerate(max_values):
+            axis = axes[row_index, column_index]
+            image = draw_heatmap(axis, case_map[max_value], compact)
+            if column_index == 0:
+                axis.set_ylabel(
+                    group_label,
                     rotation=0,
                     labelpad=54,
                     ha="right",
                     va="center",
-                    fontsize=11 if not compact else 9.5,
+                    fontsize=9.5 if compact else 11,
                     fontweight="bold",
                     color="#263238",
                 )
 
-        for col_idx in range(len(max_values), max_cols):
-            axes[row_idx, col_idx].axis("off")
+        for column_index in range(len(max_values), max_columns):
+            axes[row_index, column_index].axis("off")
 
-    title = (
-        "Actual [ANS] attention\nfor every maximum"
-        if compact
-        else "Actual [ANS] attention for every maximum"
-    )
-    fig.suptitle(
-        title,
+    figure.suptitle(
+        "Mean [ANS] attention conditioned on the true maximum",
         x=0.075 if compact else 0.08,
         y=0.995 if compact else 0.992,
         ha="left",
-        fontsize=17 if compact else 22,
+        fontsize=16 if compact else 21,
         fontweight="bold",
         color="#111827",
     )
-    fig.text(
+    figure.text(
         0.075 if compact else 0.08,
-        0.954,
-        "Ten exact matrices; each is the final softmax row: 4 heads x 11 source tokens. "
-        "Rows are grouped as max=0, max=1, max=2-6, max=7-8, max=9.",
+        0.956,
+        "Each matrix is 4 heads x 14 token identities. Repeated occurrences are summed "
+        "within each input before averaging over every input with the stated maximum.",
         ha="left",
-        fontsize=9 if compact else 10.5,
+        fontsize=8.5 if compact else 10,
         color="#58666d",
     )
-    fig.text(
+    figure.text(
         0.075 if compact else 0.08,
         0.014,
-        (
-            "Inputs are [0, 0, m, 0, 0]. No cases are averaged.\n"
-            "Coral outlines mark each head's highest-attended source."
-            if compact
-            else "Inputs are [0, 0, m, 0, 0]. Every matrix is an exact model attention "
-            "distribution; no cases are averaged."
-        ),
+        "All 100,000 inputs are included. Coral outlines mark each row's largest mean token mass.",
         ha="left",
         fontsize=8 if compact else 9,
         color="#58666d",
     )
-    if not compact:
-        fig.text(
-            0.94,
-            0.978,
-            "coral outline = row maximum",
-            ha="right",
-            fontsize=9,
-            color="#d1495b",
-            fontweight="bold",
-        )
     if image is None:
         raise AssertionError("no attention heatmaps were drawn")
-    left = 0.11 if compact else 0.09
+
+    left = 0.13 if compact else 0.09
     right = 0.965
-    colorbar_axis = fig.add_axes([left, 0.062 if compact else 0.058, right - left, 0.011])
-    colorbar = fig.colorbar(image, cax=colorbar_axis, orientation="horizontal")
+    colorbar_axis = figure.add_axes([left, 0.06, right - left, 0.012])
+    colorbar = figure.colorbar(image, cax=colorbar_axis, orientation="horizontal")
     colorbar.set_ticks([0.0, 0.5, 1.0])
     colorbar.set_ticklabels(["0%", "50%", "100%"])
-    colorbar.set_label("Attention probability", color="#58666d")
+    colorbar.set_label("Mean attention probability", color="#58666d")
     colorbar.outline.set_visible(False)
     colorbar.ax.tick_params(length=0, labelsize=8)
 
-    fig.subplots_adjust(
+    figure.subplots_adjust(
         left=0.13,
         right=0.965,
-        top=0.922 if compact else 0.928,
-        bottom=0.115,
-        hspace=0.52 if compact else 0.58,
-        wspace=0.22,
+        top=0.92,
+        bottom=0.12,
+        hspace=0.65 if compact else 0.7,
+        wspace=0.28,
     )
-    return fig
+    return figure
 
 
 def main() -> None:
     torch.manual_seed(0)
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     model, _ = load_model()
+    model = model.to(device)
+    means, counts = conditional_token_attention(model)
 
-    individual = {}
+    individual = []
     for max_value in range(10):
-        attention = ans_attention_rows(model, max_value)
-        if not torch.allclose(
-            attention.sum(dim=1), torch.ones(4), rtol=0.0, atol=1e-6
-        ):
-            raise AssertionError(f"attention rows do not sum to one for max {max_value}")
-        top_positions = attention.argmax(dim=1).tolist()
-        if top_positions != EXPECTED_TOP_POSITIONS[max_value]:
-            raise AssertionError(
-                f"unexpected top sources for max {max_value}: {top_positions}"
-            )
-        individual[max_value] = {
-            "max_value": max_value,
-            "numbers": [0, 0, max_value, 0, 0],
-            "tokens": tokenize(max_value)[0].tolist(),
-            "attention": [
-                [float(value) for value in head_row] for head_row in attention
-            ],
-            "top_positions_by_head": top_positions,
-            "top_tokens_by_head": [
-                "ANS" if position == 10 else str(max_value)
-                for position in top_positions
-            ],
-        }
-
-    groups = []
-    for label, max_values in GROUPS:
-        stack = torch.stack(
-            [
-                torch.tensor(individual[max_value]["attention"])
-                for max_value in max_values
-            ]
-        )
-        mean_attention = stack.mean(dim=0)
-        member_patterns = [
-            individual[max_value]["top_positions_by_head"]
-            for max_value in max_values
-        ]
-        if any(pattern != member_patterns[0] for pattern in member_patterns[1:]):
-            raise AssertionError(f"group {label} does not share one top-source pattern")
-        groups.append(
+        attention = means[max_value]
+        top_token_indices = attention.argmax(dim=1).tolist()
+        individual.append(
             {
-                "label": label,
-                "max_values": list(max_values),
-                "max_token_label": (
-                    str(max_values[0])
-                    if len(max_values) == 1
-                    else f"{max_values[0]}-{max_values[-1]}"
-                ),
-                "mean_attention": [
-                    [float(value) for value in head_row]
-                    for head_row in mean_attention
-                ],
-                "shared_top_positions_by_head": member_patterns[0],
-                "shared_top_sources_by_head": [
-                    "ANS" if position == 10 else "max"
-                    for position in member_patterns[0]
+                "max_value": max_value,
+                "count": int(counts[max_value]),
+                "token_ids": list(range(VOCAB_SIZE)),
+                "token_labels": TOKEN_LABELS,
+                "attention": attention.tolist(),
+                "top_token_indices_by_head": top_token_indices,
+                "top_tokens_by_head": [
+                    TOKEN_LABELS[token_index] for token_index in top_token_indices
                 ],
             }
         )
 
-    cases = [
-        {
-            "max_value": max_value,
-            "attention": individual[max_value]["attention"],
-        }
-        for max_value in range(10)
-    ]
+    groups = []
+    for label, max_values in GROUPS:
+        patterns = [individual[max_value]["top_tokens_by_head"] for max_value in max_values]
+        groups.append(
+            {
+                "label": label,
+                "max_values": list(max_values),
+                "shared_top_tokens_by_head": (
+                    patterns[0]
+                    if all(pattern == patterns[0] for pattern in patterns[1:])
+                    else None
+                ),
+            }
+        )
 
     PNG_OUT.parent.mkdir(parents=True, exist_ok=True)
-    desktop_figure = make_figure(cases, compact=False)
+    desktop_figure = make_figure(individual, compact=False)
     desktop_figure.savefig(PNG_OUT, dpi=190, facecolor="#ffffff")
     plt.close(desktop_figure)
-    mobile_figure = make_figure(cases, compact=True)
+    mobile_figure = make_figure(individual, compact=True)
     mobile_figure.savefig(PNG_MOBILE_OUT, dpi=190, facecolor="#ffffff")
     plt.close(mobile_figure)
 
     result = {
         "description": (
-            "Actual final-row softmax attention for the ANS query in each head, "
-            "using matched inputs [0, 0, m, 0, 0]."
+            "Conditional mean final-row softmax attention for the ANS query in each "
+            "head, grouped by true maximum and aggregated by token identity."
         ),
-        "matrix_shape": [4, 11],
+        "aggregation": {
+            "conditioning": "all five-digit inputs whose true maximum equals d",
+            "within_input": (
+                "sum attention over all source positions carrying the same token identity"
+            ),
+            "across_inputs": "arithmetic mean within each true-maximum condition",
+        },
+        "n_inputs_total": int(counts.sum()),
+        "matrix_shape": [4, VOCAB_SIZE],
         "head_axis": ["H0", "H1", "H2", "H3"],
-        "source_positions": list(range(11)),
+        "token_axis": [
+            {"id": token_id, "label": label}
+            for token_id, label in enumerate(TOKEN_LABELS)
+        ],
+        "figure_uses_conditional_means": True,
         "figure_uses_grouped_means": False,
-        "individual_cases": [individual[max_value] for max_value in range(10)],
+        "individual_cases": individual,
         "groups": groups,
         "validation": {
+            "expected_counts_by_true_max": {
+                str(max_value): (max_value + 1) ** 5 - max_value**5
+                for max_value in range(10)
+            },
+            "all_100000_inputs_included": True,
             "all_attention_rows_sum_to_one": True,
-            "all_members_of_each_group_share_top_source_pattern": True,
+            "eos_attention_is_zero": True,
         },
     }
     JSON_OUT.write_text(json.dumps(result, indent=2, allow_nan=False) + "\n")
 
-    print("regime,H0,H1,H2,H3")
-    for group in groups:
-        print(f"{group['label']}," + ",".join(group["shared_top_sources_by_head"]))
+    print("true_max,count,H0_top,H1_top,H2_top,H3_top")
+    for case in individual:
+        print(
+            f"{case['max_value']},{case['count']},"
+            + ",".join(case["top_tokens_by_head"])
+        )
     print(f"wrote,{PNG_OUT}")
     print(f"wrote,{PNG_MOBILE_OUT}")
     print(f"wrote,{JSON_OUT}")
