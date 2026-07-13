@@ -1254,7 +1254,71 @@
 
 <h1 id="main-results">Main results<a class="headerlink" href="#main-results" title="Permanent link">&para;</a></h1>
 <p>This analysis was developed for the
-<a href="https://puzzles.baulab.info/april-2026.html">Bau Lab April challenge</a>.</p>
+<a class="challenge-credit-link" href="https://puzzles.baulab.info/april-2026.html">Bau Lab April challenge</a>.</p>
+<blockquote>
+<p><strong>Summary.</strong> The model solves the task through a piecewise attention circuit
+at the <code>[ANS]</code> position. For maximum <code>0</code>, all four heads attend to <code>[ANS]</code>
+itself. For maximum <code>1</code>, H3 uses a soft mixture of <code>[ANS]</code> and the positions
+containing <code>1</code>. For maxima <code>2–6</code>, H3 reads the maximum token; for <code>7–8</code>, H2
+and H3 read it; and for <code>9</code>, H0 joins H2 and H3. H1 remains a nearly constant
+self-reading head. Replacing the final attention rows with this circuit
+preserves the model's predictions on all 100,000 possible inputs.</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th style="text-align: right;">True maximum</th>
+<th>H0</th>
+<th>H1</th>
+<th>H2</th>
+<th>H3</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;"><code>0</code></td>
+<td><code>[ANS]</code></td>
+<td><code>[ANS]</code></td>
+<td><code>[ANS]</code></td>
+<td><code>[ANS]</code></td>
+</tr>
+<tr>
+<td style="text-align: right;"><code>1</code></td>
+<td><code>[ANS]</code></td>
+<td><code>[ANS]</code></td>
+<td><code>[ANS]</code></td>
+<td>soft mix of <code>[ANS]</code> and <code>1</code></td>
+</tr>
+<tr>
+<td style="text-align: right;"><code>2–6</code></td>
+<td><code>[ANS]</code></td>
+<td><code>[ANS]</code></td>
+<td><code>[ANS]</code></td>
+<td>maximum</td>
+</tr>
+<tr>
+<td style="text-align: right;"><code>7–8</code></td>
+<td><code>[ANS]</code></td>
+<td><code>[ANS]</code></td>
+<td>maximum</td>
+<td>maximum</td>
+</tr>
+<tr>
+<td style="text-align: right;"><code>9</code></td>
+<td>maximum</td>
+<td><code>[ANS]</code></td>
+<td>maximum</td>
+<td>maximum</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>Changing only these final attention rows is sufficient to steer the model's
+answer, and the complete piecewise replacement reproduces all 100,000
+predictions. The resulting head outputs are added and read by the
+unembedding. It can be shown that this computation can be performed in a
+reduced three-dimensional subspace.</p>
+</blockquote>
 <h2 id="model-and-notation">Model and notation<a class="headerlink" href="#model-and-notation" title="Permanent link">&para;</a></h2>
 <h3 id="transformer-computation">Transformer computation<a class="headerlink" href="#transformer-computation" title="Permanent link">&para;</a></h3>
 <p>The model has one attention-only layer, a <code>64</code>-dimensional residual stream,

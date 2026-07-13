@@ -158,6 +158,21 @@ body:has(.main-results) .md-sidebar--secondary .md-nav .md-nav .md-nav {
   color: var(--main-line-strong);
 }
 
+.main-results .challenge-credit-link,
+.main-results .challenge-credit-link:visited {
+  color: #2563eb;
+  font-weight: 650;
+  text-decoration: underline;
+  text-decoration-thickness: 1.5px;
+  text-underline-offset: 0.16em;
+}
+
+.main-results .challenge-credit-link:hover,
+.main-results .challenge-credit-link:focus-visible {
+  color: #1d4ed8;
+  text-decoration-thickness: 2px;
+}
+
 /* Tables and mathematical blocks */
 .main-results table:not([class]) {
   display: table;
