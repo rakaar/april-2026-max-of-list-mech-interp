@@ -1,0 +1,45 @@
+{
+  "model": {
+    "vocab_size": 14,
+    "d_model": 64,
+    "n_heads": 4,
+    "n_layers": 1,
+    "max_seq_len": 12
+  },
+  "vocab": {
+    "type": "number",
+    "num_range": 10
+  },
+  "training": {
+    "list_len": 5,
+    "num_range": 10,
+    "steps": 20000,
+    "seed": 42,
+    "learning_rate": 0.001,
+    "batch_size": 512,
+    "weight_decay": 0.01,
+    "scheduler": "CosineAnnealingLR",
+    "eval_every": 1000,
+    "min_per_value": 200,
+    "final_test_acc": 1.0,
+    "final_test_loss": 4.1669528678818375e-08,
+    "examples_seen": 10240000,
+    "epochs": 257,
+    "upstream_commit": "7857375da7dd7560fd5751c7e4fff42630295a3e",
+    "unit_unembedding": {
+      "enabled": true,
+      "scope": "all_vocabulary_rows",
+      "method": "post_optimizer_row_projection",
+      "target_norm": 1.0,
+      "final_norm_stats": {
+        "target": 1.0,
+        "minimum": 0.9999999403953552,
+        "maximum": 1.0000001192092896,
+        "mean": 1.0,
+        "std": 2.518756048175419e-08,
+        "max_abs_error": 1.1920928955078125e-07
+      }
+    }
+  },
+  "puzzle": "1a"
+}

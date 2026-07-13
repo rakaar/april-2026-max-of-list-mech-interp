@@ -21,52 +21,15 @@ toc_depth: 3
   <div class="architecture-loading">Loading transformer architecture...</div>
 </div>
 
-### Matrices
-
-| Matrix | Shape | Symbol |
-|---|---:|---:|
-| Embedding matrix | `14 x 64` | $W_E$ |
-| Unembedding matrix | `64 x 14` | $W_U$ |
-| Query matrix of head "h" | `64 x 16` | $W_Q^h$ |
-| Key matrix of head "h" | `64 x 16` | $W_K^h$ |
-| Value matrix of head "h" | `64 x 16` | $W_V^h$ |
-| $W_O$ of each head | `16 x 64` | $W_O^h$ |
-
-It is generally considered to be one large matrix while computing (`64 x 64`).
-But to interpret its easy to think that each head has its own output matrix.
-
 ## Attention routing at the `[ANS]` token
 
-### Looking at attention patterns in each head at ANS token
+### Looking at attention patterns
 
-The final response we care about is the prediction of the model at last token
-(ANS token). So its sufficient to look at last row of the prediction logits
-which is of size `N x Vocab Size`. We only need `-1 x Vocab size`. If we trace
-back down, in each head, all that matters for the computation is the last row
-of the attention matrix. The last row of the attention matrix checks what
-tokens the ANS token attends to?
-
-Using the notation in the architecture diagram, the query, keys, and final
-attention row for head $h$ are
-
-$$
-Q_h = R W_Q^h,
-\qquad
-K_h = R W_K^h,
-\qquad
-a_h = \operatorname{softmax}\left(
-\frac{Q_h[-1,:]K_h^\top}{\sqrt{16}} + M_{\mathrm{causal}}[-1,:]
-\right).
-$$
-
-Below, each row is the resulting $a_h \in \mathbb{R}^{1 \times N}$.
-
-> **Display specification**
->
-> Show every maximum from `0` through `9` separately. In each case, show a
-> colored `4 x 11` matrix: four attention heads by `11` source tokens, with token
-> identities at the top. Matrices are laid out in rows as:
-> `0`, `1`, `2–6`, `7–8`, and `9` so that similar regimes are easy to compare.
+We only care about the model's response at the `[ANS]` token, which is the
+final score vector $F$ in the transformer diagram. In each head, the attention
+component that influences $F$ is $a_h$: the vector that says which source
+tokens `[ANS]` attends to. Below, we visualize this attention when each digit
+$d$ is the maximum number.
 
 <figure class="main-results-plot attention-explorer">
   <div
@@ -89,22 +52,12 @@ Below, each row is the resulting $a_h \in \mathbb{R}^{1 \times N}$.
     </picture>
   </noscript>
   <div class="main-results-figure-caption">
-    Actual final-row softmax attention for the <code>[ANS]</code> query. Each
-    matrix has four head rows and eleven source-token columns. Matrices are shown in grouped rows (`0`, `1`, `2–6`, `7–8`, `9`) so similar regimes can be compared side by side. All ten maxima are shown separately; no attention matrices are averaged.
+    Final-row softmax attention for the <code>[ANS]</code> query. Each matrix
+    uses the matched input <code>[0, 0, d, 0, 0]</code>, with <code>d</code> at
+    the central number position. These are exact representative cases, not
+    averages over all inputs with the same maximum.
   </div>
 </figure>
-
-[Open the exact plotted values](assets/main_results_ans_attention_regimes.json){ .main-results-data-link }
-
-!!! info "How to read this diagnostic"
-    These are the model's actual attention distributions after softmax over all
-    `11` source positions. The coral outline marks the largest entry in each
-    head row. Inputs use the matched form `[0, 0, m, 0, 0]`, with the unique
-    nonzero maximum at source position `5`.
-
-    Max `1` is the important soft case: H3 gives approximately `62%` to
-    `[ANS]` and `38%` to the `1` token. From max `2` onward, the recruited
-    heads place nearly all their attention on the maximum token.
 
 ### Causal manipulation of the `[ANS]` attention rows
 
@@ -147,92 +100,25 @@ requested digit. To produce `7`, both $a_2$ and $a_3$ must read the `7` token.
 
 ## Low-dimensional computation
 
-For the `[ANS]` prediction, head $h$ uses the quantities defined in the
-architecture diagram:
+There are only `10` possible digit answers, while the residual stream has `64`
+dimensions. It is therefore reasonable to expect that the answer-writing
+computation may use a much lower-dimensional representation.
 
-$$
-V_h = R W_V^h \in \mathbb{R}^{N \times 16},
-\qquad
-a_h = A_h[-1,:] \in \mathbb{R}^{1 \times N},
-$$
+To test this, we perform PCA on the model's `64 x 64` output matrix $W_O$. If
+$Q_k$ contains the top $k$ principal directions, projecting $W_O$ into this
+basis reduces it from `64 x 64` to `64 x k`. Equivalently, each head's
+`16 x 64` output matrix $W_O^h$ becomes `16 x k`.
 
-$$
-V_h^a = a_h V_h \in \mathbb{R}^{1 \times 16},
-\qquad
-z_h = V_h^a W_O^h \in \mathbb{R}^{1 \times 64}.
-$$
+We then use the same output-derived basis for the unembedding matrix. This
+reduces $W_U$ from `64 x V` to `k x V`. Thus the heads write into a shared
+$k$-dimensional space, and the unembedding reads from that same space. The PCA
+basis is obtained only from $W_O$; PCA is not fitted separately to $W_U$.
 
-Except for the soft-attention case at maximum `1`, the successful one-hot
-interventions make $a_h$ select either the `[ANS]` row or a number row of
-$V_h$. The four head writes are then added:
+### How many dimensions are needed?
 
-$$
-z = \sum_{h=0}^{3} z_h \in \mathbb{R}^{1 \times 64}.
-$$
-
-The actual model computes
-
-$$
-R_{\mathrm{final}}[-1,:] = R[-1,:] + z,
-\qquad
-\ell = R_{\mathrm{final}}[-1,:] W_U.
-$$
-
-For this model, the isolated head readout $\ell_{\mathrm{heads}} = z W_U$
-already gives `100%` accuracy over all `100,000` possible five-digit inputs.
-The experiment below therefore studies this sufficient head-write computation
-without adding the original `[ANS]` residual.
-
-### Output-matrix PCA
-
-Let the four output maps be stacked into the mathematical `64 x 64` output
-matrix:
-
-$$
-O_{\mathrm{all}} =
-\begin{bmatrix}
-W_O^0 \\
-W_O^1 \\
-W_O^2 \\
-W_O^3
-\end{bmatrix}.
-$$
-
-PCA is fitted after centering the `64` rows of $O_{\mathrm{all}}$. If $Q_k$
-contains its top $k$ principal directions (`64 x k`), each head's output map
-and the unembedding can be expressed in the same reduced basis:
-
-$$
-\widetilde{W}_O^h = W_O^h Q_k
-    \in \mathbb{R}^{16 \times k},
-\qquad
-\widetilde{W}_U = Q_k^\top W_{U,c}
-    \in \mathbb{R}^{k \times |\mathcal{V}|}.
-$$
-
-The complete reduced computation is then
-
-$$
-z_k = \sum_h V_h^a \widetilde{W}_O^h
-    \in \mathbb{R}^{1 \times k},
-\qquad
-\ell_k = z_k \widetilde{W}_U.
-$$
-
-$W_{U,c}$ is centered over vocabulary items. This subtracts the same scalar
-from every candidate logit and therefore cannot change the argmax. Although
-centering is used to fit PCA, no output-matrix mean is subtracted from the
-actual head writes.
-
-### Accuracy as dimensions are added
-
-The projected computation was evaluated exhaustively on all `100,000` inputs
-using the full `14`-token vocabulary. Every column below uses the same basis
-$Q_k$, obtained only from PCA of the centered output matrix. The output column
-reports how much centered output-matrix variance this basis captures. The
-unembedding column reports how much centered `14 x 64` unembedding variance is
-captured after projecting it onto that same output-derived basis; PCA is not
-fitted to the unembedding matrix.
+We keep increasing the number of retained principal components and evaluate
+the projected computation exhaustively on all `100,000` possible inputs. The
+prediction is taken over the full `14`-token vocabulary.
 
 | Output-PCA basis retained | Output-matrix variance captured | Unembedding variance captured | 14-way accuracy |
 |---|---:|---:|---:|
@@ -240,33 +126,30 @@ fitted to the unembedding matrix.
 | PC1 + PC2 | 84.06% | 85.04% | 57.758% |
 | **PC1 + PC2 + PC3** | **88.34%** | **91.51%** | **100.000%** |
 
-PC3 contributes only `4.28%` additional output-matrix variance, but raises
-exhaustive accuracy from `57.758%` to `100%`.
+With only three principal components, the projected model reaches `100%`
+accuracy. The four head outputs can therefore be added and read by the
+unembedding inside a three-dimensional subspace without changing any of the
+model's decisions. This shows that the computation needed to solve this task
+is low-dimensional.
 
-!!! success "Three dimensions are sufficient"
-    Each head's learned `16 x 64` output map can be replaced, for this task, by
-    the derived `16 x 3` map $W_O^h Q_3$. The four `1 x 3` head writes are
-    summed and scored against the unembedding projected into the same basis.
-    This reduced computation preserves every one of the model's `100,000`
-    max-of-five decisions.
+### Visualizing the three-dimensional computation
 
-### Interactive three-dimensional computation
-
-Because three dimensions suffice, the answer-writing computation can be shown
-directly. Both panels use the same $Q_3$ basis obtained from PCA of the output
-matrix.
+Because three dimensions are sufficient, we can plot the ten digit
+unembedding vectors and the head outputs in the same space. Both interactives
+below use the top three principal directions obtained from $W_O$.
 
 #### Baseline plus recruited corrections
 
-The first panel presents the computation as a fixed baseline followed by
-answer-dependent corrections. The baseline is
-$B=z_0([\mathrm{ANS}])+z_1([\mathrm{ANS}])+z_2([\mathrm{ANS}])$, where
-$z_h(x)$ denotes the write produced when $a_h$ reads source $x$. The term
-$z_3$ supplies the first answer-dependent write. For outputs `7–9`,
-$z_2([\mathrm{ANS}])$ is replaced by $z_2(n)$; for output `9`, $z_0$ is
-replaced in the same way. Thus the $z_2$ and $z_0$ arrows are replacement
-differences such as $z_2(n)-z_2([\mathrm{ANS}])$, avoiding double-counting the
-self write already in $B$.
+When all heads attend to `[ANS]`, their combined output gives the baseline
+answer `0`. The first interactive shows how this baseline is corrected as
+heads are recruited to read higher digits. Each arrow shows the change
+contributed by a recruited head, and the endpoint shows the resulting summed
+head output in the three-dimensional unembedding space.
+
+In the displayed decomposition, the fixed vector $B$ contains the `[ANS]`
+writes from H0, H1, and H2, while H3 is shown as the first answer-dependent
+arrow. For outputs `7–9`, H2 replaces its `[ANS]` write with a digit write; H0
+does the same for output `9`.
 
 [Open the baseline-and-corrections interactive](assets/model1_output_pca_piecewise_interactive.html){ target=_blank .main-results-data-link }
 
@@ -278,22 +161,13 @@ self write already in $B$.
   allowfullscreen>
 </iframe>
 
-Exact values:
-[model1_output_pca_piecewise_interactive.json](assets/model1_output_pca_piecewise_interactive.json).
-Source: `scripts/analysis/model1_output_pca_piecewise_interactive.py`.
-
 #### Direct output from each head
 
-The second panel regroups the same endpoint as four direct head writes rather
-than a baseline and corrections. Each colored arrow starts at the origin and
-is the projected vector $V_h^aW_O^h$. The black arrow is their sum
-$z=\sum_h V_h^aW_O^h$. Select an output `0–9` to see which source each head
-reads and how the resulting sum scores all `14` vocabulary tokens.
-
-For output `1`, $a_3$ is the measured soft `[ANS]`/`1` attention row. Every
-other endpoint uses the verified one-hot attention recipe. For all ten
-requested outputs, both the `3d` and full `64d` head sums predict the requested
-token.
+The second interactive shows the same computation without regrouping it into
+a baseline and corrections. Each colored arrow is one head's complete output
+$z_h = V_h^a W_O^h$ in the three-dimensional space. The black arrow is the sum
+of all four head outputs. The bar chart shows the dot product of this sum with
+each vocabulary token's projected unembedding vector.
 
 [Open the direct-head-writes interactive](assets/model1_output_pca_head_contributions_interactive.html){ target=_blank .main-results-data-link }
 
@@ -304,83 +178,3 @@ token.
   loading="lazy"
   allowfullscreen>
 </iframe>
-
-Exact values:
-[model1_output_pca_head_contributions_interactive.json](assets/model1_output_pca_head_contributions_interactive.json).
-Source:
-`scripts/analysis/model1_output_pca_head_contributions_interactive.py`.
-
-The same three output-derived directions capture `88.34%` of the centered
-output matrix's variance and about `91.5%` of the centered unembedding
-variance. This supports a shared low-dimensional read/write subspace: the
-heads write answer-relevant information into directions that the unembedding
-also reads strongly.
-
-This is a sufficiency result, not a matrix-rank claim. The centered output
-matrix has rank `63`, and `11.66%` of its variance lies outside the three-PC
-subspace. Those discarded directions may change logit values, but they are not
-needed to preserve the argmax on this complete input space. The two interactive
-panels above decompose the head-specific `[ANS]` baseline and recruited
-corrections inside this `3d` space.
-
-Reproducible analysis:
-`scripts/analysis/model1_output_pca_readout_accuracy.py`.
-[Open the exact PCA, variance, and accuracy values](assets/model1_output_pca_readout_accuracy.json){ .main-results-data-link }
-
-### Unembedding-matrix PCA works too
-
-The construction also works in the other direction. Instead of obtaining the
-low-dimensional basis from the output matrix, PCA can be fitted to the
-centered full `14 x 64` unembedding matrix. The resulting `64 x k` basis is
-then used to reduce every head's `16 x 64` output map to `16 x k`. The four
-heads write and sum directly in `k` dimensions before the full `14`-token
-unembedding readout.
-
-This version was also evaluated exhaustively over all `100,000` inputs. Every
-column below uses the basis obtained only from full-vocabulary unembedding
-PCA. The output-matrix variance column measures how much variance that same
-unembedding-derived basis captures after being applied to the centered output
-matrix.
-
-| Full-unembedding PCA basis retained | Unembedding variance captured | Output-matrix variance captured | 14-way accuracy |
-|---|---:|---:|---:|
-| PC1 | 62.01% | 56.45% | 40.952% |
-| PC1 + PC2 | 87.37% | 82.01% | 86.318% |
-| **PC1 + PC2 + PC3** | **94.04%** | **86.23%** | **100.000%** |
-
-!!! success "Either matrix supplies a sufficient three-dimensional basis"
-    Using the top three full-unembedding PCs, each head's `16 x 64` output map
-    can be replaced by a derived `16 x 3` map. The resulting three-dimensional
-    computation predicts the correct token for all `100,000` inputs and never
-    predicts `[BOS]`, `[SEP]`, `[ANS]`, or `[EOS]`.
-
-### Why both bases work
-
-The leading output and unembedding directions are close in residual-stream
-space. The [July 12 PC-alignment experiment](2026-07-12.md#model-1-are-the-w_o-and-w_u-top-three-pc-subspaces-the-same)
-first showed this using the ten digit-unembedding rows. Repeating the same
-calculation with the full `14`-token unembedding basis used in the table above
-gives the following exact `64d` cosine matrix:
-
-| | Output PC1 | Output PC2 | Output PC3 |
-|---|---:|---:|---:|
-| **Full-$W_U$ PC1** | **0.9689** | 0.1840 | 0.0302 |
-| **Full-$W_U$ PC2** | -0.2011 | **0.9655** | 0.0703 |
-| **Full-$W_U$ PC3** | -0.0267 | -0.0763 | **0.9676** |
-
-| Comparison | PC1 | PC2 | PC3 |
-|---|---:|---:|---:|
-| Same-index PC cosine | 0.9689 | 0.9655 | 0.9676 |
-| Principal angle between the two top-three subspaces | 5.24 degrees | 11.03 degrees | 14.34 degrees |
-
-The bases are strongly aligned but not identical. This overlap explains why
-either set of PCs captures most of the other matrix's variance and preserves
-the same low-dimensional read/write computation. Alignment alone does not
-guarantee perfect accuracy: the remaining requirement is that discarding the
-other directions never moves an input across a competing token's
-dot-product decision boundary. Exhaustive evaluation confirms that condition
-for this task at `k = 3`.
-
-Reproducible analysis:
-`scripts/analysis/model1_unembedding_pca_readout_accuracy.py`.
-[Open the exact full-unembedding PCA, alignment, variance, and accuracy values](assets/model1_unembedding_pca_readout_accuracy.json){ .main-results-data-link }

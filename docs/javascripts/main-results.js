@@ -189,13 +189,13 @@
               <b aria-hidden="true">&#8594;</b>
               <div>
                 <span class="architecture-step-label">Unembedding</span>
-                <strong>&ell; = R<sub>final</sub>[-1, :] W<sub>U</sub></strong>
-                <small>W<sub>U</sub>: 64 &times; 14 &nbsp;&rarr;&nbsp; &ell;: 1 &times; 14</small>
+                <strong>F = R<sub>final</sub>[-1, :] W<sub>U</sub></strong>
+                <small>W<sub>U</sub>: 64 &times; 14 &nbsp;&rarr;&nbsp; F: 1 &times; 14</small>
               </div>
               <b aria-hidden="true">&#8594;</b>
               <div class="architecture-prediction">
                 <span class="architecture-step-label">Prediction</span>
-                <strong>argmax<sub>t</sub> &ell;<sub>t</sub></strong>
+                <strong>argmax<sub>t</sub> F<sub>t</sub></strong>
                 <small>one vocabulary token</small>
               </div>
             </div>

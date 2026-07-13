@@ -56,12 +56,22 @@ uv pip install -r requirements.txt
 # Puzzle 1a (takes ~2 minutes on GPU)
 python 04_2026/puzzle1a/train.py
 
+# Controlled unit-unembedding retrain used by this result book
+python 04_2026/puzzle1a/train.py \
+  --unit_unembed \
+  --seed 42 \
+  --save_dir 04_2026/puzzle1a/checkpoints/unit_unembed_seed42
+
 # Puzzle 1b (takes ~5 minutes on GPU)
 python 04_2026/puzzle1b/train.py
 
 # With wandb logging
 python 04_2026/puzzle1a/train.py --wandb
 ```
+
+`--unit_unembed` projects all 14 rows of `unembed.weight` to norm one after
+initialization and after every optimizer step. It leaves the architecture,
+cross-entropy objective, optimizer, scheduler, and checkpoint format unchanged.
 
 ### Pushing to HuggingFace
 
