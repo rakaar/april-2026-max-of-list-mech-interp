@@ -1,0 +1,44 @@
+{
+  "description": "Model 1 digit unembedding row L2 norms. The digit rows are model.unembed.weight[:10], shape 10 x d_model, and logits are residual @ W_U[d].",
+  "hf_repo": "andyrdt/04_2026_puzzle_1a",
+  "model_config": {
+    "vocab_size": 14,
+    "d_model": 64,
+    "n_heads": 4,
+    "n_layers": 1,
+    "max_seq_len": 12
+  },
+  "tensor_shape": [
+    10,
+    64
+  ],
+  "norms": [
+    1.2250618934631348,
+    1.0095869302749634,
+    0.8604539632797241,
+    0.7813339233398438,
+    0.7418146729469299,
+    0.7130612730979919,
+    0.892738401889801,
+    0.8749921917915344,
+    0.8128560185432434,
+    0.8592914938926697
+  ],
+  "pearson_digit_value_vs_norm": -0.5308570861816406,
+  "monotonic_increasing": false,
+  "monotonic_decreasing": false,
+  "largest_norm_digit": 0,
+  "smallest_norm_digit": 5,
+  "norm_order_descending": [
+    0,
+    1,
+    6,
+    7,
+    2,
+    9,
+    8,
+    3,
+    4,
+    5
+  ]
+}

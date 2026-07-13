@@ -1,0 +1,165 @@
+{
+  "description": "Top-three centered digit-unembedding and stacked output-matrix PC directions. The exact 64D directions are shown in either PC triad's 3D coordinate frame.",
+  "matrices": {
+    "digit_unembedding": {
+      "definition": "model.unembed.weight[0:10]",
+      "shape": [
+        10,
+        64
+      ],
+      "centering": "subtract the mean of the ten digit-token rows"
+    },
+    "output_matrix": {
+      "definition": "O_all = stored PyTorch W_O.weight.T",
+      "shape": [
+        64,
+        64
+      ],
+      "centering": "subtract the mean of the 64 output-direction rows"
+    }
+  },
+  "digit_unembedding_pca": {
+    "basis_shape": [
+      64,
+      3
+    ],
+    "explained_variance_by_pc": [
+      0.6946896019892347,
+      0.1704471148258168,
+      0.08746801869907393
+    ],
+    "top3_cumulative_explained_variance": 0.9526047355141254
+  },
+  "output_matrix_pca": {
+    "basis_shape": [
+      64,
+      3
+    ],
+    "explained_variance_by_pc": [
+      0.5922665405899709,
+      0.2483265480893076,
+      0.04282336743487822
+    ],
+    "top3_cumulative_explained_variance": 0.8834164561141568
+  },
+  "comparison": {
+    "sign_alignment": "Each output PC sign is chosen so its dot product with the same-index digit-unembedding PC is nonnegative.",
+    "signs_applied_to_output_pcs": [
+      1.0,
+      -1.0,
+      -1.0
+    ],
+    "pc_cosine_matrix": [
+      [
+        0.9694250068296468,
+        0.18797559183494153,
+        -0.02253509754284888
+      ],
+      [
+        -0.19778829129490177,
+        0.9261266471753894,
+        0.029448288724913473
+      ],
+      [
+        0.041629522229832294,
+        -0.02331586446699576,
+        0.9741464880213916
+      ]
+    ],
+    "same_index_pc_cosines": [
+      0.9694250068296468,
+      0.9261266471753894,
+      0.9741464880213916
+    ],
+    "principal_angles_degrees": [
+      6.9386525666505845,
+      13.485546945650704,
+      19.04326838428703
+    ],
+    "cosines_of_principal_angles": [
+      0.9926760699715315,
+      0.9724287768435729,
+      0.9452724448315738
+    ],
+    "chordal_subspace_distance": 0.4188514045750918
+  },
+  "coordinates": {
+    "digit_unembedding_pc_frame": {
+      "digit_unembedding_pcs": [
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "output_matrix_pcs": [
+        [
+          0.9694250068296468,
+          -0.19778829129490177,
+          0.041629522229832294
+        ],
+        [
+          0.18797559183494153,
+          0.9261266471753894,
+          -0.02331586446699576
+        ],
+        [
+          -0.02253509754284888,
+          0.029448288724913473,
+          0.9741464880213916
+        ]
+      ]
+    },
+    "output_matrix_pc_frame": {
+      "digit_unembedding_pcs": [
+        [
+          0.9694250068296468,
+          0.18797559183494153,
+          -0.02253509754284888
+        ],
+        [
+          -0.19778829129490177,
+          0.9261266471753894,
+          0.029448288724913473
+        ],
+        [
+          0.041629522229832294,
+          -0.02331586446699576,
+          0.9741464880213916
+        ]
+      ],
+      "output_matrix_pcs": [
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          1.0
+        ]
+      ]
+    }
+  },
+  "validation": {
+    "both_pc_triads_orthonormal_in_64d": true,
+    "coordinate_dot_products_reproduce_exact_64d_pc_cosines": true,
+    "plot_projection_warning": "The union of two distinct 3D subspaces can span up to 6D. In each view, the selected triad is exact and the other triad is orthogonally projected."
+  }
+}

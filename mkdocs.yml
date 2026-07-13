@@ -1,6 +1,6 @@
 site_name: April 2026 Max of List Result Book
 site_description: Working notes and results for the April 2026 Mech Interp Puzzle.
-site_url: ""
+site_url: "https://rakaar.github.io/april-2026-max-of-list-mech-interp/"
 docs_dir: docs
 site_dir: site
 
@@ -8,28 +8,37 @@ theme:
   name: material
   palette:
     - scheme: default
-      primary: indigo
-      accent: teal
+      primary: custom
+      accent: custom
   features:
     - navigation.sections
     - navigation.indexes
+    - navigation.top
+    - toc.follow
     - content.code.copy
     - content.tabs.link
 
 nav:
-  - Home: index.md
-  - Setup: setup.md
-  - First Part: first-part.md
-  - Experiments: experiments.md
-  - Daily Notes:
+  - Main Results: main-results.md
+  - Research Log:
+      - Experiments: experiments.md
       - 2026-06-29: 2026-06-29.md
       - 2026-06-30: 2026-06-30.md
       - 2026-07-02: 2026-07-02.md
+      - 2026-07-06: 2026-07-06.md
+      - 2026-07-07: 2026-07-07.md
+      - 2026-07-09: 2026-07-09.md
+      - 2026-07-11: 2026-07-11.md
+      - 2026-07-12: 2026-07-12.md
+  - Appendix:
+      - First Part: first-part.md
 
 markdown_extensions:
   - admonition
   - attr_list
   - md_in_html
+  - pymdownx.arithmatex:
+      generic: true
   - tables
   - toc:
       permalink: true
@@ -38,3 +47,11 @@ markdown_extensions:
   - pymdownx.superfences
   - pymdownx.tasklist:
       custom_checkbox: true
+
+extra_css:
+  - stylesheets/main-results.css
+
+extra_javascript:
+  - javascripts/mathjax.js
+  - javascripts/main-results.js
+  - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js

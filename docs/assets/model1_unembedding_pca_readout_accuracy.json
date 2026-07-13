@@ -1,0 +1,322 @@
+{
+  "description": "PCA is fitted to the centered rows of the full 14x64 unembedding. The resulting Q_k basis reduces each 16x64 per-head output map to 16xk and is used for a full 14-token readout over all 100000 inputs.",
+  "hf_repo": "andyrdt/04_2026_puzzle_1a",
+  "model_config": {
+    "vocab_size": 14,
+    "d_model": 64,
+    "n_heads": 4,
+    "n_layers": 1,
+    "max_seq_len": 12
+  },
+  "device": "cuda",
+  "basis": {
+    "source": "centered full-vocabulary unembedding rows",
+    "source_shape": [
+      14,
+      64
+    ],
+    "centered_rank": 13,
+    "basis_shape": [
+      64,
+      3
+    ],
+    "explained_variance_by_pc": [
+      0.6201300239607936,
+      0.25359593803196256,
+      0.06662549860922246
+    ],
+    "cumulative_unembedding_variance_captured": {
+      "1": 0.6201300239607936,
+      "2": 0.8737259619927562,
+      "3": 0.9403514606019787
+    }
+  },
+  "output_matrix_variance_in_unembedding_pcs": {
+    "matrix_shape": [
+      64,
+      64
+    ],
+    "centering": "subtract the mean of the 64 output-direction rows",
+    "cumulative_fraction_captured": {
+      "1": 0.5644592270783003,
+      "2": 0.8201426227581313,
+      "3": 0.862265723428851
+    }
+  },
+  "readout": {
+    "reduced_output": "W_O_low^h = W_O^h @ Q_k, shape 16 x k",
+    "head_write": "z_h = V_h @ W_O_low^h, shape batch x k",
+    "sum": "z = sum_h z_h, shape batch x k",
+    "unembedding": "U_low = (U - mean_vocab(U)) @ Q_k, shape 14 x k",
+    "logits": "z @ U_low.T, shape batch x 14"
+  },
+  "evaluation": {
+    "n_inputs": 100000,
+    "full_64d_head_sum_correct": 100000,
+    "counts_by_true_max": {
+      "0": 1,
+      "1": 31,
+      "2": 211,
+      "3": 781,
+      "4": 2101,
+      "5": 4651,
+      "6": 9031,
+      "7": 15961,
+      "8": 26281,
+      "9": 40951
+    },
+    "by_k": {
+      "1": {
+        "accuracy": 0.40952,
+        "correct": 40952,
+        "total": 100000,
+        "special_token_prediction_count": 0,
+        "prediction_distribution": {
+          "0": 1024,
+          "9": 98976
+        },
+        "accuracy_by_true_max": {
+          "0": {
+            "accuracy": 1.0,
+            "correct": 1,
+            "total": 1
+          },
+          "1": {
+            "accuracy": 0.0,
+            "correct": 0,
+            "total": 31
+          },
+          "2": {
+            "accuracy": 0.0,
+            "correct": 0,
+            "total": 211
+          },
+          "3": {
+            "accuracy": 0.0,
+            "correct": 0,
+            "total": 781
+          },
+          "4": {
+            "accuracy": 0.0,
+            "correct": 0,
+            "total": 2101
+          },
+          "5": {
+            "accuracy": 0.0,
+            "correct": 0,
+            "total": 4651
+          },
+          "6": {
+            "accuracy": 0.0,
+            "correct": 0,
+            "total": 9031
+          },
+          "7": {
+            "accuracy": 0.0,
+            "correct": 0,
+            "total": 15961
+          },
+          "8": {
+            "accuracy": 0.0,
+            "correct": 0,
+            "total": 26281
+          },
+          "9": {
+            "accuracy": 1.0,
+            "correct": 40951,
+            "total": 40951
+          }
+        },
+        "max_abs_coordinate_error_per_head_vs_sum_then_project": 6.103515625e-05,
+        "centered_vs_raw_unembedding_argmax_mismatches": 0
+      },
+      "2": {
+        "accuracy": 0.86318,
+        "correct": 86318,
+        "total": 100000,
+        "special_token_prediction_count": 0,
+        "prediction_distribution": {
+          "0": 1,
+          "1": 31,
+          "2": 211,
+          "3": 781,
+          "4": 2101,
+          "7": 20612,
+          "8": 35312,
+          "9": 40951
+        },
+        "accuracy_by_true_max": {
+          "0": {
+            "accuracy": 1.0,
+            "correct": 1,
+            "total": 1
+          },
+          "1": {
+            "accuracy": 1.0,
+            "correct": 31,
+            "total": 31
+          },
+          "2": {
+            "accuracy": 1.0,
+            "correct": 211,
+            "total": 211
+          },
+          "3": {
+            "accuracy": 1.0,
+            "correct": 781,
+            "total": 781
+          },
+          "4": {
+            "accuracy": 1.0,
+            "correct": 2101,
+            "total": 2101
+          },
+          "5": {
+            "accuracy": 0.0,
+            "correct": 0,
+            "total": 4651
+          },
+          "6": {
+            "accuracy": 0.0,
+            "correct": 0,
+            "total": 9031
+          },
+          "7": {
+            "accuracy": 1.0,
+            "correct": 15961,
+            "total": 15961
+          },
+          "8": {
+            "accuracy": 1.0,
+            "correct": 26281,
+            "total": 26281
+          },
+          "9": {
+            "accuracy": 1.0,
+            "correct": 40951,
+            "total": 40951
+          }
+        },
+        "max_abs_coordinate_error_per_head_vs_sum_then_project": 9.1552734375e-05,
+        "centered_vs_raw_unembedding_argmax_mismatches": 0
+      },
+      "3": {
+        "accuracy": 1.0,
+        "correct": 100000,
+        "total": 100000,
+        "special_token_prediction_count": 0,
+        "prediction_distribution": {
+          "0": 1,
+          "1": 31,
+          "2": 211,
+          "3": 781,
+          "4": 2101,
+          "5": 4651,
+          "6": 9031,
+          "7": 15961,
+          "8": 26281,
+          "9": 40951
+        },
+        "accuracy_by_true_max": {
+          "0": {
+            "accuracy": 1.0,
+            "correct": 1,
+            "total": 1
+          },
+          "1": {
+            "accuracy": 1.0,
+            "correct": 31,
+            "total": 31
+          },
+          "2": {
+            "accuracy": 1.0,
+            "correct": 211,
+            "total": 211
+          },
+          "3": {
+            "accuracy": 1.0,
+            "correct": 781,
+            "total": 781
+          },
+          "4": {
+            "accuracy": 1.0,
+            "correct": 2101,
+            "total": 2101
+          },
+          "5": {
+            "accuracy": 1.0,
+            "correct": 4651,
+            "total": 4651
+          },
+          "6": {
+            "accuracy": 1.0,
+            "correct": 9031,
+            "total": 9031
+          },
+          "7": {
+            "accuracy": 1.0,
+            "correct": 15961,
+            "total": 15961
+          },
+          "8": {
+            "accuracy": 1.0,
+            "correct": 26281,
+            "total": 26281
+          },
+          "9": {
+            "accuracy": 1.0,
+            "correct": 40951,
+            "total": 40951
+          }
+        },
+        "max_abs_coordinate_error_per_head_vs_sum_then_project": 9.1552734375e-05,
+        "centered_vs_raw_unembedding_argmax_mismatches": 0
+      }
+    }
+  },
+  "alignment_with_output_pcs": {
+    "definition": "C = Q_U.T @ Q_O; rows are full-vocabulary W_U PCs and columns are output-matrix PCs",
+    "output_pc_signs_applied": [
+      1.0,
+      -1.0,
+      1.0
+    ],
+    "pc_cosine_matrix": [
+      [
+        0.9688567186258314,
+        0.18399652678091763,
+        0.03020690937631769
+      ],
+      [
+        -0.20106454370856242,
+        0.9654951244004384,
+        0.07027063848560794
+      ],
+      [
+        -0.026735109127361018,
+        -0.07627725356823686,
+        0.9675695061617071
+      ]
+    ],
+    "same_index_pc_cosines": [
+      0.9688567186258314,
+      0.9654951244004384,
+      0.9675695061617071
+    ],
+    "cosines_of_principal_angles": [
+      0.9958251930633938,
+      0.9815150159300086,
+      0.9688552328232503
+    ],
+    "principal_angles_degrees": [
+      5.2372949820499475,
+      11.033630684023835,
+      14.337183146994203
+    ]
+  },
+  "related_digit_only_alignment": {
+    "page": "docs/2026-07-12.md",
+    "json": "docs/assets/model1_output_unembedding_pc_alignment.json",
+    "note": "The earlier interactive used the ten digit-unembedding rows. This artifact recomputes alignment for the full 14-token basis used by the accuracy table."
+  }
+}

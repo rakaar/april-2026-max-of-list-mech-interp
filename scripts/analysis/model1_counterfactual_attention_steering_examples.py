@@ -54,31 +54,42 @@ def target_position(nums: list[int], target: int) -> int | None:
     return None
 
 
+def one_hot_attention_row(reference: torch.Tensor, position: int) -> torch.Tensor:
+    row = torch.zeros(
+        reference.shape[0],
+        reference.shape[1],
+        dtype=reference.dtype,
+        device=reference.device,
+    )
+    row[:, position] = 1.0
+    return row
+
+
 def head_value_choices(
     source_values: list[torch.Tensor],
     tokens: list[int],
     nums: list[int],
     target: int,
     alpha_for_one: float | None,
-) -> tuple[list[torch.Tensor], dict[str, str]]:
-    ans_values = [values[:, 10, :] for values in source_values]
+) -> tuple[list[torch.Tensor], list[torch.Tensor], dict[str, str]]:
+    ans_rows = [one_hot_attention_row(values, 10) for values in source_values]
     pos = target_position(nums, target)
     if target != 0 and pos is None:
         raise ValueError(f"target {target} is not present in input {nums}")
 
-    def at_target(head_idx: int) -> torch.Tensor:
+    def target_row(head_idx: int) -> torch.Tensor:
         assert pos is not None
-        return source_values[head_idx][:, pos, :]
+        return one_hot_attention_row(source_values[head_idx], pos)
 
     recipe: dict[str, str] = {}
     if target == 0:
-        chosen = ans_values
+        forced_rows = ans_rows
         recipe = {f"H{i}": "ANS@10" for i in range(4)}
     elif target == 1:
         if alpha_for_one is None:
             raise ValueError("target 1 requires an alpha_for_one mixture")
-        h3_mix = (1.0 - alpha_for_one) * ans_values[3] + alpha_for_one * at_target(3)
-        chosen = [ans_values[0], ans_values[1], ans_values[2], h3_mix]
+        h3_mix = (1.0 - alpha_for_one) * ans_rows[3] + alpha_for_one * target_row(3)
+        forced_rows = [ans_rows[0], ans_rows[1], ans_rows[2], h3_mix]
         recipe = {
             "H0": "ANS@10",
             "H1": "ANS@10",
@@ -86,7 +97,7 @@ def head_value_choices(
             "H3": f"{1.0 - alpha_for_one:.3f}*ANS@10 + {alpha_for_one:.3f}*{format_source(pos, tokens)}",
         }
     elif 2 <= target <= 6:
-        chosen = [ans_values[0], ans_values[1], ans_values[2], at_target(3)]
+        forced_rows = [ans_rows[0], ans_rows[1], ans_rows[2], target_row(3)]
         recipe = {
             "H0": "ANS@10",
             "H1": "ANS@10",
@@ -94,7 +105,7 @@ def head_value_choices(
             "H3": format_source(pos, tokens),
         }
     elif 7 <= target <= 8:
-        chosen = [ans_values[0], ans_values[1], at_target(2), at_target(3)]
+        forced_rows = [ans_rows[0], ans_rows[1], target_row(2), target_row(3)]
         recipe = {
             "H0": "ANS@10",
             "H1": "ANS@10",
@@ -102,7 +113,7 @@ def head_value_choices(
             "H3": format_source(pos, tokens),
         }
     elif target == 9:
-        chosen = [at_target(0), ans_values[1], at_target(2), at_target(3)]
+        forced_rows = [target_row(0), ans_rows[1], target_row(2), target_row(3)]
         recipe = {
             "H0": format_source(pos, tokens),
             "H1": "ANS@10",
@@ -111,7 +122,12 @@ def head_value_choices(
         }
     else:
         raise ValueError(f"unsupported target {target}")
-    return chosen, recipe
+
+    chosen = [
+        torch.bmm(row.unsqueeze(1), values).squeeze(1)
+        for row, values in zip(forced_rows, source_values, strict=True)
+    ]
+    return chosen, forced_rows, recipe
 
 
 def run_forced_recipe(
@@ -146,7 +162,9 @@ def run_forced_recipe(
             }
             source_values.append(resid @ head.W_V.weight.detach().T)
 
-        chosen, recipe = head_value_choices(source_values, tokens_list, nums, target, alpha_for_one)
+        chosen, forced_rows, recipe = head_value_choices(
+            source_values, tokens_list, nums, target, alpha_for_one
+        )
         head_sum = layer.W_O(torch.cat(chosen, dim=-1))
         final_vec = ans_resid + head_sum
         forced_logits = digit_logits(final_vec, model)[0]
@@ -163,6 +181,10 @@ def run_forced_recipe(
         "top_minus_runner_up": margin,
         "digit_logits": [float(v) for v in forced_logits],
         "recipe": recipe,
+        "forced_attention_rows": {
+            f"H{head_idx}": [float(value) for value in row[0]]
+            for head_idx, row in enumerate(forced_rows)
+        },
         "actual_prediction": int(actual_digit_logits.argmax()),
         "actual_top_sources": actual_top_sources,
     }
@@ -236,6 +258,8 @@ def main() -> None:
     torch.manual_seed(0)
     model = load_model()
     examples = [
+        {"nums": [2, 3, 4, 5, 6], "targets": [2, 3, 4, 5]},
+        {"nums": [4, 5, 6, 7, 8], "targets": [4, 5, 6, 7]},
         {"nums": [1, 2, 3, 4, 5], "targets": [0, 1, 2, 3, 4, 5]},
         {"nums": [5, 6, 7, 8, 9], "targets": [0, 5, 6, 7, 8, 9]},
         {"nums": [0, 1, 2, 7, 9], "targets": [0, 1, 2, 7, 9]},

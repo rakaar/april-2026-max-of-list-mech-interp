@@ -2,6 +2,7 @@ torch
 einops
 tqdm
 matplotlib
+plotly
 numpy
 wandb
 huggingface_hub

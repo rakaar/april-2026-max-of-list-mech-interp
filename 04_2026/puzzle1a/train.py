@@ -1,6 +1,10 @@
 """
 Puzzle 1a: Max of List — 1-Layer Attention-Only Transformer
 
+Vendored from andyrdt/puzzles commit
+7857375da7dd7560fd5751c7e4fff42630295a3e and extended with an optional
+projected unit-norm constraint on every unembedding row.
+
 Task: Given a list of numbers (0-9), predict the maximum.
 Input:  [BOS] n1 [SEP] n2 [SEP] ... nk [ANS]
 Target: max [EOS]
@@ -27,6 +31,32 @@ import matplotlib.pyplot as plt
 # Allow importing from parent directory
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from model import AttentionOnlyTransformer
+
+
+UPSTREAM_COMMIT = "7857375da7dd7560fd5751c7e4fff42630295a3e"
+
+
+@torch.no_grad()
+def project_unembedding_rows(model, target_norm: float = 1.0) -> None:
+    """Project every vocabulary row of W_U onto the requested sphere."""
+    weight = model.unembed.weight
+    norms = weight.norm(dim=1, keepdim=True)
+    if not torch.isfinite(norms).all() or bool((norms <= 0).any()):
+        raise RuntimeError("cannot normalize non-finite or zero unembedding rows")
+    weight.mul_(target_norm / norms)
+
+
+@torch.no_grad()
+def unembedding_norm_stats(model, target_norm: float = 1.0) -> dict:
+    norms = model.unembed.weight.norm(dim=1)
+    return {
+        "target": target_norm,
+        "minimum": float(norms.min()),
+        "maximum": float(norms.max()),
+        "mean": float(norms.mean()),
+        "std": float(norms.std(unbiased=False)),
+        "max_abs_error": float((norms - target_norm).abs().max()),
+    }
 
 
 # ── Vocab ───────────────────────────────────────────────────────────────────
@@ -207,6 +237,8 @@ def plot_training(history, per_value_acc, save_dir, args):
 # ── Training ────────────────────────────────────────────────────────────────
 
 def train(args):
+    if args.target_unembed_norm <= 0:
+        raise ValueError("--target_unembed_norm must be positive")
     torch.manual_seed(args.seed)
     np.random.seed(args.seed)
 
@@ -236,6 +268,9 @@ def train(args):
         max_seq_len=input_seq_len,
         n_layers=1,
     ).to(args.device)
+
+    if args.unit_unembed:
+        project_unembedding_rows(model, args.target_unembed_norm)
 
     n_params = sum(p.numel() for p in model.parameters())
     print(f"Parameters: {n_params:,}")
@@ -294,6 +329,8 @@ def train(args):
             optimizer.zero_grad()
             loss.backward()
             optimizer.step()
+            if args.unit_unembed:
+                project_unembedding_rows(model, args.target_unembed_norm)
             scheduler.step()
 
             step += 1
@@ -337,9 +374,18 @@ def train(args):
 
     # Final eval
     metrics = evaluate(model, test_loader, vocab, args.device, args.list_len)
+    final_unembedding_norms = unembedding_norm_stats(
+        model, args.target_unembed_norm
+    )
+    if args.unit_unembed and final_unembedding_norms["max_abs_error"] > 1e-6:
+        raise AssertionError(
+            "unit-unembedding projection drifted: "
+            f"{final_unembedding_norms['max_abs_error']:.3e}"
+        )
     print(f"\nFinal: test_loss={metrics['loss']:.4f}, test_acc={metrics['acc']:.4f}")
     print(f"Per-value accuracy: {metrics['per_value_acc']}")
     print(f"Total examples seen: {examples_seen:,}, epochs: {epoch}")
+    print(f"Unembedding row norms: {final_unembedding_norms}")
 
     # Save
     save_dir = Path(args.save_dir)
@@ -353,10 +399,24 @@ def train(args):
             "num_range": args.num_range,
             "steps": args.steps,
             "seed": args.seed,
+            "learning_rate": args.lr,
+            "batch_size": args.batch_size,
+            "weight_decay": 0.01,
+            "scheduler": "CosineAnnealingLR",
+            "eval_every": args.eval_every,
+            "min_per_value": args.min_per_value,
             "final_test_acc": metrics["acc"],
             "final_test_loss": metrics["loss"],
             "examples_seen": examples_seen,
             "epochs": epoch,
+            "upstream_commit": UPSTREAM_COMMIT,
+            "unit_unembedding": {
+                "enabled": args.unit_unembed,
+                "scope": "all_vocabulary_rows",
+                "method": "post_optimizer_row_projection",
+                "target_norm": args.target_unembed_norm,
+                "final_norm_stats": final_unembedding_norms,
+            },
         },
         "puzzle": "1a",
     }
@@ -389,6 +449,12 @@ def get_args():
     p.add_argument("--eval_every", type=int, default=1000)
     p.add_argument("--seed", type=int, default=42)
     p.add_argument("--device", type=str, default="cuda" if torch.cuda.is_available() else "cpu")
+    p.add_argument(
+        "--unit_unembed",
+        action="store_true",
+        help="Project every unembedding row to unit norm after init and each optimizer step",
+    )
+    p.add_argument("--target_unembed_norm", type=float, default=1.0)
     # Save
     p.add_argument("--save_dir", type=str, default=str(Path(__file__).parent / "checkpoints"))
     # Wandb
