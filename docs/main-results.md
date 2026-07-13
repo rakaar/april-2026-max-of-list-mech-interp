@@ -9,7 +9,29 @@ toc_depth: 3
 # Main results
 
 This analysis was developed for the
-[Bau Lab April challenge](https://puzzles.baulab.info/april-2026.html).
+[Bau Lab April challenge](https://puzzles.baulab.info/april-2026.html){ .challenge-credit-link }.
+
+> **Summary.** The model solves the task through a piecewise attention circuit
+> at the `[ANS]` position. For maximum `0`, all four heads attend to `[ANS]`
+> itself. For maximum `1`, H3 uses a soft mixture of `[ANS]` and the positions
+> containing `1`. For maxima `2–6`, H3 reads the maximum token; for `7–8`, H2
+> and H3 read it; and for `9`, H0 joins H2 and H3. H1 remains a nearly constant
+> self-reading head. Replacing the final attention rows with this circuit
+> preserves the model's predictions on all 100,000 possible inputs.
+
+| True maximum | H0 | H1 | H2 | H3 |
+|---:|---|---|---|---|
+| `0` | `[ANS]` | `[ANS]` | `[ANS]` | `[ANS]` |
+| `1` | `[ANS]` | `[ANS]` | `[ANS]` | soft mix of `[ANS]` and `1` |
+| `2–6` | `[ANS]` | `[ANS]` | `[ANS]` | maximum |
+| `7–8` | `[ANS]` | `[ANS]` | maximum | maximum |
+| `9` | maximum | `[ANS]` | maximum | maximum |
+
+> Changing only these final attention rows is sufficient to steer the model's
+> answer, and the complete piecewise replacement reproduces all 100,000
+> predictions. The resulting head outputs are added and read by the
+> unembedding. It can be shown that this computation can be performed in a
+> reduced three-dimensional subspace.
 
 ## Model and notation
 
