@@ -8,6 +8,9 @@ toc_depth: 3
 
 # Main results
 
+This analysis was developed for the
+[Bau Lab April challenge](https://puzzles.baulab.info/april-2026.html).
+
 ## Model and notation
 
 ### Transformer computation
@@ -126,7 +129,7 @@ reduces $W_U$ from `64 x V` to `k x V`. Thus the heads write into a shared
 $k$-dimensional space, and the unembedding reads from that same space. The PCA
 basis is obtained only from $W_O$; PCA is not fitted separately to $W_U$.
 
-### How many dimensions are needed?
+### How many dimensions are sufficient?
 
 We keep increasing the number of retained principal components and evaluate
 the projected computation exhaustively on all `100,000` possible inputs. The
@@ -193,6 +196,47 @@ sum with each vocabulary token's projected unembedding vector.
 </iframe>
 
 ## Supplementary results
+
+### QK score hints at head recruitment
+
+For each head, the responsible query vector is the query of the `[ANS]`
+token. We can compare this query with the key vector of each number and with
+the key vector of `[ANS]` itself. Using the notation above:
+
+$$
+q_h^{\text{ANS}} = R[-1,:]W_Q^h,
+\qquad
+k_h(n) = W_E[n]W_K^h,
+\qquad
+k_h^{\text{ANS}} = R[-1,:]W_K^h.
+$$
+
+The figure compares the scaled QK scores
+
+$$
+s_h(n) = \frac{q_h^{\text{ANS}}k_h(n)^T}{\sqrt{16}}
+\qquad \text{and} \qquad
+s_h(\text{ANS}) =
+\frac{q_h^{\text{ANS}}(k_h^{\text{ANS}})^T}{\sqrt{16}}.
+$$
+
+When $s_h(n) > s_h(\text{ANS})$, the `[ANS]` query has a larger dot product
+with the number key than with its own key. In this model, these crossings
+reproduce the head-recruitment thresholds: H3 crosses `[ANS]` for numbers
+`2`-`9`, H2 for `7`-`9`, H0 only for `9`, and H1 never crosses it.
+
+<figure class="main-results-plot">
+  <img
+    src="../assets/model1_ans_qk_threshold_plot.png"
+    alt="QK scores between the ANS query and number-token keys for all four heads, with the ANS self-key score shown as a horizontal threshold"
+  >
+  <figcaption>
+    Number-key QK scores for each head. The horizontal line is the
+    <code>[ANS]</code> self-key score. The <code>[ANS]</code> query and self key
+    include the fixed position embedding at position 10; the plotted number
+    keys use the number-token embeddings.
+  </figcaption>
+</figure>
 
 ### H0's partial attention to `8` is inconsequential
 
@@ -336,4 +380,4 @@ It gets all but three cases correct. The H1-ablation failures are:
 | `[0, 0, 1, 0, 0]` | 1 | 0 |
 | `[8, 8, 8, 8, 8]` | 8 | 9 |
 
-[Analysis code](https://github.com/rakaar/april-2026-max-of-list-mech-interp/blob/agent/document-low-dimensional-readout/scripts/analysis/model1_main_results_supplementary.py)
+[Analysis code](https://github.com/rakaar/april-2026-max-of-list-mech-interp/blob/main/scripts/analysis/model1_main_results_supplementary.py)
