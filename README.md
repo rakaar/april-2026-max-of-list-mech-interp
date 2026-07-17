@@ -8,7 +8,31 @@ The focus here is Model 1 from the first part of the challenge: an
 attention-only transformer that returns the maximum digit from a list of five
 digits.
 
-## Main Result Notes
+## Result Book
+
+- [Main results](https://rakaar.github.io/april-2026-max-of-list-mech-interp/main-results/)
+- [Research log](https://rakaar.github.io/april-2026-max-of-list-mech-interp/experiments/)
+
+## Summary of Main Results
+
+The model implements a piecewise attention circuit at the final `[ANS]`
+position. H3 reads maxima `2-6`; H2 joins H3 for `7-8`; and H0 joins them for
+`9`. H1 remains a nearly constant `[ANS]`-reading head, while maxima `0` and `1`
+use the `[ANS]` baseline and a soft H3 mixture respectively.
+
+Replacing only the final attention row of each head with this circuit preserves
+the model's predictions on all `100,000` possible five-digit inputs. The four
+head writes are summed in the residual stream, and the complete computation can
+be reduced to three dimensions using PCs of either the stacked output matrix or
+the full-vocabulary unembedding matrix without losing accuracy.
+
+The readout is based on dot products, not angle alone. A retrained model whose
+unembedding rows are constrained to unit norm has exact angular decoding in the
+full `64`-dimensional space. Its top-three projection still has unequal
+unembedding norms: dot-product accuracy is `100%`, while cosine-only accuracy
+is `95.317%`.
+
+## Key Artifacts
 
 - `attention_head_ANS_row_manipulation.md`: standalone causal steering result.
   It shows that changing only the `[ANS]` row of each attention head can steer

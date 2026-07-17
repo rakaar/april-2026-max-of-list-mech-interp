@@ -386,20 +386,11 @@ Three independently trained constrained models reached `100%` accuracy on all
 full `64`-dimensional residual space, as required by the unit-norm constraint.
 This produces an exact angular readout in the original space.
 
-The hoped-for three-dimensional visualization does **not** remain purely
-angular. Let $P_3$ be a three-PC basis. Although $\lVert U_d \rVert=1$ before
-projection, the projected norm is
-
-$$
-\lVert P_3^\top U_d \rVert^2
-= 1 - \lVert (I-P_3P_3^\top)U_d \rVert^2,
-$$
-
-and the discarded component is different for each token. In the primary
-model's top-three output-matrix-PC space, the digit-unembedding norms range
-from `0.732` to `0.956`. The projected dot-product readout retains `100%`
-accuracy, but normalizing the projected vectors and decoding by cosine alone
-gives only `95.317%` accuracy.
+The low-dimensional projection does not preserve equal unembedding norms. In
+the primary model's top-three output-matrix-PC space, the digit-unembedding
+norms range from `0.732` to `0.956`. The projected dot-product readout retains
+`100%` accuracy, but normalizing the projected vectors and decoding by cosine
+alone gives only `95.317%` accuracy.
 
 Thus, forcing unit unembedding norms produces angular coding in `64d`, but not
 after a lossy low-dimensional projection. The three-dimensional decision still
