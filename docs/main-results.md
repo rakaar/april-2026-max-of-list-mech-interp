@@ -357,15 +357,57 @@ F_d^{(3)} = \lVert R_{\text{final}}^{(3)}[-1,:] \rVert
              \lVert U_d^{(3)} \rVert \cos(\theta_d).
 $$
 
-One might therefore expect that forcing every unembedding vector to norm `1`
-would create a purely angular decoder. In the full `64`-dimensional space it
-does. However, projection does not preserve those individual norms: in the
-unit-unembedding retrain, the top-three output-PCA unembedding norms range from
-`0.732` to `0.956`. Its three-dimensional dot-product accuracy remains `100%`,
-while cosine-only accuracy is `95.317%`. The full-space angular code therefore
-does not remain purely angular after projection. See the
-[unit-norm retraining experiment](2026-07-12.md#model-1-retrain-unit-norm-unembedding-rows)
-for the complete check.
+### What if each row of the unembedding matrix is forced to norm 1?
+
+The model chooses its response using the largest unembedding dot product. For
+the final `[ANS]` state $h$ and the unembedding row $U_d$ for candidate token
+$d$,
+
+$$
+F_d = h^\top U_d
+    = \lVert h \rVert \lVert U_d \rVert \cos(\theta_d).
+$$
+
+For one input, $\lVert h \rVert$ is common to every candidate. In the released
+model, the winning logit can therefore depend on both the unembedding norm
+$\lVert U_d \rVert$ and the cosine alignment $\cos(\theta_d)$. This motivates a
+controlled retraining experiment: after every optimizer step, force all `14`
+rows of the `64`-dimensional unembedding matrix to have norm `1`. If the model
+still solves the task, its full-space readout must be angular because
+
+$$
+\operatorname*{argmax}_d h^\top U_d
+= \operatorname*{argmax}_d \cos(\theta_d)
+\qquad \text{when } \lVert U_d \rVert=1.
+$$
+
+Three independently trained constrained models reached `100%` accuracy on all
+`100,000` inputs. The primary seed also has `100%` cosine-only accuracy in the
+full `64`-dimensional residual space, as required by the unit-norm constraint.
+This produces an exact angular readout in the original space.
+
+The hoped-for three-dimensional visualization does **not** remain purely
+angular. Let $P_3$ be a three-PC basis. Although $\lVert U_d \rVert=1$ before
+projection, the projected norm is
+
+$$
+\lVert P_3^\top U_d \rVert^2
+= 1 - \lVert (I-P_3P_3^\top)U_d \rVert^2,
+$$
+
+and the discarded component is different for each token. In the primary
+model's top-three output-matrix-PC space, the digit-unembedding norms range
+from `0.732` to `0.956`. The projected dot-product readout retains `100%`
+accuracy, but normalizing the projected vectors and decoding by cosine alone
+gives only `95.317%` accuracy.
+
+Thus, forcing unit unembedding norms produces angular coding in `64d`, but not
+after a lossy low-dimensional projection. The three-dimensional decision still
+depends on both the projected unembedding norm and its angle with the projected
+head output. See the
+[complete unit-norm retraining experiment](2026-07-12.md#model-1-retrain-unit-norm-unembedding-rows)
+for training details, attention recruitment, additional seeds, and the
+interactive geometry.
 
 ### Why we did not add the initial residual stream
 
