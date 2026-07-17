@@ -1818,18 +1818,11 @@ still solves the task, its full-space readout must be angular because</p>
 <code>100,000</code> inputs. The primary seed also has <code>100%</code> cosine-only accuracy in the
 full <code>64</code>-dimensional residual space, as required by the unit-norm constraint.
 This produces an exact angular readout in the original space.</p>
-<p>The hoped-for three-dimensional visualization does <strong>not</strong> remain purely
-angular. Let <span class="arithmatex">\(P_3\)</span> be a three-PC basis. Although <span class="arithmatex">\(\lVert U_d \rVert=1\)</span> before
-projection, the projected norm is</p>
-<div class="arithmatex">\[
-\lVert P_3^\top U_d \rVert^2
-= 1 - \lVert (I-P_3P_3^\top)U_d \rVert^2,
-\]</div>
-<p>and the discarded component is different for each token. In the primary
-model's top-three output-matrix-PC space, the digit-unembedding norms range
-from <code>0.732</code> to <code>0.956</code>. The projected dot-product readout retains <code>100%</code>
-accuracy, but normalizing the projected vectors and decoding by cosine alone
-gives only <code>95.317%</code> accuracy.</p>
+<p>The low-dimensional projection does not preserve equal unembedding norms. In
+the primary model's top-three output-matrix-PC space, the digit-unembedding
+norms range from <code>0.732</code> to <code>0.956</code>. The projected dot-product readout retains
+<code>100%</code> accuracy, but normalizing the projected vectors and decoding by cosine
+alone gives only <code>95.317%</code> accuracy.</p>
 <p>Thus, forcing unit unembedding norms produces angular coding in <code>64d</code>, but not
 after a lossy low-dimensional projection. The three-dimensional decision still
 depends on both the projected unembedding norm and its angle with the projected
